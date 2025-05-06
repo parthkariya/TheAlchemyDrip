@@ -14,6 +14,7 @@ const ProPage = () => {
 
   useEffect(() => {
     fetchSingleProduct(`${url}/${slug}`);
+    
   }, [slug]);
 
   // console.log("slug", slug);

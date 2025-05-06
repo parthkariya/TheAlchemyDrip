@@ -374,11 +374,7 @@ button.close-button {
     height: 250px;
   }
 }
-@media screen and (max-width: 550px) {
-  .zoom_image {
-    height: 170px;
-  }
-}
+
 /*  */
 @media screen and (max-width: 767px) {
   .title h2,
@@ -388,5 +384,43 @@ button.close-button {
 
   .section-title {
     margin-bottom: 25px !important;
+  }
+}
+
+@media screen and (max-width: 850px) {
+
+
+  .resp_cat_img_card{
+    width: 200px !important;
+    height: 100% !important;
+    max-width: 200px !important;
+  }
+
+  .resp_cat_img{
+    width: 180px !important;
+    height: 180px !important;
+    object-fit: contain;
+  }
+}
+
+@media screen and (max-width: 550px) {
+  .zoom_image {
+    height: 170px;
+  }
+
+  .resp_cat_img_card{
+    width: 170px !important;
+    height: 100% !important;
+    max-width: 170px !important;
+  }
+
+  .resp_cat_img{
+    width: 150px !important;
+    height: 150px !important;
+    object-fit: contain;
+  }
+
+  .cat_school_name{
+    font-size: 16px !important;
   }
 }

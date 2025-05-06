@@ -113,9 +113,9 @@ const ContactUs = () => {
                     }}>
                     Email: &nbsp;
                     <a
-                      href="mailto:info@thealchemydrip.com"
+                      href="mailto: info@thealchemydrip.in"
                       style={{ color: "black", fontWeight: "400" }}>
-                      info@thealchemydrip.com
+                      info@thealchemydrip.in
                     </a>
                   </p>
                 </li>

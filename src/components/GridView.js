@@ -4,7 +4,7 @@ import Product from "./Product";
 import { useUserContext } from "../context/user_context";
 
 const GridView = ({ products }) => {
-  // console.log("productsssss", products);
+  console.log("productsssss", products);
   return (
     <Wrapper>
       <div className="products-container">

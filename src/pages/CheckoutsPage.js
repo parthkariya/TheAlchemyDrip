@@ -32,10 +32,11 @@ const CheckoutsPage = () => {
   const history = useHistory();
   // window.scrollTo(0, 0);
 
-  const { cart, cart_item,check_value, total_amount, shipping_fees, clearCart, orderResponse } =
+  const { cart, cart_item, check_value, total_amount, shipping_fees, clearCart, orderResponse } =
     useCartContext();
 
   console.log("cart are", cart_item);
+
   const { isLogin, logintoken, logindata } = useUserContext();
   const { setOrder, order_data, login_loading, setOrderGuest } =
     useOrderContext();
@@ -45,8 +46,10 @@ const CheckoutsPage = () => {
   const [showscreen, setShowlogin] = React.useState();
 
   const location = useLocation();
-//   const data = location.state;
+  //   const data = location.state;
   const data = location.state?.items || [];
+
+  
 
 
   console.log("Received Data:", data);
@@ -75,7 +78,7 @@ const CheckoutsPage = () => {
     }
   }, [isLogin]);
 
-  useEffect(() => {}, [order_data]);
+  useEffect(() => { }, [order_data]);
 
   const mSelectAddress = (id) => {
     setSelectAddress(id);
@@ -142,7 +145,7 @@ const CheckoutsPage = () => {
       Notification("success", "", order_data.message);
       clearCart();
       history.push("/");
-    } 
+    }
 
     console.log("response order ", order_data);
   };
@@ -267,7 +270,7 @@ const CheckoutsPage = () => {
     }
     var options = {
       key: "rzp_live_pXp8Xsvsqxx2j2",
-    //   key: "rzp_test_C1WkhcrxRyAGl9",
+      //   key: "rzp_test_C1WkhcrxRyAGl9",
 
       currency: "INR",
       order_id: order_id,
@@ -525,7 +528,7 @@ const CheckoutsPage = () => {
                             </div>
                           </div>
                           <ul className="qty pro_qty_line">
-                          {/* {check_value == 1 ? <>
+                            {/* {check_value == 1 ? <>
                             {cart_item.map((item) => {
                               return (
                                 <li style={{ textTransform: "capitalize" }}>
@@ -555,13 +558,13 @@ const CheckoutsPage = () => {
                             })} */}
                             {/* {cart.map((item) => {
                               return ( */}
-                                <li style={{ textTransform: "capitalize" }}>
-                                  {data[0]?.product?.name}{" "}
-                                  <span>{formatPrice(data[0]?.value)}</span>
-                                </li>
-                              {/* );
+                            <li style={{ textTransform: "capitalize" }}>
+                              {data[0]?.product?.name}{" "}
+                              <span>{formatPrice(data[0]?.value)}</span>
+                            </li>
+                            {/* );
                             })} */}
-                          
+
                           </ul>
                           {/* <ul className="sub-total">
                             <li>
@@ -594,15 +597,37 @@ const CheckoutsPage = () => {
                               </div>
                             </li>
                           </ul> */}
+                          
+                          {data[0]?.value * data[0]?.qty < 1000 ? <>
+                            <ul className="qty pro_qty_line">
+                         
+                         <li style={{ textTransform: "capitalize" }}>
+                           Shipping fee
+                           <span>{formatPrice(50)}</span>
+                         </li>
+                      
+
+                       </ul>
+                          </> : <></>}
+                         
                           <ul className="total">
                             <li>
                               Total
                               <span className="count">
-                                {formatPrice(data[0]?.value * data[0]?.qty)}
+                                {/* {formatPrice(data[0]?.value * data[0]?.qty)} */}
+                                {formatPrice(
+                                  (data[0]?.value * data[0]?.qty || 0) + ((data[0]?.value * data[0]?.qty || 0) < 1000 ? 50 : 0)
+                                )}
                               </span>
                             </li>
                           </ul>
                         </div>
+
+                        {(data[0]?.value * data[0]?.qty || 0) < 1000 && (
+                          <span style={{ color: "#000", fontWeight: "500" }}>
+                            Avail free shipping for orders above 1000/-
+                          </span>
+                        )}
                         <div className="payment-box">
                           <div className="upper-box">
                             <div className="payment-options">
@@ -1376,11 +1401,10 @@ const Wrapper = styled.section`
       width: 100%;
     }
 
-    ${
-      "" /* .col-lg-9 order-lg-last dashboard-content{
+    ${"" /* .col-lg-9 order-lg-last dashboard-content{
       padding:0 15px;
     } */
-    }
+  }
     .page {
       min-height: calc(60vh - (20vh + 10rem));
     }

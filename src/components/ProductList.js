@@ -13,7 +13,10 @@ const ProductList = () => {
   //   single_product
   // );
 
-  if (products.length < 1) {
+  // console.log("products",products);
+  
+
+  if (single_product.length < 1) {
     return (
       <h5 style={{ textTransform: "none" }}>
         Sorry, no product matched to your search...

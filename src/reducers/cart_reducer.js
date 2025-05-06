@@ -204,7 +204,13 @@ if (action.type === TOGGLE_CART_ITEM_AMOUNT) {
         total_amount: 0,
       }
     );
-    return { ...state, total_items, total_amount };
+
+        // Apply shipping fee if total_amount is less than 1000
+        const shipping_fees = total_amount < 1000 ? 50 : 0;
+        
+    return { ...state, total_items, total_amount,shipping_fees };
+    
+    
   }
   
 

@@ -48,6 +48,7 @@ const ProductsPage = () => {
   const prodatalist = async () => {
     const datalist = await localStorage.getItem("productdata");
     setdata2(JSON.parse(datalist));
+    
    };
 
      const { getClass,class_data_loading } = useProductsContext();

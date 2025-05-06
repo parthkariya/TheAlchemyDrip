@@ -112,6 +112,9 @@ const SingleProductPage = () => {
 
   //fetch single product details
 
+  console.log("getColors", getColors);
+
+
   useEffect(() => {
     fetchSingleProduct1(`${url}/${slug}/abc/${userid}`);
   }, [slug]);
@@ -352,26 +355,51 @@ const SingleProductPage = () => {
                   <h5>select Color:</h5>
 
                   {getColors.map((item, index) => {
-                    const isSelected = index === getActiveColor;
-                    return (
-                      <div
-                        key={index}
-                        onClick={() => {
-                          setColorId(item.color_id);
-                          setColorName(item.color_name);
-                          setActiveColor(index);
-                        }}
-                        style={{
-                          width: "20px",
-                          height: "20px",
-                          borderRadius: "50%",
-                          background: item.color_code,
-                          opacity: isSelected ? "0.6" : "1",
-                          // filter: isSelected ? "grayscale(50%)" : "none",
-                          cursor: "pointer", // Optional: Add cursor pointer to indicate clickability
-                        }}></div>
-                    );
-                  })}
+  const isSelected = index === getActiveColor;
+
+  // Determine the color of the tick based on whether the selected color is white or not
+  const tickColor = item.color_name === "WHITE" ? "black" : "white";
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+      <div
+        key={index}
+        onClick={() => {
+          setColorId(item.color_id);
+          setColorName(item.color_name);
+          setActiveColor(index);
+        }}
+        style={{
+          width: "20px",
+          height: "20px",
+          borderRadius: "50%",
+          background: item.color_code,
+          position: "relative", // This will allow positioning the checkmark
+          cursor: "pointer", // Optional: Add cursor pointer to indicate clickability
+          border: item?.color_name === "WHITE" ? "1px solid #000" : ""
+        }}
+      >
+        {isSelected && (
+          <span
+            style={{
+              position: "absolute",
+              top: "-3px", // Adjust the position of the tick
+              right: "4px", // Adjust the position of the tick
+              color: tickColor, // Set the tick color based on whether the selected color is white
+              fontSize: "16px", // Adjust the size of the tick
+              fontWeight: "bold",
+            }}
+          >
+            ✓
+          </span>
+        )}
+      </div>
+      <span>{item?.color_name}</span>
+    </div>
+  );
+})}
+
+
                 </div>
               </>
             )}

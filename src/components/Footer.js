@@ -180,8 +180,8 @@ const Footer = () => {
                         </h4>
                         <span>
                           <p>
-                            <a href="mailto:info@thealchemydrip.com">
-                              Info@TheAlchemydrip.com{" "}
+                            <a href="mailto:info@thealchemydrip.in">
+                            info@thealchemydrip.in{" "}
                             </a>
                           </p>
                         </span>

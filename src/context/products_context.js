@@ -90,7 +90,7 @@ export const ProductsProvider = ({ children }) => {
         },
       });
       const products = response.data.data;
-      console.log("products  detch api", products);
+      console.log("products  fetch api", products);
       dispatch({ type: GET_PRODUCTS_SUCCESS, payload: products });
     } catch (error) {
       dispatch({ type: GET_SINGLE_PRODUCT_ERROR });

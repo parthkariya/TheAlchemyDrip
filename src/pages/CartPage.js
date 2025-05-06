@@ -6,6 +6,7 @@ import { CartContent, PageHero } from "../components";
 
 const CartPage = () => {
   // window.scrollTo(0, 0)
+  
   const { cart } = useCartContext();
 
   if (cart.length < 1) {

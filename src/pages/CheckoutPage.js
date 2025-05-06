@@ -34,6 +34,8 @@ const CheckoutPage = () => {
     useCartContext();
 
   console.log("cart are", cart);
+  console.log("total_amount",total_amount);
+  
   const { isLogin, logintoken, logindata } = useUserContext();
   const { setOrder, order_data, login_loading, setOrderGuest } =
     useOrderContext();
@@ -575,15 +577,34 @@ const CheckoutPage = () => {
                               </div>
                             </li>
                           </ul> */}
+                          {total_amount < 1000 ? <>
+                            <ul className="qty pro_qty_line">
+
+                           
+<li style={{ textTransform: "capitalize" }}>
+  Shipping fee
+  <span>{formatPrice(shipping_fees)}</span>
+</li>
+
+
+</ul>
+                          </> : <></>}
+                         
                           <ul className="total">
                             <li>
                               Total
                               <span className="count">
-                                {formatPrice(total_amount)}
+                                {formatPrice(total_amount + shipping_fees)}
                               </span>
                             </li>
                           </ul>
                         </div>
+                        {total_amount < 1000 ? <>
+                          <span style={{ color: "#000", fontWeight: "500" }}>
+                            Avail free shipping for orders above 1000/-
+                          </span>
+
+                        </> : <></>}
                         <div className="payment-box">
                           <div className="upper-box">
                             <div className="payment-options">

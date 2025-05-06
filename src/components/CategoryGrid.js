@@ -127,7 +127,7 @@ const CategoryGrid = ({ getdrop, setdrop }) => {
               return (
                 <div
                   style={{ cursor: "pointer" }}
-                  className="col-md-4"
+                  className="col-md-4 resp_cat_img_card"
                   key={index}
                   onClick={() => {
                     setModal(true);
@@ -137,7 +137,7 @@ const CategoryGrid = ({ getdrop, setdrop }) => {
                 >
                   {/* <Link to={`/products`}> */}
                   <div className="a">
-                    <img
+                    <img className="resp_cat_img"
                       src={c.image_full_path}
                       alt=""
                       style={{ marginBottom: "0px !important" }}
@@ -153,7 +153,7 @@ const CategoryGrid = ({ getdrop, setdrop }) => {
                     </button>
                   </div>
 
-                  {/* <a>{c.name}</a> */}
+                  <p className="cat_school_name" style={{color:"#000",fontWeight:"500",fontSize:"18px",marginBottom:"10px"}}>{c.name}</p>
                 </div>
               );
             })}
@@ -258,8 +258,9 @@ const Wrapper = styled.section`
   }
   .col-md-4 {
     ${"" /* height: 150px; */}
-    height: 350px;
-    width: 140px;
+    height: 100%;
+    width: 275px;
+    max-width: 275px;
     -ms-flex: 0 0 33.333333%;
     flex: 0 0 33.333333%;
     ${"" /* max-width: 33.333333%; */}
@@ -270,8 +271,8 @@ const Wrapper = styled.section`
     overflow: hidden;
     .a {
       img {
-        height: 350px;
-        width: 100%;
+        height: 275px;
+        width: 275px;
         ${
           "" /* height:100%;
         width: 100%; */
@@ -287,7 +288,7 @@ const Wrapper = styled.section`
         right: 0;
         bottom: 0px;
         background: rgb(0 0 0/0.5);
-        width: calc(100% - 100px);
+        width: calc(100% - 75px);
         margin: 0 auto;
         color: #fff;
         font-size: 28px;

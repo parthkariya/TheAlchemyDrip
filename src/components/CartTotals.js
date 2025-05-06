@@ -7,6 +7,9 @@ import { Link } from "react-router-dom";
 
 const CartTotals = () => {
   const { total_amount, shipping_fees } = useCartContext();
+
+  console.log("shipping_fees",shipping_fees);
+  
   return (
     <Wrapper>
       <div>
@@ -27,7 +30,13 @@ const CartTotals = () => {
               proceed to checkout
             </Link>
           </div>
+          {total_amount < 1000 ? <>
+            <p style={{color:"#000",fontWeight:"500",marginTop:"1rem",marginBottom:"0rem",display:"block"}}>Avail free shipping for orders above 1000/-</p>
+          </> : <></> }
+          
+
         </article>
+
       </div>
     </Wrapper>
   );
