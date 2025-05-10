@@ -403,7 +403,7 @@ const SingleProductPage = () => {
                 </div>
               </>
             )}
-            {getstock == 0 ? (
+            {getstock == 0 || getstock <=0  ? (
               <h3
                 style={{
                   color: "red",
@@ -429,7 +429,7 @@ const SingleProductPage = () => {
               </div>
             )}
 
-            {getstock == 0 ? (
+            {getstock == 0 || getstock <= 0 ? (
               <></>
             ) : (
               <div>
