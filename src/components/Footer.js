@@ -199,7 +199,7 @@ const Footer = () => {
                   class="footer-copyright py-3 pr-4 mb-0"
                   style={{ color: "rgb(151, 151, 151)" }}
                 >
-                  © 2024 The Alchemy Drip , All right reserved.
+                  © {new Date().getFullYear()} The Alchemy Drip , All right reserved.
                 </p>
               </div>
               <div class="col-md-0"></div>

@@ -101,7 +101,7 @@ export const ProductsProvider = ({ children }) => {
 
   //fetch cate product api
   const fetchSingleProduct = async (url) => {
-    console.log("singleproduct ", url);
+    console.log("singleproduct", url);
     dispatch({ type: GET_SINGLE_PRODUCT_BEGIN });
     try {
       const response = await axios.get(url, {

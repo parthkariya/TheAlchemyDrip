@@ -98,7 +98,8 @@ export const get_customer_details_url = BaseUrl + "customers-detail";
 export const update_customer_details_url = BaseUrl + "update-profile";
 export const get_order_details_url = BaseUrl + "get-order-detail/";
 export const return_order_url = BaseUrl + "return";
-export const download_invoice_url = BaseUrl + "download-invoice";
+// export const download_invoice_url = BaseUrl + "download-invoice";
+export const download_invoice_url = BaseUrl + "get-order-invoice-pdf";
 export const create_store_ticket = BaseUrl + "store-ticket";
 export const store_ticket_view_url = BaseUrl + "store-ticket-view";
 export const contact_us = BaseUrl + "contact-us";
@@ -116,6 +117,8 @@ export const get_exchangeproduct = BaseUrl + "getexchangeproduct";
 export const ex_pro_submit = BaseUrl + "ex_pro_submit";
 export const getexchangeproductsize = BaseUrl + "getexchangeproductsize";
 export const customer_data = BaseUrl + "customer-data";
+export const forgot_password = BaseUrl + "forgot-password";
+export const forgot_change_password = BaseUrl + "forgot-change-password";
 // export const single_product_url = `https://course-api.com/react-store-single-product?id=`;
 
 // screen type

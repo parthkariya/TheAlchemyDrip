@@ -194,8 +194,8 @@ export const OrderProvider = ({ children }) => {
       const responses = response.data;
       console.log("download invoice res ", responses);
       if (responses.success == 1) {
-        if (isValidHttpUrl(responses.records)) {
-          window.open(responses.records);
+        if (isValidHttpUrl(responses.data)) {
+          window.open(responses.data);
         } else {
           Notification("error", "Error!", "PDF URL IS NOT VALID");
         }

@@ -171,7 +171,7 @@ useEffect(()=>{
                           style={{ marginBottom: "0px !important" }}
                         />
                         <button type="button" name="category" value={c.name}>
-                          {c.name}
+                          {c.name}  
                         </button>
                       </div>
                     </Link>

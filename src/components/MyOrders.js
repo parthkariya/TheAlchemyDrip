@@ -157,7 +157,8 @@ const MyOrders = () => {
 
   const mDownloadInvoice = (mID) => {
     var params = {
-      order_number: mID,
+      // order_number: mID,
+      id: mID,
     };
     downloadInvocie(params);
   };
@@ -183,6 +184,8 @@ const MyOrders = () => {
   const [quantity, setQuantity] = useState(1);
 
   const [getQtys, setQtys] = useState();
+
+  
 
   // const login = JSON.parse(localStorage.getItem("token"));
 
@@ -522,14 +525,14 @@ const MyOrders = () => {
                                   <FaWindowClose />
                                 </i>
                               </a> */}
-                              {/* <a
+                               <a
                                 href="javascript:void(0);"
                                 title="Download invoice"
                                 onClick={() => mDownloadInvoice(item.id)}>
                                 <i className="">
                                   <FaDownload />
                                 </i>
-                              </a> */}
+                              </a> 
                               {/* {item.order_status_id == "1" ? () */}
                               {item.order_status_id == "6" ? (
                                 <></>
@@ -1289,7 +1292,7 @@ const Wrapper = styled.div`
             width: 23%;
           }
           :nth-child(2) {
-            width: 10%;
+            width: 11%;
           }
           :nth-child(3) {
             width: 15%;
@@ -1524,7 +1527,7 @@ const Wrapper = styled.div`
     margin: 0 0 0 10px;
   }
   .notification_head h3 {
-    padding: 0 20px;
+    padding: 0px 20px 0px 0px;
   }
   .refund_amt {
     width: 13%;
