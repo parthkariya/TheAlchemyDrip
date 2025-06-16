@@ -36,7 +36,7 @@ const CheckoutsPage = () => {
     useCartContext();
 
   console.log("cart are", cart_item);
-  
+
 
   const { isLogin, logintoken, logindata } = useUserContext();
   const { setOrder, order_data, login_loading, setOrderGuest } =
@@ -660,11 +660,15 @@ const CheckoutsPage = () => {
                           </ul>
                         </div>
 
-                        {(data[0]?.value * data[0]?.qty || 0) < 1000 && (
+                        {((data[0]?.value || 0) * (data[0]?.qty || 0)) < 1000 && getShiftigCharge == 0 && (
                           <span style={{ color: "#000", fontWeight: "500" }}>
                             Avail free shipping for orders above 1000/-
                           </span>
                         )}
+
+
+
+
                         <div className="payment-box">
                           <div className="upper-box">
                             <div className="payment-options">

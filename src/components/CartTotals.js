@@ -54,9 +54,13 @@ const CartTotals = () => {
               proceed to checkout
             </Link>
           </div>
-          {total_amount < 1000 || getShiftigCharge == 50 ? <>
+          {total_amount < 1000 && getShiftigCharge == 0 ? <>
             <p style={{color:"#000",fontWeight:"500",marginTop:"1rem",marginBottom:"0rem",display:"block"}}>Avail free shipping for orders above 1000/-</p>
-          </> : <></> }
+          </> : <>
+            {/* {getShiftigCharge == 50 ? <></> : <>
+              <p style={{color:"#000",fontWeight:"500",marginTop:"1rem",marginBottom:"0rem",display:"block"}}>Avail free shipping for orders above 1000/-</p>
+            </>} */}
+          </> }
           
 
         </article>

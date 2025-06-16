@@ -630,12 +630,18 @@ const CheckoutPage = () => {
                             </li>
                           </ul>
                         </div>
-                        {total_amount < 1000 || getShiftigCharge == 50 ? <>
+                        {total_amount < 1000 && getShiftigCharge == 0 ? <>
                           <span style={{ color: "#000", fontWeight: "500" }}>
                             Avail free shipping for orders above 1000/-
                           </span>
 
                         </> : <></>}
+
+                         {/* {((data[0]?.value || 0) * (data[0]?.qty || 0)) < 1000 && getShiftigCharge === 0 && (
+                          <span style={{ color: "#000", fontWeight: "500" }}>
+                            Avail free shipping for orders above 1000/-
+                          </span>
+                        )} */}
                         <div className="payment-box">
                           <div className="upper-box">
                             <div className="payment-options">
