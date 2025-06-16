@@ -34,8 +34,8 @@ const CheckoutPage = () => {
     useCartContext();
 
   console.log("cart are", cart);
-  console.log("total_amount",total_amount);
-  
+  console.log("total_amount", total_amount);
+
   const { isLogin, logintoken, logindata } = useUserContext();
   const { setOrder, order_data, login_loading, setOrderGuest } =
     useOrderContext();
@@ -57,10 +57,20 @@ const CheckoutPage = () => {
   const [country, setCountry] = React.useState("");
   const [postalcode, setPostalCode] = React.useState("");
   const [selectedAddId, setSelectAddress] = React.useState(0);
+  const [getShiftigCharge, setShiftingCharge] = React.useState();
+  const [getCategoryId, setCatetegoryId] = React.useState();
+  
 
   useEffect(() => {
     getCountries();
+    const shifting_charge = JSON.parse(localStorage.getItem("shiftingcharge"));
+    const category_id = JSON.parse(localStorage.getItem("categoryid"));
+    setCatetegoryId(category_id);
+    setShiftingCharge(shifting_charge);
   }, []);
+
+  console.log("shifting charge", getShiftigCharge);
+  console.log("getCategoryId", getCategoryId);
 
   useEffect(() => {
     if (isLogin) {
@@ -107,7 +117,7 @@ const CheckoutPage = () => {
     formData.append(`gst_no`, "test");
     formData.append(`device_id`, "bx7ftm5vhdm5c78pqr9l");
     formData.append(`gst_no`, "test");
-
+    formData.append(`category_id`, getCategoryId);
     for (var i = 0; i < cart.length; i++) {
       formData.append(`product_id[${i}]`, cart[i].idmain);
       // formData.append(`color_id[${i}]`, cart[i].color);
@@ -212,6 +222,7 @@ const CheckoutPage = () => {
     formData.append(`city_id`, city);
     formData.append(`state_id`, _state);
     formData.append(`country_id`, country);
+    formData.append(`category_id`, getCategoryId);
     for (var i = 0; i < cart.length; i++) {
       formData.append(`product_id[${i}]`, cart[i].idmain);
 
@@ -577,29 +588,49 @@ const CheckoutPage = () => {
                               </div>
                             </li>
                           </ul> */}
-                          {total_amount < 1000 ? <>
+                          {getShiftigCharge == 0 ? <>
+                            {total_amount < 1000 ? <>
+                              <ul className="qty pro_qty_line">
+
+
+                                <li style={{ textTransform: "capitalize" }}>
+                                  Shipping fee
+                                  <span>{formatPrice(shipping_fees)}</span>
+                                </li>
+
+
+                              </ul>
+                            </> : <></>}
+                          </> : <>
                             <ul className="qty pro_qty_line">
 
-                           
-<li style={{ textTransform: "capitalize" }}>
-  Shipping fee
-  <span>{formatPrice(shipping_fees)}</span>
-</li>
+                              <li style={{ textTransform: "capitalize" }}>
+                                Shipping fee
+                                <span>{formatPrice(getShiftigCharge)}</span>
+                              </li>
 
 
-</ul>
-                          </> : <></>}
-                         
+                            </ul>
+                          </>}
+
+
                           <ul className="total">
                             <li>
                               Total
-                              <span className="count">
+                              {getShiftigCharge == 0 ? <>
+                                <span className="count">
                                 {formatPrice(total_amount + shipping_fees)}
                               </span>
+                              </> : <>
+                              <span className="count">
+                                {formatPrice(total_amount + Number(getShiftigCharge))}
+                                </span>
+                              </>}
+                              
                             </li>
                           </ul>
                         </div>
-                        {total_amount < 1000 ? <>
+                        {total_amount < 1000 || getShiftigCharge == 50 ? <>
                           <span style={{ color: "#000", fontWeight: "500" }}>
                             Avail free shipping for orders above 1000/-
                           </span>

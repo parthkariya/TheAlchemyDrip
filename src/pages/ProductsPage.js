@@ -156,11 +156,12 @@ useEffect(()=>{
             {getClassDta && getClassDta.length > 0
               ? getClassDta.map((c, index) => {
                   return (
+                    <div className="col-md-4" key={index}>
                     <Link
                       to={`/Propage/${c.slug}`}
                       style={{ cursor: "pointer" }}
-                      className="col-md-4"
-                      key={index}
+                      className=""
+                      // key={index}
                       onClick={() => {
                         // setModal(true);
                       }}>
@@ -175,6 +176,8 @@ useEffect(()=>{
                         </button>
                       </div>
                     </Link>
+                    <span style={{color:"#5d5d9c",fontWeight:"600"}}>{c.name}</span>
+                    </div>
                   );
                 })
               : null}
@@ -317,10 +320,11 @@ const Wrapper = styled.section`
     ${"" /* padding: 0 50px; */}
     text-align: center;
     ${"" /* margin-bottom: 30px; */}
-    position: relative;
+    ${'' /* position: relative; */}
     overflow: hidden;
     .Propage_img_main {
       height: 200px;
+      position: relative;
     }
     .Propage_img_main {
       img {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useCartContext } from "../context/cart_context";
 import { useUserContext } from "../context/user_context";
@@ -9,7 +9,16 @@ const CartTotals = () => {
   const { total_amount, shipping_fees } = useCartContext();
 
   console.log("shipping_fees",shipping_fees);
+    const [getShiftigCharge, setShiftingCharge] = React.useState();
+
+    useEffect(()=>{
+      const shifting_charge = JSON.parse(localStorage.getItem("shiftingcharge"));
+    setShiftingCharge(shifting_charge);
+    },[])
   
+      console.log("shifting charge", getShiftigCharge);
+
+
   return (
     <Wrapper>
       <div>
@@ -17,20 +26,35 @@ const CartTotals = () => {
           <h5>
             subtotal : <span>{formatPrice(total_amount)}</span>
           </h5>
-          <p>
+          {          getShiftigCharge == 0 ? <>
+            <p>
             shipping fee : <span>{formatPrice(shipping_fees)}</span>
           </p>
+          </> : <>
+            <p>
+            shipping fee : <span>{formatPrice(getShiftigCharge)}</span>
+          </p>
+          </>}
+          
           <hr />
-          <h4>
+          {          getShiftigCharge == 0 ? <>
+            <h4>
             Order Total :{" "}
             <span>{formatPrice(total_amount + shipping_fees)}</span>
           </h4>
+          </> : <>
+            <h4>
+            Order Total :{" "}
+            <span>{formatPrice(total_amount + Number(getShiftigCharge))}</span>
+          </h4>
+          </> }
+          
           <div style={{ marginTop: "2rem" }}>
             <Link to="/checkout" className="btn">
               proceed to checkout
             </Link>
           </div>
-          {total_amount < 1000 ? <>
+          {total_amount < 1000 || getShiftigCharge == 50 ? <>
             <p style={{color:"#000",fontWeight:"500",marginTop:"1rem",marginBottom:"0rem",display:"block"}}>Avail free shipping for orders above 1000/-</p>
           </> : <></> }
           

@@ -92,9 +92,13 @@ const CategoryGrid = ({ getdrop, setdrop }) => {
       };
 
       console.log("-=-=-=->", params);
+      localStorage.setItem("shiftingcharge", "0");
+      localStorage.setItem("categoryid", "");
       const data = await setMallRegister(params);
       if (data) {
         if (data.status === 1) {
+          localStorage.setItem("shiftingcharge", JSON.stringify(data?.shipping_rate ? data?.shipping_rate : ""));
+          localStorage.setItem("categoryid", JSON.stringify(data?.category_id ? data?.category_id : ""));
           setModal(false);
           setShowlogin(true);
           console.log("register-data", data);

@@ -36,6 +36,7 @@ const CheckoutsPage = () => {
     useCartContext();
 
   console.log("cart are", cart_item);
+  
 
   const { isLogin, logintoken, logindata } = useUserContext();
   const { setOrder, order_data, login_loading, setOrderGuest } =
@@ -49,7 +50,7 @@ const CheckoutsPage = () => {
   //   const data = location.state;
   const data = location.state?.items || [];
 
-  
+
 
 
   console.log("Received Data:", data);
@@ -67,10 +68,20 @@ const CheckoutsPage = () => {
   const [country, setCountry] = React.useState("");
   const [postalcode, setPostalCode] = React.useState("");
   const [selectedAddId, setSelectAddress] = React.useState(0);
+  const [getShiftigCharge, setShiftingCharge] = React.useState();
+  const [getCategoryId, setCatetegoryId] = React.useState();
 
   useEffect(() => {
     getCountries();
+    const shifting_charge = JSON.parse(localStorage.getItem("shiftingcharge"));
+    const category_id = JSON.parse(localStorage.getItem("categoryid"));
+    setShiftingCharge(shifting_charge);
+    setCatetegoryId(category_id);
   }, []);
+
+  console.log("shifting charge", getShiftigCharge);
+  console.log("getCategoryId", getCategoryId);
+
 
   useEffect(() => {
     if (isLogin) {
@@ -117,6 +128,7 @@ const CheckoutsPage = () => {
     formData.append(`gst_no`, "test");
     formData.append(`device_id`, "bx7ftm5vhdm5c78pqr9l");
     formData.append(`gst_no`, "test");
+    formData.append(`category_id`, getCategoryId);
 
     for (var i = 0; i < data.length; i++) {
       formData.append(`product_id[${i}]`, data[i].product_id);
@@ -222,6 +234,8 @@ const CheckoutsPage = () => {
     formData.append(`city_id`, city);
     formData.append(`state_id`, _state);
     formData.append(`country_id`, country);
+    formData.append(`category_id`, getCategoryId);
+
     for (var i = 0; i < data.length; i++) {
       formData.append(`product_id[${i}]`, data[i].product_id);
 
@@ -597,28 +611,51 @@ const CheckoutsPage = () => {
                               </div>
                             </li>
                           </ul> */}
-                          
-                          {data[0]?.value * data[0]?.qty < 1000 ? <>
+                          {getShiftigCharge == 0 ? <>
+                            {data[0]?.value * data[0]?.qty < 1000 ? <>
+                              {console.log("true")}
+                              <ul className="qty pro_qty_line">
+                                <li style={{ textTransform: "capitalize" }}>
+                                  Shipping fee
+                                  <span>{formatPrice(50)}</span>
+                                </li>
+                              </ul>
+                            </> : <></>}
+                          </> : <>
+                            {console.log("false")}
                             <ul className="qty pro_qty_line">
-                         
-                         <li style={{ textTransform: "capitalize" }}>
-                           Shipping fee
-                           <span>{formatPrice(50)}</span>
-                         </li>
-                      
 
-                       </ul>
-                          </> : <></>}
-                         
+                              <li style={{ textTransform: "capitalize" }}>
+                                Shipping fee
+                                <span>{formatPrice(getShiftigCharge)}</span>
+                              </li>
+
+
+                            </ul>
+                          </>}
+
+
                           <ul className="total">
                             <li>
                               Total
-                              <span className="count">
-                                {/* {formatPrice(data[0]?.value * data[0]?.qty)} */}
-                                {formatPrice(
-                                  (data[0]?.value * data[0]?.qty || 0) + ((data[0]?.value * data[0]?.qty || 0) < 1000 ? 50 : 0)
-                                )}
-                              </span>
+                              {getShiftigCharge == 0 ? <>
+                                <span className="count">
+                                  {/* {formatPrice(data[0]?.value * data[0]?.qty)} */}
+                                  {formatPrice(
+                                    (data[0]?.value * data[0]?.qty || 0) + ((data[0]?.value * data[0]?.qty || 0) < 1000 ? 50 : 0)
+                                  )}
+                                </span>
+                              </> : <>
+                                <span className="count">
+                                  {/* {formatPrice(data[0]?.value * data[0]?.qty)} */}
+                                  {formatPrice(
+                                    (Number(data[0]?.value || 0) * Number(data[0]?.qty || 0)) + Number(getShiftigCharge || 0)
+                                  )}
+
+
+                                </span>
+                              </>}
+
                             </li>
                           </ul>
                         </div>
