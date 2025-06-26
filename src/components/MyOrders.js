@@ -484,7 +484,7 @@ const MyOrders = () => {
                           {/* <td>{formatPrice(item.formated_total_price)}</td> */}
                           <td>{formatPrice(item.total_price)}</td>
                           {item.order_status_id == "1" ? (
-                            <td className="cancelled_order">Waiting</td>
+                            <td className="cancelled_order">In Progress</td>
                           ) : item.order_status_id == "2" ? (
                             <td className="cancelled_order">Preparing</td>
                           ) : item.order_status_id == "3" ? (

@@ -71,6 +71,9 @@ const CheckoutsPage = () => {
   const [getShiftigCharge, setShiftingCharge] = React.useState();
   const [getCategoryId, setCatetegoryId] = React.useState();
 
+  console.log("selectedAddId",selectedAddId);
+  
+
   useEffect(() => {
     getCountries();
     const shifting_charge = JSON.parse(localStorage.getItem("shiftingcharge"));

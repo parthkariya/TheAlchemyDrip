@@ -8,15 +8,15 @@ import { Link } from "react-router-dom";
 const CartTotals = () => {
   const { total_amount, shipping_fees } = useCartContext();
 
-  console.log("shipping_fees",shipping_fees);
-    const [getShiftigCharge, setShiftingCharge] = React.useState();
+  console.log("shipping_fees", shipping_fees);
+  const [getShiftigCharge, setShiftingCharge] = React.useState();
 
-    useEffect(()=>{
-      const shifting_charge = JSON.parse(localStorage.getItem("shiftingcharge"));
+  useEffect(() => {
+    const shifting_charge = JSON.parse(localStorage.getItem("shiftingcharge"));
     setShiftingCharge(shifting_charge);
-    },[])
-  
-      console.log("shifting charge", getShiftigCharge);
+  }, [])
+
+  console.log("shifting charge", getShiftigCharge);
 
 
   return (
@@ -26,42 +26,42 @@ const CartTotals = () => {
           <h5>
             subtotal : <span>{formatPrice(total_amount)}</span>
           </h5>
-          {          getShiftigCharge == 0 ? <>
+          {getShiftigCharge == 0 ? <>
             <p>
-            shipping fee : <span>{formatPrice(shipping_fees)}</span>
-          </p>
+              shipping fee : <span>{formatPrice(shipping_fees)}</span>
+            </p>
           </> : <>
             <p>
-            shipping fee : <span>{formatPrice(getShiftigCharge)}</span>
-          </p>
+              shipping fee : <span>{formatPrice(getShiftigCharge)}</span>
+            </p>
           </>}
-          
+
           <hr />
-          {          getShiftigCharge == 0 ? <>
+          {getShiftigCharge == 0 ? <>
             <h4>
-            Order Total :{" "}
-            <span>{formatPrice(total_amount + shipping_fees)}</span>
-          </h4>
+              Order Total :{" "}
+              <span>{formatPrice(total_amount + shipping_fees)}</span>
+            </h4>
           </> : <>
             <h4>
-            Order Total :{" "}
-            <span>{formatPrice(total_amount + Number(getShiftigCharge))}</span>
-          </h4>
-          </> }
-          
+              Order Total :{" "}
+              <span>{formatPrice(total_amount + Number(getShiftigCharge))}</span>
+            </h4>
+          </>}
+
           <div style={{ marginTop: "2rem" }}>
             <Link to="/checkout" className="btn">
               proceed to checkout
             </Link>
           </div>
           {total_amount < 1000 && getShiftigCharge == 0 ? <>
-            <p style={{color:"#000",fontWeight:"500",marginTop:"1rem",marginBottom:"0rem",display:"block"}}>Avail free shipping for orders above 1000/-</p>
+            <p style={{ color: "#000", fontWeight: "500", marginTop: "1rem", marginBottom: "0rem", display: "block" }}>Avail free shipping for orders above 1000/-</p>
           </> : <>
             {/* {getShiftigCharge == 50 ? <></> : <>
               <p style={{color:"#000",fontWeight:"500",marginTop:"1rem",marginBottom:"0rem",display:"block"}}>Avail free shipping for orders above 1000/-</p>
             </>} */}
-          </> }
-          
+          </>}
+
 
         </article>
 

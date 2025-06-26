@@ -739,7 +739,8 @@ const LoginModule = ({ showscreen, setShowlogin }) => {
                   </ul>
                   <div className="login-button" style={{ display: "flex" }}>
                     <button className="btn" onClick={() => setSignupType(1)}>
-                      Login Now
+                      {/* Login Now */}
+                      Back
                     </button>
                     <button className="btn-login" onClick={mSignUp}>
                       Create Account

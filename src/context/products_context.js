@@ -208,7 +208,7 @@ export const ProductsProvider = ({ children }) => {
       // localStorage.setItem("productdata", JSON.stringify(response.data.data));
       // localStorage.setItem("campusdata", JSON.stringify(response.data.data1));
       if (classdata.status == 1) {
-        // console.log("====", JSON.stringify(classdata, null, 2));
+        console.log("====", JSON.stringify(classdata, null, 2));
         // Notification("success", "Valid Password.");
         dispatch({ type: CLASSES_SUCCESS, payload: response.data.data });
       } else {

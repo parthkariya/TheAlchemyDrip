@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useReducer } from "react";
 import reducer from "../reducers/address_reducer";
 import axios from "axios";
+
 import {
   add_address_url,
   get_countries,
@@ -20,6 +21,8 @@ import {
   GET_STATES,
   GET_CITY,
 } from "../actions";
+import Notification from "../utils/Notification";
+
 
 // use for login data management
 const initialState = {
@@ -100,6 +103,9 @@ export const AddressProvider = ({ children }) => {
       if (logindata.success == 1) {
         // dispatch({ type: ADDRESS_ADD_SUCCESS, payload: logindata });
         getAddress(token);
+      }else if(logindata.success == 0){
+                Notification("error", "Error!", logindata.message);
+
       } else {
         dispatch({ type: ADDRESS_ERROR });
       }

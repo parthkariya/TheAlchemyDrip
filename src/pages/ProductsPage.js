@@ -75,7 +75,7 @@ useEffect(()=>{
       const data = await getClass(params);
       if (data) {
         if (data.status === 1) {
-          console.log("class-data", data);
+          console.log("class-data", data?.data?.category);
           setClassData(data?.data?.category);
           setClassDataLoading(false);
 
@@ -158,7 +158,7 @@ useEffect(()=>{
                   return (
                     <div className="col-md-4" key={index}>
                     <Link
-                      to={`/Propage/${c.slug}`}
+                      to={`/Propage/${c.slug}?allpage`}
                       style={{ cursor: "pointer" }}
                       className=""
                       // key={index}
