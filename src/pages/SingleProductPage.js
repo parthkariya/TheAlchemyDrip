@@ -80,7 +80,7 @@ const SingleProductPage = () => {
     size_id,
   } = single_product1;
 
-  console.log("log single pro", single_product1.details);
+  console.log("log single pro", single_product1);
   const [value, setValue] = useState("");
   const [value1, setValue1] = useState("");
   const [getColor, setColor] = useState("");
@@ -177,16 +177,7 @@ const SingleProductPage = () => {
   console.log("duplicate", duplicateSizes);
 
   const sizeApi = async (id) => {
-    // console.log("abc");
 
-    // if (name == "") {
-    //   Notification("error", "Error!", "Please enter your Name!");
-    //   return;
-    // } else if (description == "") {
-    //   Notification("error", "Error!", "Please enter some Description!");
-    //   return;
-    // }
-    // if {
     const formData = new FormData();
     formData.append("product_id", product_id);
     formData.append("size_id", id);
@@ -298,7 +289,7 @@ const SingleProductPage = () => {
                           // setColorName(item.color_name);
                           SetCon1(true);
                           setSizeValue(item.size_name);
-                          SetStock(item.inventory);
+                          SetStock(item.display_stock);
                           setWish(item.wishlist);
                           SetCondition(true);
                           sizeApi(item.size_id);
@@ -355,55 +346,55 @@ const SingleProductPage = () => {
                   <h5>select Color:</h5>
 
                   {getColors.map((item, index) => {
-  const isSelected = index === getActiveColor;
+                    const isSelected = index === getActiveColor;
 
-  // Determine the color of the tick based on whether the selected color is white or not
-  const tickColor = item.color_name === "WHITE" ? "black" : "white";
+                    // Determine the color of the tick based on whether the selected color is white or not
+                    const tickColor = item.color_name === "WHITE" ? "black" : "white";
 
-  return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-      <div
-        key={index}
-        onClick={() => {
-          setColorId(item.color_id);
-          setColorName(item.color_name);
-          setActiveColor(index);
-        }}
-        style={{
-          width: "20px",
-          height: "20px",
-          borderRadius: "50%",
-          background: item.color_code,
-          position: "relative", // This will allow positioning the checkmark
-          cursor: "pointer", // Optional: Add cursor pointer to indicate clickability
-          border: item?.color_name === "WHITE" ? "1px solid #000" : ""
-        }}
-      >
-        {isSelected && (
-          <span
-            style={{
-              position: "absolute",
-              top: "-3px", // Adjust the position of the tick
-              right: "4px", // Adjust the position of the tick
-              color: tickColor, // Set the tick color based on whether the selected color is white
-              fontSize: "16px", // Adjust the size of the tick
-              fontWeight: "bold",
-            }}
-          >
-            ✓
-          </span>
-        )}
-      </div>
-      <span>{item?.color_name}</span>
-    </div>
-  );
-})}
+                    return (
+                      <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                        <div
+                          key={index}
+                          onClick={() => {
+                            setColorId(item.color_id);
+                            setColorName(item.color_name);
+                            setActiveColor(index);
+                          }}
+                          style={{
+                            width: "20px",
+                            height: "20px",
+                            borderRadius: "50%",
+                            background: item.color_code,
+                            position: "relative", // This will allow positioning the checkmark
+                            cursor: "pointer", // Optional: Add cursor pointer to indicate clickability
+                            border: item?.color_name === "WHITE" ? "1px solid #000" : ""
+                          }}
+                        >
+                          {isSelected && (
+                            <span
+                              style={{
+                                position: "absolute",
+                                top: "-3px", // Adjust the position of the tick
+                                right: "4px", // Adjust the position of the tick
+                                color: tickColor, // Set the tick color based on whether the selected color is white
+                                fontSize: "16px", // Adjust the size of the tick
+                                fontWeight: "bold",
+                              }}
+                            >
+                              ✓
+                            </span>
+                          )}
+                        </div>
+                        <span>{item?.color_name}</span>
+                      </div>
+                    );
+                  })}
 
 
                 </div>
               </>
             )}
-            {getstock == 0 || getstock <=0  ? (
+            {getstock == 0 || getstock <= 0 ? (
               <h3
                 style={{
                   color: "red",

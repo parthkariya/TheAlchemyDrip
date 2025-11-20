@@ -71,7 +71,6 @@ const CheckoutsPage = () => {
   const [getShiftigCharge, setShiftingCharge] = React.useState();
   const [getCategoryId, setCatetegoryId] = React.useState();
 
-  console.log("selectedAddId",selectedAddId);
   
 
   useEffect(() => {
@@ -82,8 +81,8 @@ const CheckoutsPage = () => {
     setCatetegoryId(category_id);
   }, []);
 
-  console.log("shifting charge", getShiftigCharge);
-  console.log("getCategoryId", getCategoryId);
+  // console.log("shifting charge", getShiftigCharge);
+  // console.log("getCategoryId", getCategoryId);
 
 
   useEffect(() => {
@@ -287,7 +286,7 @@ const CheckoutsPage = () => {
     }
     var options = {
       key: "rzp_live_pXp8Xsvsqxx2j2",
-      //   key: "rzp_test_C1WkhcrxRyAGl9",
+      //   key: "rzp_test_C1WkhcrxRyAGl9",  
 
       currency: "INR",
       order_id: order_id,

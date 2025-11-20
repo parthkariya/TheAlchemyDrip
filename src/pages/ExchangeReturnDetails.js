@@ -175,7 +175,7 @@ const ExchangeReturnDetails = () => {
       // setExsizedata(response.data.data.sizes);
       // setExsizeshow(true);
       // setProId("");
-      setInventry(response.data.data.inventory);
+      setInventry(response.data.data.display_stock);
 
       console.log("response  ", response.data.success);
       createNotification("success", "Success!", response.data.message);
