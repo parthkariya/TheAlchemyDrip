@@ -19,7 +19,6 @@ const NavbarHome = ({ getdrop }) => {
 
   const { getClass, class_data_loading } = useProductsContext();
 
-
   const [scrolled, setScrolled] = React.useState(false);
   const handleScroll = () => {
     const offset = window.scrollY;
@@ -54,24 +53,20 @@ const NavbarHome = ({ getdrop }) => {
     const datalist = await localStorage.getItem("productdata");
     setdata2(JSON.parse(datalist));
   };
-
   const [getClassDta, setClassData] = useState([]);
 
   useEffect(() => {
     GetClassData();
-  }, [])
+  }, []);
 
   const GetClassData = async (type) => {
     const userid = await localStorage.getItem("userid");
-
     var params = {
       id: userid,
-    }
-    console.log("-=-=-=->", params);
+    };
     const data = await getClass(params);
     if (data) {
       if (data.status === 1) {
-        console.log("class-data", data);
         setClassData(data?.data?.category);
         // history.push("/products");
         // history.push("/Propage/" + data.data[0].slug);
@@ -79,7 +74,7 @@ const NavbarHome = ({ getdrop }) => {
         // window.location.reload(false);
       }
     }
-  }
+  };
 
   return (
     <NavContainer
@@ -87,7 +82,8 @@ const NavbarHome = ({ getdrop }) => {
         background: "floralwhite",
         boxShadow:
           "rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.04) 0px 10px 10px -5px",
-      }}>
+      }}
+    >
       <div className="nav-center">
         <div className="nav-header">
           <Link to="/">
@@ -102,23 +98,31 @@ const NavbarHome = ({ getdrop }) => {
             <div className="nav_icons_flex">
               <Link to="/cart" className="cart-btn" onClick={closeSideBar}>
                 <span className="cart-container">
-                  <FaShoppingCart style={{ color: "black", fontSize: "25px" }} />
+                  <FaShoppingCart
+                    style={{ color: "black", fontSize: "25px" }}
+                  />
                   <span className="cart-value">{total_items}</span>
                 </span>
               </Link>
               <button
                 type="button"
                 onClick={openSideBar}
-                style={{ background: "white", border: "none" }}>
+                style={{ background: "white", border: "none" }}
+              >
                 <FaBars />
               </button>
             </div>
             {isLogin ? (
               <div className="navbar_inner_menu_flex">
-                <Link to="/MyProfile" className="navbar_my_order_menu_resp">My Orders</Link>
+                <Link to="/MyProfile" className="navbar_my_order_menu_resp">
+                  My Orders
+                </Link>
 
                 <div className="dropdown">
-                  <div className="nav-linkk nav_link_position_top" style={{ fontSize: "18px" }}>
+                  <div
+                    className="nav-linkk nav_link_position_top"
+                    style={{ fontSize: "18px" }}
+                  >
                     Sections&nbsp;
                     <i className="fa fa-caret-down"></i>
                   </div>
@@ -166,7 +170,6 @@ const NavbarHome = ({ getdrop }) => {
               ""
             )}
           </div>
-
         </div>
         <ul className="nav-links" style={{ alignItems: "center" }}>
           {links.map((link) => {
@@ -185,7 +188,8 @@ const NavbarHome = ({ getdrop }) => {
                 style={{
                   color: "var(--clr-primary-darkred)",
                   fontWeight: "500",
-                }}>
+                }}
+              >
                 Sections&nbsp;
                 <i className="fa fa-caret-down"></i>
               </div>

@@ -100,7 +100,19 @@ const SingleProductPage = () => {
   const [activeButtonIndex, setActiveButtonIndex] = useState(0);
   const [getActiveColor, setActiveColor] = useState(null);
   const [getColors, setColors] = useState([]);
+  const [qty, setQty] = useState();
   // const [getSize_Id, setSize_Id] = useState("");
+
+  useEffect(() => {
+    if (getColors.length > 0 && getActiveColor === null) {
+      const first = getColors[0];
+      setColorId(first.color_id);
+      // setColorName(first.color_name);
+      // setActiveColor(0);
+      SetStock(first.display_stock);
+      setQty(1);
+    }
+  }, [getColors]);
 
   const handleButtonClick = (index) => {
     setActiveButtonIndex(index);
@@ -111,9 +123,6 @@ const SingleProductPage = () => {
   // console.log("singleproduct array",singleProduct);
 
   //fetch single product details
-
-  console.log("getColors", getColors);
-
 
   useEffect(() => {
     fetchSingleProduct1(`${url}/${slug}/abc/${userid}`);
@@ -174,16 +183,11 @@ const SingleProductPage = () => {
     (item, index) =>
       details?.map((item) => item.size_name).indexOf(item.size_name) !== index
   );
-  console.log("duplicate", duplicateSizes);
 
   const sizeApi = async (id) => {
-
     const formData = new FormData();
     formData.append("product_id", product_id);
     formData.append("size_id", id);
-
-    console.log("formData color api ", formData);
-
     const response = await axios
       .post(get_size_color_stock, formData, {
         headers: {
@@ -220,7 +224,8 @@ const SingleProductPage = () => {
       {/* <PageHero title={name} productpage="e" /> */}
       <div
         className="section section-center page"
-        style={{ paddingTop: "30px" }}>
+        style={{ paddingTop: "30px" }}
+      >
         {/* <Link to="/products" className="btn-back-to-product">
           back to products
         </Link> */}
@@ -229,7 +234,8 @@ const SingleProductPage = () => {
           <section className="content">
             <h2
               style={{ color: "black", fontWeight: "700" }}
-              className="sing-prod-heading">
+              className="sing-prod-heading"
+            >
               {name}
             </h2>
             {/* ratings */}
@@ -256,7 +262,8 @@ const SingleProductPage = () => {
               style={{
                 flexDirection: "column",
                 alignItems: "flex-start",
-              }}>
+              }}
+            >
               <b>Available in : </b>
               <h5>Select Size:</h5>
               <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
@@ -285,15 +292,17 @@ const SingleProductPage = () => {
                           setValue(item.price);
                           setValue1(item.wholesale_price);
                           setSizeId(item.size_id);
-                          // setColorId(item.color_id);
+                          setColorId(item.color_id);
                           // setColorName(item.color_name);
                           SetCon1(true);
                           setSizeValue(item.size_name);
-                          SetStock(item.display_stock);
+                          // SetStock(item.display_stock);
                           setWish(item.wishlist);
                           SetCondition(true);
                           sizeApi(item.size_id);
-                        }}>
+                          setQty(1);
+                        }}
+                      >
                         {item.size_name}
                         {/* {item.color_name} */}
                       </button>
@@ -340,7 +349,8 @@ const SingleProductPage = () => {
                     padding: getColors[0]?.color_id === 1 ? "0" : "1rem 0",
                     display: getColors[0]?.color_id === 1 ? "block" : "flex",
                     gap: getColors[0]?.color_id === 1 ? "0rem" : "0.5rem",
-                  }}>
+                  }}
+                >
                   {/* Select Color: */}
                   {/* {getColor[0]?.color_id ===  1 } */}
                   <h5>select Color:</h5>
@@ -348,36 +358,47 @@ const SingleProductPage = () => {
                   {getColors.map((item, index) => {
                     const isSelected = index === getActiveColor;
 
-                    // Determine the color of the tick based on whether the selected color is white or not
-                    const tickColor = item.color_name === "WHITE" ? "black" : "white";
+                    const tickColor =
+                      item.color_name === "WHITE" ? "black" : "white";
 
                     return (
-                      <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                        }}
+                      >
                         <div
                           key={index}
                           onClick={() => {
                             setColorId(item.color_id);
                             setColorName(item.color_name);
                             setActiveColor(index);
+                            SetStock(item.display_stock);
+                            setQty(1);
                           }}
                           style={{
                             width: "20px",
                             height: "20px",
                             borderRadius: "50%",
                             background: item.color_code,
-                            position: "relative", // This will allow positioning the checkmark
-                            cursor: "pointer", // Optional: Add cursor pointer to indicate clickability
-                            border: item?.color_name === "WHITE" ? "1px solid #000" : ""
+                            position: "relative",
+                            cursor: "pointer",
+                            border:
+                              item?.color_name === "WHITE"
+                                ? "1px solid #000"
+                                : "",
                           }}
                         >
                           {isSelected && (
                             <span
                               style={{
                                 position: "absolute",
-                                top: "-3px", // Adjust the position of the tick
-                                right: "4px", // Adjust the position of the tick
-                                color: tickColor, // Set the tick color based on whether the selected color is white
-                                fontSize: "16px", // Adjust the size of the tick
+                                top: "-3px",
+                                right: "4px",
+                                color: tickColor,
+                                fontSize: "16px",
                                 fontWeight: "bold",
                               }}
                             >
@@ -389,8 +410,6 @@ const SingleProductPage = () => {
                       </div>
                     );
                   })}
-
-
                 </div>
               </>
             )}
@@ -399,12 +418,13 @@ const SingleProductPage = () => {
                 style={{
                   color: "red",
                   padding: "1rem 0",
-                }}>
+                }}
+              >
                 Out of stock
               </h3>
             ) : (
               <div>
-                {colorId >= 1 ? (
+                {colorId > 1 ? (
                   <AddToCart
                     product={single_product1}
                     value={value}
@@ -413,6 +433,7 @@ const SingleProductPage = () => {
                     sizeid={sizeId}
                     colorId={colorId}
                     colorName={colorName}
+                    qtyy={qty}
                   />
                 ) : (
                   <></>
@@ -433,6 +454,7 @@ const SingleProductPage = () => {
                     sizeid={sizeId}
                     colorId={colorId}
                     colorName={colorName}
+                    qtyy={qty}
                   />
                 ) : (
                   <></>
@@ -447,13 +469,15 @@ const SingleProductPage = () => {
                   style={{
                     flexDirection: "column",
                     alignItems: "flex-start",
-                  }}>
+                  }}
+                >
                   <b>Description : </b>
                   <p
                     style={{ marginBottom: "0px" }}
                     dangerouslySetInnerHTML={{
                       __html: description,
-                    }}></p>
+                    }}
+                  ></p>
                 </p>
                 <hr />
               </div>
@@ -486,7 +510,8 @@ const SingleProductPage = () => {
                     display: "flex",
                     gap: "0.4rem",
                     alignItems: "center",
-                  }}>
+                  }}
+                >
                   <FaWhatsapp style={{ height: "20px" }} />
                   <span>Call or WhatsApp us at +91 82964 85534</span>
                 </li>
@@ -495,7 +520,8 @@ const SingleProductPage = () => {
                     display: "flex",
                     gap: "0.4rem",
                     alignItems: "center",
-                  }}>
+                  }}
+                >
                   <FaMailBulk style={{ height: "20px" }} />
                   <span>E-mail us at info@thealchemydrip.com</span>
                 </li>

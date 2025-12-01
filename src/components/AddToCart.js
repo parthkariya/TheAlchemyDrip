@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useCartContext } from "../context/cart_context";
 import QtyButtons from "./QtyButtons";
@@ -13,18 +13,28 @@ const AddToCart = ({
   sizeid,
   colorId,
   colorName,
+  qtyy,
 }) => {
   const { addToCart } = useCartContext();
-  console.log("colorId are ==>",colorId);
+  console.log("colorId are ==>", colorId);
   const { stock, colors, sizes, HIGHT, LENGTH, WIDTH, slug } = product;
   console.log("product details", sizeValue);
   console.log("product details qty", getstock);
-  // Set Color State
   const [mainColor, setMainColor] = useState(colors ? colors[0] : []);
   const [mainSize, setMainSize] = useState(sizes ? sizes[0] : []);
   const [check, setCheck] = useState();
 
-  const [qty, setQty] = useState(1);
+  // const safecolorID = colorId ? colorId : 1;
+
+  const [qty, setQty] = useState(qtyy);
+
+  console.log("QQQQtyyy", qtyy);
+
+  useEffect(() => {
+    setQty(1);
+  }, [colorId]);
+
+  console.log("AAAAQQQQ", qty);
 
   const increase = () => {
     setQty((oldQty) => {
@@ -85,32 +95,31 @@ const AddToCart = ({
           </button> */}
 
           <button
-  type="submit"
-  onClick={() => {
-    const currentCheck = 0; // Use a local variable to set check
-    setCheck(currentCheck);
-    console.log("ttttt->", JSON.stringify(colorId, null, 2));
-    addToCart(
-      product.product_id,
-      mainColor,
-      qty,
-      product,
-      mainSize,
-      slug,
-      product.product_images,
-      value,
-      sizeValue,
-      getstock,
-      sizeid,
-      colorId,
-      colorName,
-      currentCheck // Pass the local value directly
-    );
-  }}
->
-  ADD TO CART
-</button>
-         
+            type="submit"
+            onClick={() => {
+              const currentCheck = 0; // Use a local variable to set check
+              setCheck(currentCheck);
+              console.log("ttttt->", JSON.stringify(colorId, null, 2));
+              addToCart(
+                product.product_id,
+                mainColor,
+                qty,
+                product,
+                mainSize,
+                slug,
+                product.product_images,
+                value,
+                sizeValue,
+                getstock,
+                sizeid,
+                colorId,
+                colorName,
+                currentCheck // Pass the local value directly
+              );
+            }}
+          >
+            ADD TO CART
+          </button>
         </div>
         {/* <Link
   to="/checkouts"
@@ -141,55 +150,55 @@ const AddToCart = ({
   PROCEED TO CHECKOUT
 </Link>; */}
 
-<Link
-  to={{
-    pathname: "/checkouts",
-    state: {
-      items: [
-        {
-          product_id: product.product_id,
-          mainColor: mainColor,
-          qty: qty,
-          product: product,
-          mainSize: mainSize,
-          slug: slug,
-          product_images: product.product_images,
-          value: value,
-          sizeValue: sizeValue,
-          getstock: getstock,
-          sizeid: sizeid,
-          colorId: colorId,
-          colorName: colorName,
-          currentCheck: 1, // Include the local variable
-        },
-      ],
-    },
-  }}
-  className="btn"
-  style={{ marginTop: "0px", width: "225px", borderRadius: "0px" }}
-  onClick={() => {
-    console.log("ttttt->", JSON.stringify(colorId, null, 2));
-    setCheck(1);
-    addToCart(
-      product.product_id,
-      mainColor,
-      qty,
-      product,
-      mainSize,
-      slug,
-      product.product_images,
-      value,
-      sizeValue,
-      getstock,
-      sizeid,
-      colorId,
-      colorName,
-      1
-    );
-  }}
->
-  PROCEED TO CHECKOUT
-</Link>
+        <Link
+          to={{
+            pathname: "/checkouts",
+            state: {
+              items: [
+                {
+                  product_id: product.product_id,
+                  mainColor: mainColor,
+                  qty: qty,
+                  product: product,
+                  mainSize: mainSize,
+                  slug: slug,
+                  product_images: product.product_images,
+                  value: value,
+                  sizeValue: sizeValue,
+                  getstock: getstock,
+                  sizeid: sizeid,
+                  colorId: colorId,
+                  colorName: colorName,
+                  currentCheck: 1, // Include the local variable
+                },
+              ],
+            },
+          }}
+          className="btn"
+          style={{ marginTop: "0px", width: "225px", borderRadius: "0px" }}
+          onClick={() => {
+            console.log("ttttt->", JSON.stringify(colorId, null, 2));
+            setCheck(1);
+            addToCart(
+              product.product_id,
+              mainColor,
+              qty,
+              product,
+              mainSize,
+              slug,
+              product.product_images,
+              value,
+              sizeValue,
+              getstock,
+              sizeid,
+              colorId,
+              colorName,
+              1
+            );
+          }}
+        >
+          PROCEED TO CHECKOUT
+        </Link>
         {/* <Link
           to="/cart"
           className="cart-btn"
@@ -336,10 +345,9 @@ const Wrapper = styled.section`
     /* margin-top: 14px; */
   }
   @media screen and (max-width: 1400px) {
-      .sing_btn_gap{
-        gap:15px !important;
-        }
+    .sing_btn_gap {
+      gap: 15px !important;
+    }
   }
-  
 `;
 export default AddToCart;

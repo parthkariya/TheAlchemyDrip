@@ -48,44 +48,41 @@ const ProductsPage = () => {
   const prodatalist = async () => {
     const datalist = await localStorage.getItem("productdata");
     setdata2(JSON.parse(datalist));
-    
-   };
+  };
 
-     const { getClass,class_data_loading } = useProductsContext();
-   
+  const { getClass, class_data_loading } = useProductsContext();
 
-   const [getClassDta,setClassData] = useState([]);
-   const [getClassDtaLoading,setClassDataLoading] = useState(false);
+  const [getClassDta, setClassData] = useState([]);
+  const [getClassDtaLoading, setClassDataLoading] = useState(false);
 
-   console.log("class_data_loading",class_data_loading);
-   
+  console.log("class_data_loading", class_data_loading);
 
-useEffect(()=>{
-  GetClassData();
-},[])
+  useEffect(() => {
+    GetClassData();
+  }, []);
 
-   const GetClassData = async () => {
+  const GetClassData = async () => {
     setClassDataLoading(true);
     const userid = await localStorage.getItem("userid");
 
-      var params = {
-        id: userid,
-      }
-      console.log("-=-=-=->", params);
-      const data = await getClass(params);
-      if (data) {
-        if (data.status === 1) {
-          console.log("class-data", data?.data?.category);
-          setClassData(data?.data?.category);
-          setClassDataLoading(false);
+    var params = {
+      id: userid,
+    };
+    console.log("-=-=-=->", params);
+    const data = await getClass(params);
+    if (data) {
+      if (data.status === 1) {
+        console.log("class-data", data?.data?.category);
+        setClassData(data?.data?.category);
+        setClassDataLoading(false);
 
-          // history.push("/products");
-          // history.push("/Propage/" + data.data[0].slug);
-          // showscreen();
-          // window.location.reload(false);
-        }
+        // history.push("/products");
+        // history.push("/Propage/" + data.data[0].slug);
+        // showscreen();
+        // window.location.reload(false);
       }
     }
+  };
 
   return (
     <main>
@@ -149,48 +146,59 @@ useEffect(()=>{
                 })
               : null}
           </div> */}
-          {getClassDtaLoading === true ? <>
-            <Loading />
-          </> : <>
-            <div className="row">
-            {getClassDta && getClassDta.length > 0
-              ? getClassDta.map((c, index) => {
-                  return (
-                    <div className="col-md-4" key={index}>
-                    <Link
-                      to={`/Propage/${c.slug}?allpage`}
-                      style={{ cursor: "pointer" }}
-                      className=""
-                      // key={index}
-                      onClick={() => {
-                        // setModal(true);
-                      }}>
-                      <div className="Propage_img_main">
-                        <img
-                          src={c.image_full_path}
-                          alt=""
-                          style={{ marginBottom: "0px !important" }}
-                        />
-                        <button type="button" name="category" value={c.name}>
-                          {c.name}  
-                        </button>
-                      </div>
-                    </Link>
-                    <span style={{color:"#5d5d9c",fontWeight:"600"}}>{c.name}</span>
-                    </div>
-                  );
-                })
-              : null}
-          </div>
-          </>}
-         
+          {getClassDtaLoading === true ? (
+            <>
+              <Loading />
+            </>
+          ) : (
+            <>
+              <div className="row">
+                {getClassDta && getClassDta.length > 0
+                  ? getClassDta.map((c, index) => {
+                      return (
+                        <div className="col-md-4" key={index}>
+                          <Link
+                            to={`/Propage/${c.slug}?allpage`}
+                            style={{ cursor: "pointer" }}
+                            className=""
+                            // key={index}
+                            onClick={() => {
+                              // setModal(true);
+                            }}
+                          >
+                            <div className="Propage_img_main">
+                              <img
+                                src={c.image_full_path}
+                                alt=""
+                                style={{ marginBottom: "0px !important" }}
+                              />
+                              <button
+                                type="button"
+                                name="category"
+                                value={c.name}
+                              >
+                                {c.name}
+                              </button>
+                            </div>
+                          </Link>
+                          <span style={{ color: "#5d5d9c", fontWeight: "600" }}>
+                            {c.name}
+                          </span>
+                        </div>
+                      );
+                    })
+                  : null}
+              </div>
+            </>
+          )}
         </div>
         <ReactModal
           isOpen={getModal}
           onRequestClose={() => {
             setModal(false);
           }}
-          style={customStyles}>
+          style={customStyles}
+        >
           <>
             <div
               style={{
@@ -198,7 +206,8 @@ useEffect(()=>{
                 justifyContent: "center",
                 padding: "0.6rem",
                 background: "gainsboro",
-              }}>
+              }}
+            >
               <b style={{ fontSize: "18px", margin: "0px" }}>PASSWORD</b>
             </div>
             <div className="model_sizing">
@@ -216,7 +225,8 @@ useEffect(()=>{
               <div>
                 <button
                   className="btn"
-                  style={{ width: "100%", margin: "0px" }}>
+                  style={{ width: "100%", margin: "0px" }}
+                >
                   Submit
                 </button>
               </div>
@@ -229,7 +239,8 @@ useEffect(()=>{
         onRequestClose={() => {
           setModal(false);
         }}
-        style={customStyles}>
+        style={customStyles}
+      >
         <>
           <div
             style={{
@@ -237,7 +248,8 @@ useEffect(()=>{
               justifyContent: "center",
               padding: "0.6rem",
               background: "gainsboro",
-            }}>
+            }}
+          >
             <b style={{ fontSize: "18px", margin: "0px" }}>PASSWORD</b>
           </div>
           <div className="model_sizing">
@@ -258,7 +270,8 @@ useEffect(()=>{
                 onClick={() => {
                   setModal(false);
                   setSubclass(1);
-                }}>
+                }}
+              >
                 Submit
               </button>
             </div>
@@ -312,7 +325,7 @@ const Wrapper = styled.section`
     justify-content: center;
   }
   .col-md-4 {
-    ${'' /* height: 150px; */}
+    ${"" /* height: 150px; */}
     width: 150px;
     -ms-flex: 0 0 33.333333%;
     flex: 0 0 33.333333%;
@@ -320,7 +333,7 @@ const Wrapper = styled.section`
     ${"" /* padding: 0 50px; */}
     text-align: center;
     ${"" /* margin-bottom: 30px; */}
-    ${'' /* position: relative; */}
+    ${"" /* position: relative; */}
     overflow: hidden;
     .Propage_img_main {
       height: 200px;

@@ -90,7 +90,7 @@ export const ProductsProvider = ({ children }) => {
         },
       });
       const products = response.data.data;
-      console.log("products  fetch api", products);
+      console.log("products fetch api", products);
       dispatch({ type: GET_PRODUCTS_SUCCESS, payload: products });
     } catch (error) {
       dispatch({ type: GET_SINGLE_PRODUCT_ERROR });
@@ -144,7 +144,6 @@ export const ProductsProvider = ({ children }) => {
 
   //fetch single product api
   const fetchSingleProduct1 = async (url) => {
-    console.log("singleproduct");
     dispatch({ type: GET_SINGLE_PRODUCT_BEGIN1 });
     try {
       const response = await axios.get(url, {
@@ -153,8 +152,6 @@ export const ProductsProvider = ({ children }) => {
         },
       });
       const singleProduct = response.data.records;
-      console.log("singleproduct-->ressss ", singleProduct);
-
       dispatch({
         type: GET_SINGLE_PRODUCT_SUCCESS1,
         payload: singleProduct,
@@ -196,7 +193,6 @@ export const ProductsProvider = ({ children }) => {
 
   // fetch classes
   const getClass = async (params) => {
-
     dispatch({ type: CLASSES_BEGIN });
     try {
       const response = await axios.post(customer_data, params, {
@@ -208,7 +204,6 @@ export const ProductsProvider = ({ children }) => {
       // localStorage.setItem("productdata", JSON.stringify(response.data.data));
       // localStorage.setItem("campusdata", JSON.stringify(response.data.data1));
       if (classdata.status == 1) {
-        console.log("====", JSON.stringify(classdata, null, 2));
         // Notification("success", "Valid Password.");
         dispatch({ type: CLASSES_SUCCESS, payload: response.data.data });
       } else {
