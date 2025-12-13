@@ -39,9 +39,9 @@ const AddToCart = ({
   const increase = () => {
     setQty((oldQty) => {
       let tempQty = oldQty + 1;
-      if (tempQty > getstock) {
-        tempQty = getstock;
-      }
+      // if (tempQty > getstock) {
+      //   tempQty = getstock;
+      // }
       return tempQty;
     });
   };

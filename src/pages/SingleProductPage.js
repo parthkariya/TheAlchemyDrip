@@ -413,7 +413,7 @@ const SingleProductPage = () => {
                 </div>
               </>
             )}
-            {getstock == 0 || getstock <= 0 ? (
+            {/* {getstock == 0 || getstock <= 0 ? (
               <h3
                 style={{
                   color: "red",
@@ -422,29 +422,29 @@ const SingleProductPage = () => {
               >
                 Out of stock
               </h3>
-            ) : (
-              <div>
-                {colorId > 1 ? (
-                  <AddToCart
-                    product={single_product1}
-                    value={value}
-                    sizeValue={sizeValue}
-                    getstock={getstock}
-                    sizeid={sizeId}
-                    colorId={colorId}
-                    colorName={colorName}
-                    qtyy={qty}
-                  />
-                ) : (
-                  <></>
-                )}
-              </div>
-            )}
+            ) : ( */}
+            <div>
+              {colorId > 1 ? (
+                <AddToCart
+                  product={single_product1}
+                  value={value}
+                  sizeValue={sizeValue}
+                  getstock={getstock}
+                  sizeid={sizeId}
+                  colorId={colorId}
+                  colorName={colorName}
+                  qtyy={qty}
+                />
+              ) : (
+                <></>
+              )}
+            </div>
+            {/* )} */}
 
-            {getstock == 0 || getstock <= 0 ? (
+            {/* {getstock == 0 || getstock <= 0 ? (
               <></>
-            ) : (
-              <div>
+            ) : ( */}
+            {/* <div>
                 {getColors[0]?.color_id === 1 ? (
                   <AddToCart
                     product={single_product1}
@@ -459,8 +459,8 @@ const SingleProductPage = () => {
                 ) : (
                   <></>
                 )}
-              </div>
-            )}
+              </div> */}
+            {/* )} */}
 
             <div className="description-part-main">
               <div className="description-part">
