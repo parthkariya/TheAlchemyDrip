@@ -14,7 +14,7 @@ const cart_reducer = (state, action) => {
       color,
       amount,
       product,
-       slug,
+      slug,
       images,
       value,
       sizeValue,
@@ -25,29 +25,29 @@ const cart_reducer = (state, action) => {
       check_value,
     } = action.payload;
 
-    console.log("===>",check_value);
+    console.log("===>", check_value);
 
     const tempItem = state.cart.find((i) => i.id === id + value);
     if (tempItem) {
       console.log("aaa");
-      
+
       const tempCart = state.cart.map((cartItem) => {
         if (cartItem.id === id + value) {
           let newAmount = cartItem.amount + amount;
-          if (newAmount > cartItem.max) {
-            newAmount = cartItem.max;
-          }
+          // if (newAmount > cartItem.max) {
+          //   newAmount = cartItem.max;
+          // }
           return { ...cartItem, amount: newAmount };
         } else {
           return cartItem;
         }
       });
 
-      return { ...state, cart: tempCart,check_value };
+      return { ...state, cart: tempCart, check_value };
     }
     //  else if(check_value == 1 ){
     //   console.log("bbb");
-      
+
     //   const newItem2 = {
     //     id: id + value,
     //     idmain: id,
@@ -83,12 +83,12 @@ const cart_reducer = (state, action) => {
         // max: product.stock,
         max: getstock,
         size: sizeValue,
-        sizeid:sizeid,
-        color_id:color_id,
-        colorName:colorName
+        sizeid: sizeid,
+        color_id: color_id,
+        colorName: colorName,
       };
       // console.log("123", newItem);
-      return { ...state, cart: [...state.cart, newItem],check_value };
+      return { ...state, cart: [...state.cart, newItem], check_value };
     }
   }
   // remove from cart reducer
@@ -101,30 +101,30 @@ const cart_reducer = (state, action) => {
     return { ...state, cart: [], cart_item: [] };
   }
   //toggle quantity
-if (action.type === TOGGLE_CART_ITEM_AMOUNT) {
-  const { id, value, check_value } = action.payload;
+  if (action.type === TOGGLE_CART_ITEM_AMOUNT) {
+    const { id, value, check_value } = action.payload;
 
-  // if (check_value === 1) {
-  //   console.log("Updating amount in cart_item");
+    // if (check_value === 1) {
+    //   console.log("Updating amount in cart_item");
 
-  //   const tempCart = state.cart_item.map((item) => {
-  //     if (item.id === id) {
-  //       let newAmount = item.amount;
+    //   const tempCart = state.cart_item.map((item) => {
+    //     if (item.id === id) {
+    //       let newAmount = item.amount;
 
-  //       if (value === "inc") {
-  //         newAmount = Math.min(item.amount + 1, item.max); // Increment, but don't exceed max
-  //       } else if (value === "dec") {
-  //         newAmount = Math.max(item.amount - 1, 1); // Decrement, but don't go below 1
-  //       }
+    //       if (value === "inc") {
+    //         newAmount = Math.min(item.amount + 1, item.max); // Increment, but don't exceed max
+    //       } else if (value === "dec") {
+    //         newAmount = Math.max(item.amount - 1, 1); // Decrement, but don't go below 1
+    //       }
 
-  //       return { ...item, amount: newAmount };
-  //     }
-  //     return item;
-  //   });
+    //       return { ...item, amount: newAmount };
+    //     }
+    //     return item;
+    //   });
 
-  //   return { ...state, cart_item: tempCart };
-  // } 
-  // else if (check_value === 0) {
+    //   return { ...state, cart_item: tempCart };
+    // }
+    // else if (check_value === 0) {
     console.log("Updating amount in cart");
 
     const tempCart = state.cart.map((item) => {
@@ -132,7 +132,8 @@ if (action.type === TOGGLE_CART_ITEM_AMOUNT) {
         let newAmount = item.amount;
 
         if (value === "inc") {
-          newAmount = Math.min(item.amount + 1, item.max); // Increment, but don't exceed max
+          // newAmount = Math.min(item.amount + 1, item.max); // Increment, but don't exceed max
+          newAmount = item.amount + 1; // Increment, but don't exceed max
         } else if (value === "dec") {
           newAmount = Math.max(item.amount - 1, 1); // Decrement, but don't go below 1
         }
@@ -143,20 +144,19 @@ if (action.type === TOGGLE_CART_ITEM_AMOUNT) {
     });
 
     return { ...state, cart: tempCart };
-  // }
+    // }
 
-  // Default case if check_value is invalid
-  console.log("Invalid check_value");
-  return state;
-}
+    // Default case if check_value is invalid
+    console.log("Invalid check_value");
+    return state;
+  }
 
- 
   if (action.type === COUNT_CART_TOTALS) {
     // const { check_value } = action.payload;
-  
+
     // if (check_value === 1) {
     //   console.log("Processing cart_item totals");
-  
+
     //   const { total_items, total_amount } = state.cart_item.reduce(
     //     (total, cartItem) => {
     //       const { amount, price } = cartItem;
@@ -170,10 +170,10 @@ if (action.type === TOGGLE_CART_ITEM_AMOUNT) {
     //     }
     //   );
     //   return { ...state, total_items, total_amount };
-    // } 
+    // }
     // else if (check_value === 0) {
     //   console.log("Processing cart totals");
-  
+
     //   const { total_items, total_amount } = state.cart.reduce(
     //     (total, cartItem) => {
     //       const { amount, price } = cartItem;
@@ -205,14 +205,11 @@ if (action.type === TOGGLE_CART_ITEM_AMOUNT) {
       }
     );
 
-        // Apply shipping fee if total_amount is less than 1000
-        const shipping_fees = total_amount < 1000 ? 50 : 0;
-        
-    return { ...state, total_items, total_amount,shipping_fees };
-    
-    
+    // Apply shipping fee if total_amount is less than 1000
+    const shipping_fees = total_amount < 1000 ? 50 : 0;
+
+    return { ...state, total_items, total_amount, shipping_fees };
   }
-  
 
   return state;
   throw new Error(`No Matching "${action.type}" - action type`);

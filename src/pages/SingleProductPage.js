@@ -444,22 +444,22 @@ const SingleProductPage = () => {
             {/* {getstock == 0 || getstock <= 0 ? (
               <></>
             ) : ( */}
-            {/* <div>
-                {getColors[0]?.color_id === 1 ? (
-                  <AddToCart
-                    product={single_product1}
-                    value={value}
-                    sizeValue={sizeValue}
-                    getstock={getstock}
-                    sizeid={sizeId}
-                    colorId={colorId}
-                    colorName={colorName}
-                    qtyy={qty}
-                  />
-                ) : (
-                  <></>
-                )}
-              </div> */}
+            <div>
+              {getColors[0]?.color_id === 1 ? (
+                <AddToCart
+                  product={single_product1}
+                  value={value}
+                  sizeValue={sizeValue}
+                  getstock={getstock}
+                  sizeid={sizeId}
+                  colorId={colorId}
+                  colorName={colorName}
+                  qtyy={qty}
+                />
+              ) : (
+                <></>
+              )}
+            </div>
             {/* )} */}
 
             <div className="description-part-main">
