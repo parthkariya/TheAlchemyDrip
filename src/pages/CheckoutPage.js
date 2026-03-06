@@ -30,8 +30,15 @@ const CheckoutPage = () => {
   const history = useHistory();
   // window.scrollTo(0, 0);
 
-  const { cart, cart_item, check_value, total_amount, shipping_fees, clearCart, orderResponse } =
-    useCartContext();
+  const {
+    cart,
+    cart_item,
+    check_value,
+    total_amount,
+    shipping_fees,
+    clearCart,
+    orderResponse,
+  } = useCartContext();
 
   console.log("cart are", cart);
   console.log("total_amount", total_amount);
@@ -59,7 +66,6 @@ const CheckoutPage = () => {
   const [selectedAddId, setSelectAddress] = React.useState(0);
   const [getShiftigCharge, setShiftingCharge] = React.useState();
   const [getCategoryId, setCatetegoryId] = React.useState();
-  
 
   useEffect(() => {
     getCountries();
@@ -78,7 +84,7 @@ const CheckoutPage = () => {
     }
   }, [isLogin]);
 
-  useEffect(() => { }, [order_data]);
+  useEffect(() => {}, [order_data]);
 
   const mSelectAddress = (id) => {
     setSelectAddress(id);
@@ -287,7 +293,7 @@ const CheckoutPage = () => {
       handler: async function (response) {
         console.log(
           "Response => get_payment_id api after razorpay payment",
-          response
+          response,
         );
 
         var formData = new FormData();
@@ -307,7 +313,7 @@ const CheckoutPage = () => {
         });
         console.log(
           "Response => get_payment_id api after razorpay payment------",
-          myRes.data
+          myRes.data,
         );
 
         if (myRes && myRes.data.success == 1) {
@@ -373,7 +379,8 @@ const CheckoutPage = () => {
                                   </span>
                                   <a
                                     href="javascript:void(0)"
-                                    onClick={() => setShowlogin(!showscreen)}>
+                                    onClick={() => setShowlogin(!showscreen)}
+                                  >
                                     Log in
                                   </a>
                                 </p>
@@ -457,7 +464,8 @@ const CheckoutPage = () => {
                                   };
                                   setStateAddress("");
                                   getStates(params);
-                                }}>
+                                }}
+                              >
                                 <option value={""}>Select Country</option>
                                 {get_countrylist.map((country, index) => {
                                   return (
@@ -474,7 +482,8 @@ const CheckoutPage = () => {
                                 value={_state}
                                 onChange={(e) => {
                                   setStateAddress(e.target.value);
-                                }}>
+                                }}
+                              >
                                 <option value={""}>Select State</option>
 
                                 {get_statelist.map((states, index) => {
@@ -512,7 +521,8 @@ const CheckoutPage = () => {
                               <a
                                 href="javascript:void(0)"
                                 className="btn-normal btn"
-                                onClick={placeOrderGuest}>
+                                onClick={placeOrderGuest}
+                              >
                                 Submit
                               </a>
                             </div>
@@ -555,7 +565,6 @@ const CheckoutPage = () => {
                                 </li>
                               );
                             })}
-
                           </ul>
                           {/* <ul className="sub-total">
                             <li>
@@ -588,56 +597,64 @@ const CheckoutPage = () => {
                               </div>
                             </li>
                           </ul> */}
-                          {getShiftigCharge == 0 ? <>
-                            {total_amount < 1000 ? <>
+                          {getShiftigCharge == 0 ? (
+                            <>
+                              {total_amount < 1000 ? (
+                                <>
+                                  <ul className="qty pro_qty_line">
+                                    <li style={{ textTransform: "capitalize" }}>
+                                      Shipping fee
+                                      <span>{formatPrice(shipping_fees)}</span>
+                                    </li>
+                                  </ul>
+                                </>
+                              ) : (
+                                <></>
+                              )}
+                            </>
+                          ) : (
+                            <>
                               <ul className="qty pro_qty_line">
-
-
                                 <li style={{ textTransform: "capitalize" }}>
                                   Shipping fee
-                                  <span>{formatPrice(shipping_fees)}</span>
+                                  <span>{formatPrice(getShiftigCharge)}</span>
                                 </li>
-
-
                               </ul>
-                            </> : <></>}
-                          </> : <>
-                            <ul className="qty pro_qty_line">
-
-                              <li style={{ textTransform: "capitalize" }}>
-                                Shipping fee
-                                <span>{formatPrice(getShiftigCharge)}</span>
-                              </li>
-
-
-                            </ul>
-                          </>}
-
+                            </>
+                          )}
 
                           <ul className="total">
                             <li>
                               Total
-                              {getShiftigCharge == 0 ? <>
-                                <span className="count">
-                                {formatPrice(total_amount + shipping_fees)}
-                              </span>
-                              </> : <>
-                              <span className="count">
-                                {formatPrice(total_amount + Number(getShiftigCharge))}
-                                </span>
-                              </>}
-                              
+                              {getShiftigCharge == 0 ? (
+                                <>
+                                  <span className="count">
+                                    {formatPrice(total_amount + shipping_fees)}
+                                  </span>
+                                </>
+                              ) : (
+                                <>
+                                  <span className="count">
+                                    {formatPrice(
+                                      total_amount + Number(getShiftigCharge),
+                                    )}
+                                  </span>
+                                </>
+                              )}
                             </li>
                           </ul>
                         </div>
-                        {total_amount < 1000 && getShiftigCharge == 0 ? <>
-                          <span style={{ color: "#000", fontWeight: "500" }}>
-                            Avail free shipping for orders above 1000/-
-                          </span>
+                        {total_amount < 1000 && getShiftigCharge == 0 ? (
+                          <>
+                            <span style={{ color: "#000", fontWeight: "500" }}>
+                              Avail free shipping for orders above 1000/-
+                            </span>
+                          </>
+                        ) : (
+                          <></>
+                        )}
 
-                        </> : <></>}
-
-                         {/* {((data[0]?.value || 0) * (data[0]?.qty || 0)) < 1000 && getShiftigCharge === 0 && (
+                        {/* {((data[0]?.value || 0) * (data[0]?.qty || 0)) < 1000 && getShiftigCharge === 0 && (
                           <span style={{ color: "#000", fontWeight: "500" }}>
                             Avail free shipping for orders above 1000/-
                           </span>
@@ -694,7 +711,8 @@ const CheckoutPage = () => {
 
                                   <ul
                                     className="online-pay-option"
-                                    style={{ listStyleType: "circle" }}>
+                                    style={{ listStyleType: "circle" }}
+                                  >
                                     <li className="online-pay-option-sub">
                                       Card
                                     </li>
@@ -756,7 +774,8 @@ const CheckoutPage = () => {
                               <a
                                 href="javascript:void(0)"
                                 className="btn-normal btn"
-                                onClick={placeOrder}>
+                                onClick={placeOrder}
+                              >
                                 Place Order
                               </a>
                             </div>
@@ -765,7 +784,8 @@ const CheckoutPage = () => {
                               <a
                                 href="javascript:void(0)"
                                 className="btn-normal btn"
-                                onClick={placeOrderGuest}>
+                                onClick={placeOrderGuest}
+                              >
                                 Login/Guest
                               </a>
                             </div>
@@ -1415,10 +1435,11 @@ const Wrapper = styled.section`
       width: 100%;
     }
 
-    ${"" /* .col-lg-9 order-lg-last dashboard-content{
+    ${
+      "" /* .col-lg-9 order-lg-last dashboard-content{
       padding:0 15px;
     } */
-  }
+    }
     .page {
       min-height: calc(60vh - (20vh + 10rem));
     }
@@ -1441,7 +1462,7 @@ const Wrapper = styled.section`
     }
   }
   @media screen and (max-width: 575px) {
-     .order-box .qty li { 
+    .order-box .qty li {
       display: flex !important;
       flex-direction: row !important;
       justify-content: space-between;

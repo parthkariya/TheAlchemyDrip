@@ -3,7 +3,8 @@
   <head>
     <script
       async
-      src="https://www.googletagmanager.com/gtag/js?id=G-9M0B2THH8K"></script>
+      src="https://www.googletagmanager.com/gtag/js?id=G-9M0B2THH8K"
+    ></script>
     <script>
       window.dataLayer = window.dataLayer || [];
 
@@ -31,7 +32,8 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"
       integrity="sha512-5A8nwdMOWrSz20fDsjczgUidUBR8liPYU+WymTZP1lmY9G6Oc7HlZv156XqnsgNUzTyMefFTcsFH/tnJE/+xBg=="
       crossorigin="anonymous"
-      referrerpolicy="no-referrer" />
+      referrerpolicy="no-referrer"
+    />
 
     <link rel="manifest" href="%PUBLIC_URL%/manifest.webmanifest" />
 
@@ -48,11 +50,11 @@
         // site using the default scope.
         navigator.serviceWorker.register("/service-worker.js").then(
           function (registration) {
-            console.log("Service worker registration succeeded:", registration);
+            // console.log("Service worker registration succeeded:", registration);
           },
           /*catch*/ function (error) {
             console.log("Service worker registration failed:", error);
-          }
+          },
         );
       } else {
         console.log("Service workers are not supported.");

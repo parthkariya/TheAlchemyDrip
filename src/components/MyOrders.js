@@ -18,8 +18,10 @@ import Modal from "react-modal";
 import axios from "axios";
 import {
   ex_pro_submit,
+  get_exchange_payment_id,
   get_exchangeproduct,
   get_order_details_url,
+  get_return_payment_id,
   getexchangeproductsize,
   return_order_url,
 } from "../utils/constants";
@@ -41,14 +43,17 @@ const MyOrders = () => {
     downloadInvocie,
   } = useOrderContext();
 
-  const { isLogin, logintoken } = useUserContext();
+  const { isLogin, logintoken, logindata } = useUserContext();
   const [modalIsOpen, setIsOpen] = useState(false);
   const [openCancelModal, setCancelMOdal] = useState(false);
   const [getExchangeModal, setExchangeModal] = useState(false);
+  const [getExchangeModalFinal, setExchangeModalFinal] = useState(false);
   const [orderDetailsObject, setOrderDetailsObject] = useState({});
   const [selectedOrder, setSelectedOrder] = useState([]);
   const [selected_payment_return_mode, paymentMode] = useState(null);
   const [open_order_number, setOrderNumber] = useState(null);
+  const [selectedWithApiData, setSelectedWithApiData] = useState([]);
+
   // console.log('my_order_list ', my_order_list)
 
   const login = JSON.parse(localStorage.getItem("token"));
@@ -120,7 +125,7 @@ const MyOrders = () => {
         Notification(
           "error",
           "Error!",
-          "Please select return payment mode type !"
+          "Please select return payment mode type !",
         );
         return;
       }
@@ -166,26 +171,27 @@ const MyOrders = () => {
   //
 
   const history = useHistory();
-  const [isChecked, setIsChecked] = useState(false);
+
   const [getData, setData] = useState([]);
   const [getStatus, setStatus] = useState();
   const [getSize, setSize] = useState();
-  const [getPrice, setPrice] = useState();
+  const [getColor, setColor] = useState();
+
   const [getInventry, setInventry] = useState();
   const [getMainPrice, setMainPrice] = useState();
-  const [getCampusinput, setCampusinput] = useState("");
+
   const [getProId, setProId] = useState();
   const [getOrderlineId, setOrderlineId] = useState();
   const [getOrderId, setOrderId] = useState();
   const [getOrderId2, setOrderId2] = useState();
   const [getexsizeshow, setExsizeshow] = useState(false);
-  const [getexsizeshow2, setExsizeshow2] = useState(false);
   const [getexsizedata, setExsizedata] = useState([]);
-  const [quantity, setQuantity] = useState(1);
+  const [getexsizedataid, setExsizedataid] = useState();
+
+  const [selectedProducts, setSelectedProducts] = useState([]);
 
   const [getQtys, setQtys] = useState();
-
-  
+  console.log("getQtys", getQtys);
 
   // const login = JSON.parse(localStorage.getItem("token"));
 
@@ -213,9 +219,6 @@ const MyOrders = () => {
   const { toggleAmount } = useCartContext();
   // const data1 = JSON.parse(localStorage.getItem("exprodetails"));
 
-  const [loaded, setLoaded] = useState(false);
-  const reloadCount = Number(sessionStorage.getItem("reloadCount")) || 0;
-
   // useEffect(() => {
   //   if (reloadCount < 2) {
   //     sessionStorage.setItem("reloadCount", String(reloadCount + 1));
@@ -231,48 +234,87 @@ const MyOrders = () => {
   //   setOrderId2(data1?.order_number);
   // }, []);
   useEffect(() => {
-    setData(single_order_details?.order_lines);
+    // setData(single_order_details?.order_lines);
+    const updatedOrderLines = single_order_details?.order_lines?.map(
+      (item) => ({
+        ...item,
+        select_return_qty: item.total_quantity,
+      }),
+    );
+
+    setData(updatedOrderLines);
+
     setOrderId(single_order_details);
     setOrderId2(single_order_details?.order_number);
   }, [single_order_details]);
 
   console.log("log jay", single_order_details);
 
-  const handleCheckboxChange = (id, id2, price, mainprice) => {
-    setIsChecked(true);
-    setIsChecked(!isChecked);
-    if (isChecked) {
-      setProId(null);
-      setOrderlineId(null);
-      setPrice(null);
-      setMainPrice(null);
+  // const handleCheckboxChange = (id, id2, price, mainprice, qty) => {
+  //   setIsChecked(true);
+  //   setIsChecked(!isChecked);
+  //   if (isChecked) {
+  //     setProId(null);
+  //     setOrderlineId(null);
+  //     setPrice(null);
+  //     setMainPrice(null);
+  //     setQtys(null);
+  //   } else {
+  //     setProId(id);
+  //     setOrderlineId(id2);
+  //     setPrice(price);
+  //     setMainPrice(mainprice);
+  //     setQtys(qty);
+  //   }
+  // };
+
+  const handleCheckboxChange = (id, id2, price, mainprice, qty, itemObj) => {
+    if (getStatus == 1 || getStatus == 2) {
+      const exists = selectedProducts.some((p) => p.orderlineId === id2);
+
+      if (exists) {
+        // ✅ REMOVE on untick
+        setSelectedWithApiData((prev) => prev.filter((p) => p.id !== id2));
+      } else {
+        // ✅ ADD on tick
+
+        const newitemobj = {
+          ...itemObj,
+          new_price: itemObj.price,
+          selected_qty: itemObj.total_quantity,
+        };
+        ExchangePostApi(id, newitemobj);
+      }
+
+      // checkbox state update
+      setSelectedProducts((prev) =>
+        exists
+          ? prev.filter((p) => p.orderlineId !== id2)
+          : [...prev, { id, orderlineId: id2, price, mainprice, qty }],
+      );
     } else {
-      setProId(id);
-      setOrderlineId(id2);
-      setPrice(price);
-      setMainPrice(mainprice);
-    }
-  };
-
-  const handleIncrement = () => {
-    // if (getQtys < totalgetQtys) {
-    setQtys(Number(getQtys) + 1);
-    console.log("grt===?", getQtys);
-    // };
-  };
-
-  // console.log("getproid", getProId);
-  // console.log("setExsizeshow", getexsizeshow);
-  // console.log("selected", getProId);
-  const ExchangePostApi = async () => {
-    const tokens = JSON.parse(localStorage.getItem("token"));
-    const formData = new FormData();
-    formData.append("product_id", getProId);
-
-    if (getProId == "" || getProId == undefined) {
-      createNotification("error", "Error!", "Please select  checkbox!");
+      createNotification("error", "Error!", "Please select  type!");
       return;
     }
+  };
+
+  console.log("selectedWithApiData", selectedWithApiData);
+  console.log("getdata", getData);
+
+  const ExchangePostApi = async (product_id, itemObj) => {
+    console.log("product_id", product_id);
+
+    const tokens = JSON.parse(localStorage.getItem("token"));
+    const formData = new FormData();
+    formData.append("product_id", product_id);
+    //    for (var i = 0; i < regionidarray.length; i++) {
+    // //         await formdata.append("region_id[" + i + "]", regionidarray[i].id);
+    // //       }
+
+    // if (product_id[0] == "" || product_id[0] == undefined) {
+    //   createNotification("error", "Error!", "Please select  checkbox!");
+    //   return;
+    // }
 
     const response = await axios
       .post(get_exchangeproduct, formData, {
@@ -285,30 +327,32 @@ const MyOrders = () => {
 
       .catch((error) => console.error(`Error: ${error}`));
     if (response.data.success == 1) {
-      setExsizedata(response.data.data.sizes);
-      setExsizeshow(true);
-      // setProId("");
+      const apiData = response.data.data;
 
-      console.log("response  ", response.data.success);
-      createNotification("success", "Success!", response.data.message);
+      const combinedObj = {
+        ...itemObj,
+        apiData,
+      };
+      setSelectedWithApiData((prev) => [...prev, combinedObj]);
+
+      setExsizedata(response.data.data.sizes);
+      setExsizedataid(response.data.data.id);
+      setExsizeshow(true);
+
+      // console.log("response  ", response.data.success);
+      // createNotification("success", "Success!", response.data.message);
       return;
     } else {
       createNotification("error", "Error!", "please enter valid data!");
       return;
     }
   };
-  const getProductSize = async (id, id2) => {
+  const getProductSize = async (productid, sizeid, colorid, field, index) => {
     const tokens = JSON.parse(localStorage.getItem("token"));
-
     const formData = new FormData();
-    await formData.append("size_id", id2);
-    await formData.append("product_id", id);
-
-    if (getSize == "" || getSize == undefined || getSize == "undefined") {
-      createNotification("error", "Error!", "Please select  size!");
-      return;
-    }
-
+    formData.append("product_id[0]", productid);
+    formData.append("size_id[0]", sizeid);
+    formData.append("color_id[0]", colorid);
     const response = await axios
       .post(getexchangeproductsize, formData, {
         headers: {
@@ -320,12 +364,24 @@ const MyOrders = () => {
 
       .catch((error) => console.error(`Error: ${error}`));
     if (response.data.success == 1) {
-      // setExsizedata(response.data.data.sizes);
-      // setExsizeshow(true);
-      // setProId("");
       setInventry(response.data.data.display_stock);
 
-      console.log("response  ", response.data.success);
+      const newPrice = response.data.data[0].price;
+
+      setSelectedWithApiData((prev) =>
+        prev.map((item, idx) => {
+          if (item.product_id === productid && idx === index) {
+            return {
+              ...item,
+              size_id: sizeid,
+              color_id: colorid,
+              new_price: newPrice,
+            };
+          }
+          return item;
+        }),
+      );
+
       createNotification("success", "Success!", response.data.message);
       return;
     } else {
@@ -336,22 +392,57 @@ const MyOrders = () => {
 
   const finalExchangePostApi = async () => {
     const tokens = JSON.parse(localStorage.getItem("token"));
+    console.log("selectedWithApiData", selectedWithApiData);
+
+    for (let i = 0; i < selectedWithApiData.length; i++) {
+      const item = selectedWithApiData[i];
+
+      console.log("item.size_id", item.size_id);
+
+      if (!item.size_id || item.size_id === "") {
+        createNotification(
+          "error",
+          "Error!",
+          `Please select ${item.product_name} size`,
+        );
+        return;
+      }
+
+      if (!item.color_id || item.color_id === "") {
+        createNotification(
+          "error",
+          "Error!",
+          `Please select ${item.product_name} color`,
+        );
+        return;
+      }
+    }
 
     const formData = new FormData();
-    formData.append("product_id", getProId);
-    formData.append("size_id", getSize);
-    formData.append("color_id", 1);
-    formData.append("order_line", getOrderlineId);
-    formData.append("quantity", getQtys);
-    formData.append("main_price", getMainPrice);
-    formData.append("price", getPrice);
+    formData.append("order_header_id", single_order_details?.id);
 
-    if (getProId == "" || getProId == undefined) {
-      createNotification("error", "Error!", "Please select  checkbox!");
-      return;
-    }else if (getSize == "" || getSize == undefined){
-      createNotification("error", "Error!", "Please select  size!");
-      return;
+    for (var i = 0; i < selectedWithApiData.length; i++) {
+      formData.append(
+        "product_id[" + i + "]",
+        selectedWithApiData[i].product_id,
+      );
+      formData.append("size_id[" + i + "]", selectedWithApiData[i].size_id);
+      formData.append("color_id[" + i + "]", selectedWithApiData[i].color_id);
+      formData.append("order_line[" + i + "]", selectedWithApiData[i].id);
+      formData.append(
+        "quantity[" + i + "]",
+        selectedWithApiData[i].selected_qty,
+      );
+      formData.append(
+        "main_price[" + i + "]",
+        // selectedWithApiData[i].new_price * selectedWithApiData[i].selected_qty,
+        selectedWithApiData[i].new_price,
+      );
+      formData.append(
+        "price[" + i + "]",
+        // selectedWithApiData[i].new_price * selectedWithApiData[i].selected_qty,
+        selectedWithApiData[i].new_price,
+      );
     }
 
     const response = await axios
@@ -369,7 +460,7 @@ const MyOrders = () => {
       // history.push("/MyProfile");
       setExchangeModal(false);
       // setProId("");
-
+      displayRazorpay(response.data?.razorpay_order_id, response.data?.amount);
       console.log("response  ", response.data.success);
       createNotification("success", "Success!", response.data.message);
       return;
@@ -384,70 +475,281 @@ const MyOrders = () => {
     }
   };
 
-  const handleQtyChange = (index, qty, totalqty) => {
-    console.log("getInventry", getInventry);
-    console.log("totalqty", totalqty);
-    // if (qty < getInventry) {
-    if (qty < totalqty) {
-      const updatedArray = [...getData];
-      updatedArray[index].quantity += 1;
+  async function displayRazorpay(order_id, total_amount) {
+    console.log("order_id from api in => displayRazorpay", order_id);
 
-      setData(updatedArray);
-      setQtys(updatedArray[index].quantity);
-      // setProId(updatedArray[index].id);
-    } else {
-      console.log("something wrong");
+    var res = await loadScript();
+    console.log("res => in displayRazorpay function", res);
+
+    if (!res) {
+      alert("Razorpay SDK failed to load. Are you online?");
+      return;
+    }
+
+    var names = "dsh";
+    if (logindata) {
+      names = logindata.name;
+    }
+    var options = {
+      key: "rzp_live_pXp8Xsvsqxx2j2",
+      // key: "rzp_test_C1WkhcrxRyAGl9",
+
+      currency: "INR",
+      order_id: order_id,
+      name: "The Alchemy Drip",
+      description: "Transaction",
+      amount: total_amount * 100.0,
+      prefill: {
+        name: names,
+      },
+      // image: "https://applified.co.in/dsh//public/logos/1626349162-200X200.png",
+      // image: web_logo2,
+
+      handler: async function (response) {
+        console.log(
+          "Response => get_payment_id api after razorpay payment",
+          response,
+        );
+
+        var formData = new FormData();
+        formData.append("razorpay_payment_id", response.razorpay_payment_id);
+        formData.append("razorpay_order_id", response.razorpay_order_id);
+        formData.append("razorpay_signature", response.razorpay_signature);
+
+        for (var pair of formData.entries()) {
+          console.log("Body => ", pair[0] + ", " + pair[1]);
+        }
+
+        var myRes = await axios.post(get_exchange_payment_id, formData, {
+          headers: {
+            Accept: "application/x.uniform.v1+json",
+            // "Authorization": "Bearer ".concat(token)
+          },
+        });
+        console.log(
+          "Response => get_payment_id api after razorpay payment------",
+          myRes.data,
+        );
+
+        if (myRes && myRes.data.success == 1) {
+          Notification("success", "", myRes.data.message);
+
+          // clearCart();
+          history.push("/");
+          // alert('Payment Successfully\n Order Placed Successfully \n ')
+        } else if (myRes && myRes.data.success == 0) {
+          alert(myRes.data.message);
+        }
+        // Notification("success", "", order_data.message);
+      },
+    };
+    const paymentObject = new window.Razorpay(options);
+    paymentObject.open();
+  }
+
+  async function displayRazorpayReturn(order_id, total_amount) {
+    console.log("order_id from api in => displayRazorpay", order_id);
+
+    var res = await loadScript();
+    console.log("res => in displayRazorpay function", res);
+
+    if (!res) {
+      alert("Razorpay SDK failed to load. Are you online?");
+      return;
+    }
+
+    var names = "dsh";
+    if (logindata) {
+      names = logindata.name;
+    }
+    var options = {
+      key: "rzp_live_pXp8Xsvsqxx2j2",
+      // key: "rzp_test_C1WkhcrxRyAGl9",
+
+      currency: "INR",
+      order_id: order_id,
+      name: "The Alchemy Drip",
+      description: "Transaction",
+      amount: total_amount * 100.0,
+      prefill: {
+        name: names,
+      },
+      // image: "https://applified.co.in/dsh//public/logos/1626349162-200X200.png",
+      // image: web_logo2,
+
+      handler: async function (response) {
+        console.log(
+          "Response => get_payment_id api after razorpay payment",
+          response,
+        );
+
+        var formData = new FormData();
+        formData.append("razorpay_payment_id", response.razorpay_payment_id);
+        formData.append("razorpay_order_id", response.razorpay_order_id);
+        formData.append("razorpay_signature", response.razorpay_signature);
+
+        for (var pair of formData.entries()) {
+          console.log("Body => ", pair[0] + ", " + pair[1]);
+        }
+
+        var myRes = await axios.post(get_return_payment_id, formData, {
+          headers: {
+            Accept: "application/x.uniform.v1+json",
+            // "Authorization": "Bearer ".concat(token)
+          },
+        });
+        console.log(
+          "Response => get_payment_id api after razorpay payment------",
+          myRes.data,
+        );
+
+        if (myRes && myRes.data.success == 1) {
+          Notification("success", "", myRes.data.message);
+
+          // clearCart();
+          history.push("/");
+          // alert('Payment Successfully\n Order Placed Successfully \n ')
+        } else if (myRes && myRes.data.success == 0) {
+          alert(myRes.data.message);
+        }
+        // Notification("success", "", order_data.message);
+      },
+    };
+    const paymentObject = new window.Razorpay(options);
+    paymentObject.open();
+  }
+
+  function loadScript() {
+    return new Promise((res) => {
+      var myScript = document.createElement("script");
+      myScript.src = "https://checkout.razorpay.com/v1/checkout.js";
+      document.body.appendChild(myScript);
+      myScript.onload = () => {
+        res(true);
+      };
+      myScript.onerror = () => {
+        res(false);
+      };
+      document.body.appendChild(myScript);
+    });
+  }
+
+  const handleQtyChange = (index) => {
+    const updatedArray = [...selectedWithApiData];
+
+    const currentQty = updatedArray[index].selected_qty;
+    const maxQty = updatedArray[index].total_quantity;
+
+    if (currentQty < maxQty) {
+      updatedArray[index].selected_qty = currentQty + 1;
+      setSelectedWithApiData(updatedArray);
     }
   };
 
-  const handleQtyChange2 = (index, qty, totalqty) => {
-    if (qty <= getInventry && qty != 1) {
-      const updatedArray = [...getData];
-      updatedArray[index].quantity -= 1;
+  const handleQtyChange2 = (index) => {
+    const updatedArray = [...selectedWithApiData];
+    const currentQty = updatedArray[index].selected_qty;
 
+    if (currentQty > 1) {
+      updatedArray[index].selected_qty = currentQty - 1;
+      setSelectedWithApiData(updatedArray);
+    }
+  };
+
+  const handleQtyChangeReturn = (index) => {
+    const updatedArray = [...getData];
+
+    const currentQty = updatedArray[index].select_return_qty;
+    const maxQty = updatedArray[index].total_quantity;
+
+    if (currentQty < maxQty) {
+      updatedArray[index].select_return_qty = currentQty + 1;
       setData(updatedArray);
-      setQtys(updatedArray[index].quantity);
-      // setProId(updatedArray[index].id);
-    } else {
-      console.log("something wrong");
+    }
+  };
+
+  const handleQtyChangeReturn2 = (index) => {
+    const updatedArray = [...getData];
+    const currentQty = updatedArray[index].select_return_qty;
+
+    if (currentQty > 1) {
+      updatedArray[index].select_return_qty = currentQty - 1;
+      setData(updatedArray);
     }
   };
 
   const returnPostApi = async () => {
     const tokens = JSON.parse(localStorage.getItem("token"));
 
-    const formData = new FormData();
-    formData.append("order_lines_id", getProId);
-    formData.append("order_number", getOrderId2);
-    formData.append("is_return_status", 2);
-
-    if (getProId == "") {
-      createNotification("error", "Error!", "Please select  getProId!");
-      return;
-    }
-
-    const response = await axios
-      .post(return_order_url, formData, {
-        headers: {
-          Accept: "application/x.uniform.v1+json",
-          Authorization: "Bearer " + tokens,
-        },
-      })
-      .catch((error) => console.error(`Error: ${error}`));
-
-    if (response.data.success == 1) {
-      console.log("response  ", response.data.success);
-      createNotification("success", "Success!", response.data.message);
-      // history.push("/MyProfile");
-      setExchangeModal(false);
-    } else if (response.data.success == 0) {
-      createNotification("error", "Error!", response.data.message);
-      // createNotification("error", "Already returned!");
-      // history.push("/MyProfile");
-      setExchangeModal(false);
-      return;
+    if (getStatus == undefined || getStatus == "") {
+      createNotification(
+        "warning",
+        "Warning!",
+        "Please select type of what you want to do exchange or return!",
+      );
+    } else if (selectedProducts.length <= 0) {
+      createNotification("warning", "Warning!", "Please select  any product!");
     } else {
-      createNotification("error", "Error!", "Please enter valid data");
+      const formData = new FormData();
+      formData.append("order_id", single_order_details?.id);
+      // formData.append("order_number", getOrderId2);
+      // formData.append("is_return_status", 2);
+
+      for (var i = 0; i < selectedWithApiData.length; i++) {
+        formData.append("order_lines_id[" + i + "]", selectedWithApiData[i].id);
+        formData.append(
+          "quantity[" + i + "]",
+          selectedWithApiData[i].selected_qty,
+        );
+      }
+
+      // if (getProId == "") {
+      //   createNotification("error", "Error!", "Please select  getProId!");
+      //   return;
+      // }
+
+      const response = await axios
+        .post(return_order_url, formData, {
+          headers: {
+            Accept: "application/x.uniform.v1+json",
+            Authorization: "Bearer " + tokens,
+          },
+        })
+        .catch((error) => console.error(`Error: ${error}`));
+
+      if (response.data.success == 1) {
+        console.log("response  ", response.data.success);
+        createNotification("success", "Success!", response.data.message);
+        // history.push("/MyProfile");
+        displayRazorpayReturn(
+          response.data?.razorpay_order_id,
+          response.data?.amount,
+        );
+
+        setExchangeModal(false);
+      } else if (response.data.success == 0) {
+        createNotification("error", "Error!", response.data.message);
+        // createNotification("error", "Already returned!");
+        // history.push("/MyProfile");
+        setExchangeModal(false);
+        return;
+      } else {
+        createNotification("error", "Error!", "Please enter valid data");
+      }
+    }
+  };
+
+  const exchangereturn = async () => {
+    if (getStatus == undefined || getStatus == "") {
+      createNotification(
+        "warning",
+        "Warning!",
+        "Please select type of what you want to do exchange or return!",
+      );
+    } else if (selectedProducts.length <= 0) {
+      createNotification("warning", "Warning!", "Please select  any product!");
+    } else {
+      setExchangeModalFinal(true);
     }
   };
 
@@ -484,7 +786,7 @@ const MyOrders = () => {
                           {/* <td>{formatPrice(item.formated_total_price)}</td> */}
                           <td>{formatPrice(item.total_price)}</td>
                           {item.order_status_id == "1" ? (
-                            <td className="cancelled_order">In Progress</td>
+                            <td className="cancelled_order">Waiting</td>
                           ) : item.order_status_id == "2" ? (
                             <td className="cancelled_order">Preparing</td>
                           ) : item.order_status_id == "3" ? (
@@ -495,6 +797,26 @@ const MyOrders = () => {
                             <td className="cancelled_order">Cancelled</td>
                           ) : item.order_status_id == "6" ? (
                             <td className="cancelled_order">Returned</td>
+                          ) : item.order_status_id == "7" ? (
+                            <td className="cancelled_order">Partial</td>
+                          ) : item.order_status_id == "8" ? (
+                            <td className="cancelled_order">
+                              Dispatch Cancelled
+                            </td>
+                          ) : item.order_status_id == "9" ? (
+                            <td className="cancelled_order">
+                              Collected in Store
+                            </td>
+                          ) : item.order_status_id == "10" ? (
+                            <td className="cancelled_order">Exchange</td>
+                          ) : item.order_status_id == "11" ? (
+                            <td className="cancelled_order">
+                              Partial Returned
+                            </td>
+                          ) : item.order_status_id == "12" ? (
+                            <td className="cancelled_order">
+                              Partial Exchange
+                            </td>
                           ) : (
                             ""
                           )}
@@ -504,13 +826,15 @@ const MyOrders = () => {
                               style={{
                                 display: "flex",
                                 justifyContent: "center",
-                              }}>
+                              }}
+                            >
                               <a
                                 href="javascript:void(0);"
                                 onClick={() =>
                                   getClickedOrderDetails(item.id, 1)
                                 }
-                                title="View order">
+                                title="View order"
+                              >
                                 <i className="">
                                   <FaFileInvoice />
                                 </i>
@@ -525,18 +849,20 @@ const MyOrders = () => {
                                   <FaWindowClose />
                                 </i>
                               </a> */}
-                               <a
+
+                              <a
                                 href="javascript:void(0);"
                                 title="Download invoice"
-                                onClick={() => mDownloadInvoice(item.id)}>
+                                onClick={() => mDownloadInvoice(item.id)}
+                              >
                                 <i className="">
                                   <FaDownload />
                                 </i>
-                              </a> 
+                              </a>
                               {/* {item.order_status_id == "1" ? () */}
-                              {item.order_status_id == "6" ? (
-                                <></>
-                              ) : (
+                              {item.order_status_id == "4" ||
+                              item.order_status_id == "11" ||
+                              item.order_status_id == "12" ? (
                                 <>
                                   <div
                                     className="exchange_btn_desing"
@@ -547,12 +873,15 @@ const MyOrders = () => {
                                     onClick={() => {
                                       setExchangeModal(true);
                                       getSingleOrderDetails(item.id, login);
-                                    }}>
+                                    }}
+                                  >
                                     <i className="">
                                       <FaExchangeAlt />
                                     </i>
                                   </div>
                                 </>
+                              ) : (
+                                <></>
                               )}
                             </div>
                           </td>
@@ -570,7 +899,8 @@ const MyOrders = () => {
         // onAfterOpen={afterOpenModal}
         onRequestClose={closeModal}
         style={customStyles}
-        contentLabel="Example Modal">
+        contentLabel="Example Modal"
+      >
         <Innermodal>
           {/* <button className="close-button" onClick={closeModal}> */}
           <AiFillCloseCircle
@@ -651,7 +981,8 @@ const MyOrders = () => {
                     <p>
                       <span
                         classNameName="bold-fonts"
-                        style={{ fontWeight: "bold" }}>
+                        style={{ fontWeight: "bold" }}
+                      >
                         Address:
                       </span>
                       <br /> {orderDetailsObject.shipping_fullname}
@@ -662,7 +993,7 @@ const MyOrders = () => {
                         ? orderDetailsObject.address.address
                         : "Address Not Found"}{" "}
                       {orderDetailsObject.shipping_pincode} ,<br />
-                      {orderDetailsObject.shipping_city_name} 
+                      {orderDetailsObject.shipping_city_name}
                       {/* {orderDetailsObject.shipping_state_name} ,{" "} */}
                       {/* {orderDetailsObject.shipping_country_name} */}
                     </p>
@@ -690,19 +1021,22 @@ const MyOrders = () => {
                           <div>
                             <table
                               classNameName="table"
-                              style={{ width: "100%" }}>
+                              style={{ width: "100%" }}
+                            >
                               <tbody style={{ border: "2px solid" }}>
                                 <tr
                                   style={{
                                     display: "flex",
                                     flexDirection: "column",
                                     padding: "0.5rem",
-                                  }}>
+                                  }}
+                                >
                                   <td classNameName="product-col">
                                     <figure classNameName="product-image-container">
                                       <a
                                         href="javascript:void(0)"
-                                        classNameName="product-image">
+                                        classNameName="product-image"
+                                      >
                                         {/* <img
                                           src={item.product_image}
                                           alt="product"
@@ -711,7 +1045,8 @@ const MyOrders = () => {
                                     </figure>
                                     <h5
                                       classNameName="product-title"
-                                      style={{ display: "flex" }}>
+                                      style={{ display: "flex" }}
+                                    >
                                       <h5>Product Name :&nbsp;</h5>
                                       <a href="javascript:void(0)">
                                         {item.product_name}
@@ -826,11 +1161,13 @@ const MyOrders = () => {
         // onAfterOpen={afterOpenModal}
         onRequestClose={() => setCancelMOdal(!openCancelModal)}
         style={customStyles}
-        contentLabel="Example Modal">
+        contentLabel="Example Modal"
+      >
         <Innermodal>
           <button
             classNameName="close-button"
-            onClick={() => setCancelMOdal(!openCancelModal)}>
+            onClick={() => setCancelMOdal(!openCancelModal)}
+          >
             X
           </button>
           <div classNameName="checkout-page contact-page cancel-modal">
@@ -838,11 +1175,13 @@ const MyOrders = () => {
               <div classNameName="modal_main_div">
                 <div
                   classNameName="submit_frm row"
-                  style={{ marginTop: "20px" }}>
+                  style={{ marginTop: "20px" }}
+                >
                   <button
                     onClick={() => selectAllDefult()}
                     type="button"
-                    classNameName="button_desing">
+                    classNameName="button_desing"
+                  >
                     All
                   </button>
                 </div>
@@ -900,11 +1239,13 @@ const MyOrders = () => {
                 <div classNameName="submit_frm">
                   <div
                     classNameName="submit_frm row"
-                    style={{ marginTop: "20px" }}>
+                    style={{ marginTop: "20px" }}
+                  >
                     <button
                       onClick={() => _returnFullOrder()}
                       type="button"
-                      classNameName="button_desing">
+                      classNameName="button_desing"
+                    >
                       Cancel Order
                     </button>
                   </div>
@@ -920,9 +1261,11 @@ const MyOrders = () => {
         // onAfterOpen={afterOpenModal}
         onRequestClose={() => setExchangeModal(false)}
         style={customStyles1}
-        contentLabel="Example Modal">
+        contentLabel="Example Modal"
+      >
         <Innermodal
-          style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+          style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
+        >
           <IoMdCloseCircle
             onClick={() => setExchangeModal(false)}
             style={{ fontSize: "20px" }}
@@ -931,13 +1274,42 @@ const MyOrders = () => {
             <Wrapper>
               {getOrderId ? (
                 <>
-                  <div>
+                  <div
+                    style={{ display: "flex", justifyContent: "space-between" }}
+                  >
                     <h4>
                       Order ID:
                       {getOrderId && getOrderId && getOrderId.id
                         ? getOrderId.id
                         : ""}
                     </h4>
+
+                    <div className="input-row" action="#">
+                      <select
+                        className="dropdown_career"
+                        name="type"
+                        id="lang"
+                        style={{
+                          background: "transparent",
+                          // width: "96%",
+                          border: "2px solid #5d5d9c",
+                          minWidth: "150px",
+                        }}
+                        onChange={(e) => setStatus(e.target.value)}
+                      >
+                        .
+                        <option value="" disabled selected>
+                          Select type
+                        </option>{" "}
+                        {data.map((item, index) => {
+                          return (
+                            <>
+                              <option value={item.id}>{item.name}</option>
+                            </>
+                          );
+                        })}
+                      </select>
+                    </div>
                   </div>
                 </>
               ) : (
@@ -953,14 +1325,16 @@ const MyOrders = () => {
                           <th>Quantity</th>
                           <th>Price</th>
                           <th>Size</th>
-                          <th>
+                          <th>Color</th>
+                          {getStatus == 2 ? <th>Manage Quantity</th> : <></>}
+                          <th>Status</th>
+                          {/* <th>
                             Exchange /<br /> Return
-                          </th>
-                          {getexsizeshow == true ? <th>Select size</th> : <></>}
-                          {getexsizeshow == true ? <th>Quantity</th> : <></>}
+                          </th> */}
+                          {/* {getexsizeshow == true ? <th>Select size</th> : <></>} */}
+                          {/* {getexsizeshow == true ? <th>Quantity</th> : <></>} */}
                           {/* <th>Quantity</th> */}
                           <th>Select</th>
-                          <th>Action</th>
                         </tr>
                       </thead>
                       {getData && getData.length <= 0 ? (
@@ -974,84 +1348,63 @@ const MyOrders = () => {
                                   <tbody>
                                     <td>{item.product_name}</td>
                                     <td>{item.total_quantity}</td>
-                                    <td>{item.price}</td>
-                                    <td>{item.size}</td>
                                     <td>
-                                      <div className="input-row" action="#">
-                                        <select
-                                          className="dropdown_career"
-                                          name="type"
-                                          id="lang"
-                                          style={{
-                                            background: "transparent",
-                                            width: "96%",
-                                          }}
-                                          onChange={(e) =>
-                                            setStatus(e.target.value)
-                                          }>
-                                          .
-                                          <option value="" disabled selected>
-                                            Select type
-                                          </option>{" "}
-                                          {data.map((item, index) => {
-                                            return (
-                                              <>
-                                                <option value={item.id}>
-                                                  {item.name}
-                                                </option>
-                                              </>
-                                            );
-                                          })}
-                                        </select>
-                                      </div>
+                                      {item?.price} X {item.total_quantity} ={" "}
+                                      {item.price * item.total_quantity}
                                     </td>
+                                    <td>{item.size}</td>
+                                    <td>{item.color}</td>
 
-                                    {getexsizeshow == true ? (
+                                    {/* {getexsizeshow == true ? (
                                       <td>
-                                        {/* {getexsizedata && getexsizedata.length <= 0 ? <> No size Available. </> : <>
-                                  {getexsizedata.map((item, index) => {
-                                    return (
-                                      <>
-                                        <div>{item.name}</div>
-                                       
-                                      </>
-                                    )
-                                  })}
-                                </>} */}
-
-                                        <select
-                                          className="dropdown_career"
-                                          name="sizes"
-                                          id="lang"
-                                          style={{
-                                            background: "transparent",
-                                            width: "96%",
-                                          }}
-                                          onChange={(e) => {
-                                            setSize(e.target.value);
-                                            getProductSize(
-                                              item.product_id,
-                                              e.target.value
-                                            );
-                                          }}>
-                                          <option value="" disabled selected>
-                                            Select size
-                                          </option>{" "}
-                                          {getexsizedata &&
-                                            getexsizedata.map((item, index) => {
-                                              return (
-                                                <>
-                                                  <option value={item.id}>
-                                                    {item.name}
-                                                  </option>
-                                                </>
-                                              );
-                                            })}
-                                        </select>
+                                        {getexsizedataid ===
+                                        item?.product_id ? (
+                                          <>
+                                            <select
+                                              className="dropdown_career"
+                                              name="sizes"
+                                              id="lang"
+                                              style={{
+                                                background: "transparent",
+                                                width: "96%",
+                                                minWidth: "200px",
+                                              }}
+                                              onChange={(e) => {
+                                                setSize(e.target.value);
+                                                getProductSize(
+                                                  item.product_id,
+                                                  e.target.value,
+                                                );
+                                              }}
+                                            >
+                                              <option
+                                                value=""
+                                                disabled
+                                                selected
+                                              >
+                                                Select size
+                                              </option>{" "}
+                                              {getexsizedata &&
+                                                getexsizedata.map(
+                                                  (item, index) => {
+                                                    return (
+                                                      <>
+                                                        <option value={item.id}>
+                                                          {item.name}
+                                                        </option>
+                                                      </>
+                                                    );
+                                                  },
+                                                )}
+                                            </select>
+                                          </>
+                                        ) : (
+                                          <></>
+                                        )}
                                       </td>
                                     ) : (
                                       <></>
-                                    )}
+                                    )} */}
 
                                     {/* <input
                                 type="number"
@@ -1062,6 +1415,400 @@ const MyOrders = () => {
                                     handleCheckboxChange3(item.total_quantity,item.total_quantity);
                                   }}
                               /> */}
+                                    {getStatus == 2 ? (
+                                      <>
+                                        <td>
+                                          <div
+                                            className="quantity-box"
+                                            style={{ padding: "0px" }}
+                                          >
+                                            <div
+                                              className="qty"
+                                              style={{
+                                                display: "flex",
+                                                backgroundColor: "whitesmoke",
+                                                padding: "5px",
+                                                gap: "10px",
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                              }}
+                                            >
+                                              <button
+                                                style={{
+                                                  backgroundColor:
+                                                    "transparent",
+                                                  border: "0px",
+                                                  cursor: "pointer",
+                                                }}
+                                                type="button"
+                                                className="qty-btn"
+                                                disabled={
+                                                  item.selected_qty <= 1
+                                                }
+                                                onClick={() =>
+                                                  handleQtyChangeReturn2(index)
+                                                }
+                                              >
+                                                <FaMinus
+                                                  color="#5d5d9c"
+                                                  size={10}
+                                                />
+                                              </button>
+
+                                              <p
+                                                className="qty"
+                                                style={{ marginBottom: "0px" }}
+                                              >
+                                                {item.select_return_qty}
+                                              </p>
+                                              {/* {item.quantity <
+                                                item.total_quantity && ( */}
+                                              <button
+                                                style={{
+                                                  backgroundColor:
+                                                    "transparent",
+                                                  border: "0px",
+                                                  cursor: "pointer",
+                                                }}
+                                                type="button"
+                                                className="qty-btn"
+                                                disabled={
+                                                  item.selected_qty >=
+                                                  item.total_quantity
+                                                }
+                                                onClick={() =>
+                                                  handleQtyChangeReturn(index)
+                                                }
+                                              >
+                                                <FaPlus
+                                                  color="#5d5d9c"
+                                                  size={10}
+                                                />
+                                              </button>
+                                              {/* )} */}
+                                            </div>
+                                          </div>
+                                        </td>
+                                      </>
+                                    ) : (
+                                      <></>
+                                    )}
+
+                                    <td>
+                                      {item?.exchange_status == 1
+                                        ? "Exchange"
+                                        : item?.return_status == 1
+                                        ? "Return"
+                                        : "-"}
+                                    </td>
+
+                                    <td>
+                                      <div>
+                                        {/* <input
+                                          type="checkbox"
+                                          checked={item.isChecked}
+                                          onChange={() => {
+                                            handleCheckboxChange(
+                                              item.product_id,
+                                              item.id,
+                                              item.price,
+                                              item.main_price,
+                                              item?.quantity,
+                                            );
+                                          }}
+                                        /> */}
+                                        <input
+                                          type="checkbox"
+                                          disabled={
+                                            item?.exchange_status == 1 ||
+                                            item?.return_status == 1
+                                          }
+                                          checked={selectedProducts.some(
+                                            (p) => p.orderlineId === item.id,
+                                          )}
+                                          onChange={() => {
+                                            handleCheckboxChange(
+                                              item.product_id,
+                                              item.id,
+                                              item.price,
+                                              item.main_price,
+                                              item?.quantity,
+                                              item,
+                                            );
+                                          }}
+                                        />
+                                      </div>
+                                    </td>
+                                    {/* {getexsizeshow == false ? (
+                                      <>
+                                        <td>
+                                          {getexsizeshow == false ? (
+                                            <>
+                                              <button
+                                                className="btn"
+                                                onClick={() => {
+                                                  if (
+                                                    getexsizeshow == false &&
+                                                    getStatus == 1
+                                                  ) {
+                                                    ExchangePostApi();
+                                                  } else if (
+                                                    getexsizeshow == true
+                                                  ) {
+                                                    finalExchangePostApi();
+                                                  } else if (getStatus == 2) {
+                                                    returnPostApi();
+                                                  }
+                                                }}
+                                              >
+                                                Select size
+                                              </button>
+                                            </>
+                                          ) : (
+                                            <></>
+                                          )} */}
+                                    {/* <button
+                                            className="btn"
+                                            onClick={() => {
+                                              if (
+                                                getexsizeshow == false &&
+                                                getStatus == 1
+                                              ) {
+                                                ExchangePostApi();
+                                              } else if (
+                                                getexsizeshow == true
+                                              ) {
+                                                finalExchangePostApi();
+                                              } else if (getStatus == 2) {
+                                                returnPostApi();
+                                              }
+                                            }}
+                                          >
+                                            Select size
+                                          </button> */}
+                                    {/* </td>
+                                      </>
+                                    ) : (
+                                      <></>
+                                    )} */}
+                                  </tbody>
+                                </>
+                              );
+                            })}
+                        </>
+                      )}
+                    </table>
+                    <div
+                      style={{
+                        // width: "100%",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <button
+                        className="btn"
+                        onClick={() => {
+                          // getProductSize();
+                          {
+                            getStatus == 2 ? returnPostApi() : exchangereturn();
+                          }
+                        }}
+                      >
+                        Submit
+                      </button>
+                    </div>
+                    {/* <div>
+              <button
+                className="btn"
+                onClick={() => {
+                  if (getStatus == 1) {
+                    ExchangePostApi();
+                  }
+                }}>
+                Submit
+              </button>
+            </div> */}
+                    <p style={{ marginTop: "1rem", fontWeight: "600" }}>
+                      Kindly note that a charge of{" "}
+                      <span style={{ color: "red" }}>₹100</span> will be applied
+                      for exchanges or returns.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </Wrapper>
+          </>
+        </Innermodal>
+      </Modal>
+
+      <Modal
+        title="Exchange Return Order_final"
+        isOpen={getExchangeModalFinal}
+        // onAfterOpen={afterOpenModal}
+        onRequestClose={() => setExchangeModalFinal(false)}
+        style={customStyles1}
+        contentLabel="Example Modal"
+      >
+        <Innermodal
+          style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
+        >
+          <IoMdCloseCircle
+            onClick={() => setExchangeModalFinal(false)}
+            style={{ fontSize: "20px" }}
+          />
+          <>
+            <Wrapper>
+              {getOrderId ? (
+                <>
+                  <h4>
+                    Order ID:
+                    {getOrderId && getOrderId && getOrderId.id
+                      ? getOrderId.id
+                      : ""}
+                  </h4>
+                </>
+              ) : (
+                <></>
+              )}
+              <div className="">
+                <div className="order_history">
+                  <div className="table   table-responsive">
+                    <table className="table table-hover">
+                      <thead>
+                        <tr>
+                          <th>Product</th>
+                          <th>Quantity</th>
+                          <th>Size</th>
+                          <th>Color</th>
+                          <th>Price</th>
+                          <th>New Price</th>
+
+                          {/* <th>
+                            Exchange /<br /> Return
+                          </th> */}
+                          <th>Select size</th>
+                          <th>Select color</th>
+                          {/* {getexsizeshow == true ? <th>Quantity</th> : <></>} */}
+                          <th>Manage Quantity</th>
+                          {/* <th>Select</th> */}
+                        </tr>
+                      </thead>
+                      {selectedWithApiData &&
+                      selectedWithApiData.length <= 0 ? (
+                        <></>
+                      ) : (
+                        <>
+                          {selectedWithApiData &&
+                            selectedWithApiData.map((item, index) => {
+                              return (
+                                <>
+                                  <tbody>
+                                    <td>{item.product_name}</td>
+                                    <td>{item.total_quantity}</td>
+                                    <td>{item.size}</td>
+                                    <td>{item.color}</td>
+                                    <td>
+                                      {item?.price} X {item.total_quantity} ={" "}
+                                      {item.price * item.total_quantity}
+                                    </td>
+                                    <td>
+                                      {item?.new_price} X {item.selected_qty} ={" "}
+                                      {item.new_price * item.selected_qty}
+                                    </td>
+                                    {/* {getexsizeshow == true ? ( */}
+                                    <td>
+                                      <>
+                                        <select
+                                          className="dropdown_career"
+                                          value={item.size_id || ""}
+                                          onChange={(e) => {
+                                            const updatedData = [
+                                              ...selectedWithApiData,
+                                            ];
+                                            updatedData[index] = {
+                                              ...updatedData[index],
+                                              size_id: e.target.value,
+                                            };
+                                            setSelectedWithApiData(updatedData);
+
+                                            getProductSize(
+                                              item.product_id,
+                                              e.target.value,
+                                              item.color_id,
+                                              "size",
+                                              index,
+                                            );
+                                          }}
+                                        >
+                                          <option value="">Select size</option>
+
+                                          {item?.apiData?.sizes?.map((size) => (
+                                            <option
+                                              key={size.id}
+                                              value={size.id}
+                                            >
+                                              {size.name}
+                                            </option>
+                                          ))}
+                                        </select>
+                                      </>
+                                    </td>
+
+                                    <td>
+                                      <>
+                                        <select
+                                          className="dropdown_career"
+                                          value={item.color_id || ""}
+                                          onChange={(e) => {
+                                            const updatedData = [
+                                              ...selectedWithApiData,
+                                            ];
+                                            updatedData[index] = {
+                                              ...updatedData[index],
+                                              color_id: e.target.value,
+                                            };
+                                            setSelectedWithApiData(updatedData);
+
+                                            getProductSize(
+                                              item.product_id,
+                                              item.size_id,
+                                              e.target.value,
+                                              "color",
+                                            );
+                                          }}
+                                        >
+                                          <option value="">Select color</option>
+
+                                          {item?.apiData?.colors?.map(
+                                            (color) => (
+                                              <option
+                                                key={color.id}
+                                                value={color.id}
+                                              >
+                                                {color.name}
+                                              </option>
+                                            ),
+                                          )}
+                                        </select>
+                                      </>
+                                    </td>
+                                    {/* ) : (
+                                      <></>
+                                    )} */}
+
+                                    {/* <input
+                                      type="number"
+                                      min="10"
+                                      max="100"
+                                      value={item.total_quantity}
+                                      onChange={() => {
+                                        handleCheckboxChange3(
+                                          item.total_quantity,
+                                          item.total_quantity,
+                                        );
+                                      }}
+                                    /> */}
 
                                     {/* <QtyBtnExg
                                     getQtys={item.quantity}
@@ -1076,56 +1823,72 @@ const MyOrders = () => {
                                         <td>
                                           <div
                                             className="quantity-box"
-                                            style={{ padding: "0px" }}>
-                                            {/* <b>Quantity</b> */}
+                                            style={{ padding: "0px" }}
+                                          >
                                             <div
                                               className="qty"
                                               style={{
                                                 display: "flex",
-                                                border: "2px solid",
+                                                backgroundColor: "whitesmoke",
+                                                padding: "5px",
                                                 gap: "10px",
                                                 alignItems: "center",
                                                 justifyContent: "center",
-                                              }}>
+                                              }}
+                                            >
                                               <button
                                                 style={{
-                                                  background: "white",
+                                                  backgroundColor:
+                                                    "transparent",
                                                   border: "0px",
-                                                  display: "flex",
+                                                  cursor: "pointer",
                                                 }}
                                                 type="button"
                                                 className="qty-btn"
-                                                onClick={() => {
-                                                  handleQtyChange2(
-                                                    index,
-                                                    item.quantity,
-                                                    item.total_quantity
-                                                  );
-                                                }}>
-                                                <FaMinus />
+                                                disabled={
+                                                  item.selected_qty <= 1
+                                                }
+                                                onClick={() =>
+                                                  handleQtyChange2(index)
+                                                }
+                                              >
+                                                <FaMinus
+                                                  color="#5d5d9c"
+                                                  size={10}
+                                                />
                                               </button>
+
                                               <p
                                                 className="qty"
-                                                style={{ marginBottom: "0px" }}>
-                                                {item.quantity}
+                                                style={{ marginBottom: "0px" }}
+                                              >
+                                                {item.selected_qty}
                                               </p>
+                                              {/* {item.quantity <
+                                                item.total_quantity && ( */}
                                               <button
                                                 style={{
-                                                  background: "white",
+                                                  backgroundColor:
+                                                    "transparent",
                                                   border: "0px",
-                                                  display: "flex",
+                                                  cursor: "pointer",
                                                 }}
                                                 type="button"
                                                 className="qty-btn"
-                                                onClick={() => {
-                                                  handleQtyChange(
-                                                    index,
-                                                    item.quantity,
-                                                    item.total_quantity
-                                                  );
-                                                }}>
-                                                <FaPlus />
+                                                disabled={
+                                                  item.selected_qty >=
+                                                  item.total_quantity
+                                                }
+                                                onClick={() =>
+                                                  handleQtyChange(index)
+                                                }
+                                              >
+                                                <FaPlus
+                                                  color="#5d5d9c"
+                                                  size={10}
+                                                />
                                               </button>
+                                              {/* )} */}
                                             </div>
                                           </div>
                                         </td>
@@ -1134,40 +1897,80 @@ const MyOrders = () => {
                                       <></>
                                     )}
 
-                                    <td>
+                                    {/* <td>
                                       <div>
+                                       
                                         <input
                                           type="checkbox"
-                                          checked={item.isChecked}
+                                          // disabled={getStatus !== 1}
+                                          checked={selectedProducts.some(
+                                            (p) => p.orderlineId === item.id,
+                                          )}
                                           onChange={() => {
                                             handleCheckboxChange(
                                               item.product_id,
                                               item.id,
                                               item.price,
-                                              item.main_price
+                                              item.main_price,
+                                              item?.quantity,
+                                              item,
                                             );
                                           }}
                                         />
                                       </div>
-                                    </td>
-                                    <td>
-                                      <button
-                                        className="btn"
-                                        onClick={() => {
-                                          if (
-                                            getexsizeshow == false &&
-                                            getStatus == 1
-                                          ) {
-                                            ExchangePostApi();
-                                          } else if (getexsizeshow == true) {
-                                            finalExchangePostApi();
-                                          } else if (getStatus == 2) {
-                                            returnPostApi();
-                                          }
-                                        }}>
-                                        Submit
-                                      </button>
-                                    </td>
+                                    </td> */}
+                                    {/* {getexsizeshow == false ? (
+                                      <>
+                                        <td>
+                                          {getexsizeshow == false ? (
+                                            <>
+                                              <button
+                                                className="btn"
+                                                onClick={() => {
+                                                  if (
+                                                    getexsizeshow == false &&
+                                                    getStatus == 1
+                                                  ) {
+                                                    ExchangePostApi();
+                                                  } else if (
+                                                    getexsizeshow == true
+                                                  ) {
+                                                    finalExchangePostApi();
+                                                  } else if (getStatus == 2) {
+                                                    returnPostApi();
+                                                  }
+                                                }}
+                                              >
+                                                Select size
+                                              </button>
+                                            </>
+                                          ) : (
+                                            <></>
+                                          )} */}
+                                    {/* <button
+                                            className="btn"
+                                            onClick={() => {
+                                              if (
+                                                getexsizeshow == false &&
+                                                getStatus == 1
+                                              ) {
+                                                ExchangePostApi();
+                                              } else if (
+                                                getexsizeshow == true
+                                              ) {
+                                                finalExchangePostApi();
+                                              } else if (getStatus == 2) {
+                                                returnPostApi();
+                                              }
+                                            }}
+                                          >
+                                            Select size
+                                          </button> */}
+                                    {/* </td>
+                                      </>
+                                    ) : (
+                                      <></>
+                                    )} */}
                                   </tbody>
                                 </>
                               );
@@ -1175,6 +1978,24 @@ const MyOrders = () => {
                         </>
                       )}
                     </table>
+                    <div
+                      style={{
+                        // width: "100%",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <button
+                        className="btn"
+                        onClick={() => {
+                          // getProductSize();
+                          finalExchangePostApi();
+                        }}
+                      >
+                        Submit
+                      </button>
+                    </div>
                     {/* <div>
               <button
                 className="btn"
@@ -1186,6 +2007,11 @@ const MyOrders = () => {
                 Submit
               </button>
             </div> */}
+                    <p style={{ marginTop: "1rem", fontWeight: "600" }}>
+                      Kindly note that a charge of{" "}
+                      <span style={{ color: "red" }}>₹100</span> will be applied
+                      for exchanges or returns.
+                    </p>
                   </div>
                 </div>
               </div>

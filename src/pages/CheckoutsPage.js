@@ -10,7 +10,6 @@ import { useUserContext } from "../context/user_context";
 import { useOrderContext } from "../context/place_order_context";
 import { useLocation } from "react-router-dom";
 
-
 import icon1 from "../assets/car.png";
 import icon2 from "../assets/order.png";
 import icon3 from "../assets/payment.png";
@@ -32,11 +31,17 @@ const CheckoutsPage = () => {
   const history = useHistory();
   // window.scrollTo(0, 0);
 
-  const { cart, cart_item, check_value, total_amount, shipping_fees, clearCart, orderResponse } =
-    useCartContext();
+  const {
+    cart,
+    cart_item,
+    check_value,
+    total_amount,
+    shipping_fees,
+    clearCart,
+    orderResponse,
+  } = useCartContext();
 
   console.log("cart are", cart_item);
-
 
   const { isLogin, logintoken, logindata } = useUserContext();
   const { setOrder, order_data, login_loading, setOrderGuest } =
@@ -49,9 +54,6 @@ const CheckoutsPage = () => {
   const location = useLocation();
   //   const data = location.state;
   const data = location.state?.items || [];
-
-
-
 
   console.log("Received Data:", data);
   // const [payment_type, Type] = React.useState("1");
@@ -71,8 +73,6 @@ const CheckoutsPage = () => {
   const [getShiftigCharge, setShiftingCharge] = React.useState();
   const [getCategoryId, setCatetegoryId] = React.useState();
 
-  
-
   useEffect(() => {
     getCountries();
     const shifting_charge = JSON.parse(localStorage.getItem("shiftingcharge"));
@@ -84,14 +84,13 @@ const CheckoutsPage = () => {
   // console.log("shifting charge", getShiftigCharge);
   // console.log("getCategoryId", getCategoryId);
 
-
   useEffect(() => {
     if (isLogin) {
       setShowlogin(false);
     }
   }, [isLogin]);
 
-  useEffect(() => { }, [order_data]);
+  useEffect(() => {}, [order_data]);
 
   const mSelectAddress = (id) => {
     setSelectAddress(id);
@@ -286,7 +285,7 @@ const CheckoutsPage = () => {
     }
     var options = {
       key: "rzp_live_pXp8Xsvsqxx2j2",
-      //   key: "rzp_test_C1WkhcrxRyAGl9",  
+      // key: "rzp_test_C1WkhcrxRyAGl9",
 
       currency: "INR",
       order_id: order_id,
@@ -302,7 +301,7 @@ const CheckoutsPage = () => {
       handler: async function (response) {
         console.log(
           "Response => get_payment_id api after razorpay payment",
-          response
+          response,
         );
 
         var formData = new FormData();
@@ -322,7 +321,7 @@ const CheckoutsPage = () => {
         });
         console.log(
           "Response => get_payment_id api after razorpay payment------",
-          myRes.data
+          myRes.data,
         );
 
         if (myRes && myRes.data.success == 1) {
@@ -388,7 +387,8 @@ const CheckoutsPage = () => {
                                   </span>
                                   <a
                                     href="javascript:void(0)"
-                                    onClick={() => setShowlogin(!showscreen)}>
+                                    onClick={() => setShowlogin(!showscreen)}
+                                  >
                                     Log in
                                   </a>
                                 </p>
@@ -472,7 +472,8 @@ const CheckoutsPage = () => {
                                   };
                                   setStateAddress("");
                                   getStates(params);
-                                }}>
+                                }}
+                              >
                                 <option value={""}>Select Country</option>
                                 {get_countrylist.map((country, index) => {
                                   return (
@@ -489,7 +490,8 @@ const CheckoutsPage = () => {
                                 value={_state}
                                 onChange={(e) => {
                                   setStateAddress(e.target.value);
-                                }}>
+                                }}
+                              >
                                 <option value={""}>Select State</option>
 
                                 {get_statelist.map((states, index) => {
@@ -527,7 +529,8 @@ const CheckoutsPage = () => {
                               <a
                                 href="javascript:void(0)"
                                 className="btn-normal btn"
-                                onClick={placeOrderGuest}>
+                                onClick={placeOrderGuest}
+                              >
                                 Submit
                               </a>
                             </div>
@@ -580,7 +583,6 @@ const CheckoutsPage = () => {
                             </li>
                             {/* );
                             })} */}
-
                           </ul>
                           {/* <ul className="sub-total">
                             <li>
@@ -613,63 +615,72 @@ const CheckoutsPage = () => {
                               </div>
                             </li>
                           </ul> */}
-                          {getShiftigCharge == 0 ? <>
-                            {data[0]?.value * data[0]?.qty < 1000 ? <>
-                              {console.log("true")}
+                          {getShiftigCharge == 0 ? (
+                            <>
+                              {data[0]?.value * data[0]?.qty < 1000 ? (
+                                <>
+                                  {console.log("true")}
+                                  <ul className="qty pro_qty_line">
+                                    <li style={{ textTransform: "capitalize" }}>
+                                      Shipping fee
+                                      <span>{formatPrice(50)}</span>
+                                    </li>
+                                  </ul>
+                                </>
+                              ) : (
+                                <></>
+                              )}
+                            </>
+                          ) : (
+                            <>
+                              {console.log("false")}
                               <ul className="qty pro_qty_line">
                                 <li style={{ textTransform: "capitalize" }}>
                                   Shipping fee
-                                  <span>{formatPrice(50)}</span>
+                                  <span>{formatPrice(getShiftigCharge)}</span>
                                 </li>
                               </ul>
-                            </> : <></>}
-                          </> : <>
-                            {console.log("false")}
-                            <ul className="qty pro_qty_line">
-
-                              <li style={{ textTransform: "capitalize" }}>
-                                Shipping fee
-                                <span>{formatPrice(getShiftigCharge)}</span>
-                              </li>
-
-
-                            </ul>
-                          </>}
-
+                            </>
+                          )}
 
                           <ul className="total">
                             <li>
                               Total
-                              {getShiftigCharge == 0 ? <>
-                                <span className="count">
-                                  {/* {formatPrice(data[0]?.value * data[0]?.qty)} */}
-                                  {formatPrice(
-                                    (data[0]?.value * data[0]?.qty || 0) + ((data[0]?.value * data[0]?.qty || 0) < 1000 ? 50 : 0)
-                                  )}
-                                </span>
-                              </> : <>
-                                <span className="count">
-                                  {/* {formatPrice(data[0]?.value * data[0]?.qty)} */}
-                                  {formatPrice(
-                                    (Number(data[0]?.value || 0) * Number(data[0]?.qty || 0)) + Number(getShiftigCharge || 0)
-                                  )}
-
-
-                                </span>
-                              </>}
-
+                              {getShiftigCharge == 0 ? (
+                                <>
+                                  <span className="count">
+                                    {/* {formatPrice(data[0]?.value * data[0]?.qty)} */}
+                                    {formatPrice(
+                                      (data[0]?.value * data[0]?.qty || 0) +
+                                        ((data[0]?.value * data[0]?.qty || 0) <
+                                        1000
+                                          ? 50
+                                          : 0),
+                                    )}
+                                  </span>
+                                </>
+                              ) : (
+                                <>
+                                  <span className="count">
+                                    {/* {formatPrice(data[0]?.value * data[0]?.qty)} */}
+                                    {formatPrice(
+                                      Number(data[0]?.value || 0) *
+                                        Number(data[0]?.qty || 0) +
+                                        Number(getShiftigCharge || 0),
+                                    )}
+                                  </span>
+                                </>
+                              )}
                             </li>
                           </ul>
                         </div>
 
-                        {((data[0]?.value || 0) * (data[0]?.qty || 0)) < 1000 && getShiftigCharge == 0 && (
-                          <span style={{ color: "#000", fontWeight: "500" }}>
-                            Avail free shipping for orders above 1000/-
-                          </span>
-                        )}
-
-
-
+                        {(data[0]?.value || 0) * (data[0]?.qty || 0) < 1000 &&
+                          getShiftigCharge == 0 && (
+                            <span style={{ color: "#000", fontWeight: "500" }}>
+                              Avail free shipping for orders above 1000/-
+                            </span>
+                          )}
 
                         <div className="payment-box">
                           <div className="upper-box">
@@ -723,7 +734,8 @@ const CheckoutsPage = () => {
 
                                   <ul
                                     className="online-pay-option"
-                                    style={{ listStyleType: "circle" }}>
+                                    style={{ listStyleType: "circle" }}
+                                  >
                                     <li className="online-pay-option-sub">
                                       Card
                                     </li>
@@ -785,7 +797,8 @@ const CheckoutsPage = () => {
                               <a
                                 href="javascript:void(0)"
                                 className="btn-normal btn"
-                                onClick={placeOrder}>
+                                onClick={placeOrder}
+                              >
                                 Place Order
                               </a>
                             </div>
@@ -794,7 +807,8 @@ const CheckoutsPage = () => {
                               <a
                                 href="javascript:void(0)"
                                 className="btn-normal btn"
-                                onClick={placeOrderGuest}>
+                                onClick={placeOrderGuest}
+                              >
                                 Login/Guest
                               </a>
                             </div>
@@ -1444,10 +1458,11 @@ const Wrapper = styled.section`
       width: 100%;
     }
 
-    ${"" /* .col-lg-9 order-lg-last dashboard-content{
+    ${
+      "" /* .col-lg-9 order-lg-last dashboard-content{
       padding:0 15px;
     } */
-  }
+    }
     .page {
       min-height: calc(60vh - (20vh + 10rem));
     }
@@ -1470,7 +1485,7 @@ const Wrapper = styled.section`
     }
   }
   @media screen and (max-width: 575px) {
-     .order-box .qty li { 
+    .order-box .qty li {
       display: flex !important;
       flex-direction: row !important;
       justify-content: space-between;

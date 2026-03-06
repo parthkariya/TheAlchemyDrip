@@ -68,6 +68,7 @@ export const services = [
 export const ACCEPT_HEADER = "application/x.uniform.v1+json";
 
 const BaseUrl = "https://getmynfc.com/uniform/api/v1/";
+// const BaseUrl = "http://192.168.1.77:8000/api/v1/";
 // const BaseUrl = "http://192.168.1.49:8000/api/v1/";
 // export const products_url = BaseUrl + "new-product/";
 // export const products_url = BaseUrl + "get-product-data";
@@ -120,6 +121,8 @@ export const getexchangeproductsize = BaseUrl + "getexchangeproductsize";
 export const customer_data = BaseUrl + "customer-data";
 export const forgot_password = BaseUrl + "forgot-password";
 export const forgot_change_password = BaseUrl + "forgot-change-password";
+export const get_exchange_payment_id = BaseUrl + "get_exchange_payment_id";
+export const get_return_payment_id = BaseUrl + "get_return_payment_id";
 // export const single_product_url = `https://course-api.com/react-store-single-product?id=`;
 
 // screen type

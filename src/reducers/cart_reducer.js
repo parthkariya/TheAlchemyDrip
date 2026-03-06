@@ -27,16 +27,14 @@ const cart_reducer = (state, action) => {
 
     console.log("===>", check_value);
 
-    const tempItem = state.cart.find((i) => i.id === id + value);
-    if (tempItem) {
-      console.log("aaa");
+    const uniqueId = `${id}-${value}-${sizeid}-${color_id}`;
 
+    const tempItem = state.cart.find((i) => i.id === uniqueId);
+    if (tempItem) {
       const tempCart = state.cart.map((cartItem) => {
-        if (cartItem.id === id + value) {
+        if (cartItem.id === uniqueId) {
           let newAmount = cartItem.amount + amount;
-          // if (newAmount > cartItem.max) {
-          //   newAmount = cartItem.max;
-          // }
+
           return { ...cartItem, amount: newAmount };
         } else {
           return cartItem;
@@ -71,16 +69,14 @@ const cart_reducer = (state, action) => {
     else {
       console.log("ccc");
       const newItem = {
-        id: id + value,
+        id: uniqueId,
         idmain: id,
         slug: slug,
         name: product.name,
         color,
         amount,
         image: images,
-        // price: product.price,
         price: value,
-        // max: product.stock,
         max: getstock,
         size: sizeValue,
         sizeid: sizeid,
@@ -202,7 +198,7 @@ const cart_reducer = (state, action) => {
       {
         total_items: 0,
         total_amount: 0,
-      }
+      },
     );
 
     // Apply shipping fee if total_amount is less than 1000

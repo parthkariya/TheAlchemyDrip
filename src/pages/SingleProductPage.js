@@ -107,6 +107,7 @@ const SingleProductPage = () => {
     if (getColors.length > 0 && getActiveColor === null) {
       const first = getColors[0];
       setColorId(first.color_id);
+      setColorName(first.color_name);
       // setColorName(first.color_name);
       // setActiveColor(0);
       SetStock(first.display_stock);
@@ -116,9 +117,6 @@ const SingleProductPage = () => {
 
   const handleButtonClick = (index) => {
     setActiveButtonIndex(index);
-    // if (getstock === 0) {
-    //   Notification("error", "Error,'getstock'");
-    // }
   };
   // console.log("singleproduct array",singleProduct);
 
@@ -129,6 +127,16 @@ const SingleProductPage = () => {
   }, [slug]);
 
   useEffect(() => {
+    if (details && details[0].size_id) {
+      setColorName(details[0].color_name);
+      setColorId(details[0].color_id);
+      setSizeValue(details[0].size_name);
+      setSizeId(details[0].size_id);
+      setValue(details[0].price);
+      setValue1(details[0].wholesale_price);
+      sizeApi("");
+    } else {
+    }
     setSizeValue2(size && size);
     SetStock2(inventory && inventory);
   }, [single_product1]);
@@ -148,6 +156,37 @@ const SingleProductPage = () => {
       }, 3000);
     }
   }, [error]);
+
+  const sizeApi = async (id) => {
+    const formData = new FormData();
+    formData.append("product_id", product_id);
+    formData.append("size_id", id ? id : details && details[0].size_id);
+    const response = await axios
+      .post(get_size_color_stock, formData, {
+        headers: {
+          Accept: "application/x.uniform.v1+json",
+        },
+        "Access-Control-Allow-Origin": "*",
+      })
+      .catch((error) => console.error(`Error: ${error}`));
+    setColors(response.data.detail);
+
+    // if (response.data.success == 1) {
+    //   setProd_Id("");
+    //   setSize_Id("");
+
+    //   Notification(
+    //     "success",
+    //     "Success!",
+    //     "form has been successfully submitted"
+    //   );
+    //   return;
+    // } else {
+    //   Notification("error", "Error!", "please enter valid data!");
+    //   return;
+    // }
+    // }
+  };
 
   const mAddToWishlist = async () => {
     if (isLogin) {
@@ -181,40 +220,8 @@ const SingleProductPage = () => {
 
   const duplicateSizes = details?.filter(
     (item, index) =>
-      details?.map((item) => item.size_name).indexOf(item.size_name) !== index
+      details?.map((item) => item.size_name).indexOf(item.size_name) !== index,
   );
-
-  const sizeApi = async (id) => {
-    const formData = new FormData();
-    formData.append("product_id", product_id);
-    formData.append("size_id", id);
-    const response = await axios
-      .post(get_size_color_stock, formData, {
-        headers: {
-          Accept: "application/x.uniform.v1+json",
-        },
-        "Access-Control-Allow-Origin": "*",
-      })
-      .catch((error) => console.error(`Error: ${error}`));
-    console.log("response   ", response.data.detail);
-    setColors(response.data.detail);
-
-    // if (response.data.success == 1) {
-    //   setProd_Id("");
-    //   setSize_Id("");
-
-    //   Notification(
-    //     "success",
-    //     "Success!",
-    //     "form has been successfully submitted"
-    //   );
-    //   return;
-    // } else {
-    //   Notification("error", "Error!", "please enter valid data!");
-    //   return;
-    // }
-    // }
-  };
 
   return (
     <Wrapper>

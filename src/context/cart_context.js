@@ -20,9 +20,9 @@ const getLocalStorage = () => {
 };
 const getLocalStorageCartItem = () => {
   let cart_item = localStorage.getItem("cart_item");
-  
+
   if (cart_item) {
-    console.log("local storage",cart_item);
+    console.log("local storage", cart_item);
 
     return JSON.parse(localStorage.getItem("cart_item"));
   } else {
@@ -31,9 +31,9 @@ const getLocalStorageCartItem = () => {
 };
 const getLocalStorageCheckValue = () => {
   let check_value = localStorage.getItem("check_value");
-  
+
   if (check_value) {
-    console.log("local storage check_value",check_value);
+    console.log("local storage check_value", check_value);
 
     return JSON.parse(localStorage.getItem("check_value"));
   } else {
@@ -46,7 +46,7 @@ const initialState = {
   total_items: 0,
   total_amount: 0,
   shipping_fees: 0,
-  cart_item:getLocalStorageCartItem(),
+  cart_item: getLocalStorageCartItem(),
   check_value: getLocalStorageCheckValue(),
 };
 
@@ -70,13 +70,11 @@ export const CartProvider = ({ children }) => {
     sizeid,
     color_id,
     colorName,
-    check
+    check,
   ) => {
-    
-    console.log("checkkkk",check);
-    
-    dispatch({
+    console.log("checkkkk", check);
 
+    dispatch({
       type: ADD_TO_CART,
 
       payload: {
@@ -93,15 +91,13 @@ export const CartProvider = ({ children }) => {
         sizeid,
         color_id,
         colorName,
-        check_value:check,
+        check_value: check,
       },
     });
-    if(check == 1){
+    if (check == 1) {
       // Notification("success", "Success!", "Product Add to Cart Successfully.");
-
-    }else{
+    } else {
       Notification("success", "Success!", "Product Add to Cart Successfully.");
-
     }
   };
   //remove from cart
@@ -111,7 +107,10 @@ export const CartProvider = ({ children }) => {
 
   //toggle amount
   const toggleAmount = (id, value) => {
-    dispatch({ type: TOGGLE_CART_ITEM_AMOUNT, payload: { id, value, check_value: state.check_value,} });
+    dispatch({
+      type: TOGGLE_CART_ITEM_AMOUNT,
+      payload: { id, value, check_value: state.check_value },
+    });
   };
 
   //clear cart
@@ -121,14 +120,14 @@ export const CartProvider = ({ children }) => {
 
   //save cart to local storage
   // useEffect(() => {
-    
-  //   dispatch({ type: COUNT_CART_TOTALS,  
+
+  //   dispatch({ type: COUNT_CART_TOTALS,
   //     payload: {
   //     check_value:check,
   //   }, });
   //   localStorage.setItem("cart", JSON.stringify(state.cart));
   //   console.log("useeffect used");
-    
+
   // }, [state.cart,state.check_value]);
 
   useEffect(() => {
@@ -139,21 +138,20 @@ export const CartProvider = ({ children }) => {
         check_value: state.check_value, // Use state.check_value here
       },
     });
-  
+
     // Save the cart to local storage
     localStorage.setItem("cart", JSON.stringify(state.cart));
     localStorage.setItem("cart_item", JSON.stringify(state.cart_item));
     localStorage.setItem("check_value", JSON.stringify(state.check_value));
-  
+
     // Log for debugging
     // console.log("useEffect used");
-    
-  }, [state.cart, state.check_value,state.cart_item]); // Dependency on state.cart and state.check_value
-  
+  }, [state.cart, state.check_value, state.cart_item]); // Dependency on state.cart and state.check_value
 
   return (
     <CartContext.Provider
-      value={{ ...state, addToCart, removeItem, toggleAmount, clearCart }}>
+      value={{ ...state, addToCart, removeItem, toggleAmount, clearCart }}
+    >
       {children}
     </CartContext.Provider>
   );

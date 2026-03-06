@@ -50,7 +50,7 @@ const UserAddress = (props) => {
   const [addressId, setAddressId] = useState(""); // add address modal
   const [isEdit, setEditType] = useState(false); // add address modal
   const [screenType, setScreen] = useState(
-    props.screenType ? props.screenType : 0
+    props.screenType ? props.screenType : 0,
   ); // add address modal
 
   useEffect(() => {
@@ -233,7 +233,8 @@ const UserAddress = (props) => {
     <main>
       <Wrapper
         style={{ maxHeight: "400px", overflow: "scroll" }}
-        className="page">
+        className="page"
+      >
         <section className="section-big-py-space b-g-light">
           <div className="col-lg-9 order-lg-last dashboard-content">
             <div className="card card_bg_color">
@@ -242,7 +243,8 @@ const UserAddress = (props) => {
                 className="card-header"
                 type="button"
                 data-toggle="modal"
-                data-target="#AddressModal">
+                data-target="#AddressModal"
+              >
                 <i className="fa" aria-hidden="true">
                   <FaPlusCircle />
                 </i>
@@ -256,7 +258,8 @@ const UserAddress = (props) => {
                       props.selectedAddId == item.id
                         ? "card-body active"
                         : "card-body deactive"
-                    }>
+                    }
+                  >
                     <div className="row">
                       <div className="col-md-9">
                         <div className="addressList">
@@ -286,18 +289,20 @@ const UserAddress = (props) => {
                         <div
                           className="actions_btns"
                           // style={{ marginLeft: "1rem" }}
-                          >
+                        >
                           <div className="left_edit">
                             <a
                               href="javascript:void(0);"
-                              onClick={() => mEditAddress(item)}>
+                              onClick={() => mEditAddress(item)}
+                            >
                               Edit
                             </a>
                           </div>
                           <div className="right_delete">
                             <a
                               href="javascript:void(0);"
-                              onClick={() => mDeleteAddress(item.id)}>
+                              onClick={() => mDeleteAddress(item.id)}
+                            >
                               Delete
                             </a>
                           </div>
@@ -315,7 +320,8 @@ const UserAddress = (props) => {
           // onAfterOpen={afterOpenModal}
           onRequestClose={closeModal}
           style={customStyles}
-          contentLabel="Example Modal">
+          contentLabel="Example Modal"
+        >
           <Innermodal>
             <button className="close-button" onClick={closeModal}>
               <IoMdClose />
@@ -325,7 +331,7 @@ const UserAddress = (props) => {
                 <div className="theme-form">
                   <div className="row check-out ">
                     <div className="form-group col-md-6 col-sm-6 col-xs-12">
-                      <label>Full Name</label>
+                      <label>Student Full Name</label>
                       <input
                         type="text"
                         name="field-name"
@@ -383,7 +389,8 @@ const UserAddress = (props) => {
                       <a
                         href="javascript:void(0)"
                         className="btn-normal btn"
-                        onClick={mAddAddress}>
+                        onClick={mAddAddress}
+                      >
                         Submit
                       </a>
                     </div>
@@ -467,7 +474,7 @@ const Wrapper = styled.section`
         display: flex;
         -ms-flex-wrap: wrap;
         flex-wrap: wrap;
-        ${'' /* margin-right: -10px; */}
+        ${"" /* margin-right: -10px; */}
         margin-left: -10px;
         .col-md-9 {
           -ms-flex: 0 0 75%;

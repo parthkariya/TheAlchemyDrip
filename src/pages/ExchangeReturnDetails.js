@@ -370,7 +370,8 @@ const ExchangeReturnDetails = () => {
                                     background: "transparent",
                                     width: "96%",
                                   }}
-                                  onChange={(e) => setStatus(e.target.value)}>
+                                  onChange={(e) => setStatus(e.target.value)}
+                                >
                                   .
                                   <option value="" disabled selected>
                                     Select type
@@ -413,9 +414,10 @@ const ExchangeReturnDetails = () => {
                                     setSize(e.target.value);
                                     getProductSize(
                                       item.product_id,
-                                      e.target.value
+                                      e.target.value,
                                     );
-                                  }}>
+                                  }}
+                                >
                                   <option value="" disabled selected>
                                     Select size
                                   </option>{" "}
@@ -458,7 +460,8 @@ const ExchangeReturnDetails = () => {
                                 <td>
                                   <div
                                     className="quantity-box"
-                                    style={{ padding: "0px" }}>
+                                    style={{ padding: "0px" }}
+                                  >
                                     {/* <b>Quantity</b> */}
                                     <div
                                       className="qty"
@@ -468,7 +471,8 @@ const ExchangeReturnDetails = () => {
                                         gap: "10px",
                                         alignItems: "center",
                                         justifyContent: "center",
-                                      }}>
+                                      }}
+                                    >
                                       <button
                                         style={{
                                           background: "white",
@@ -481,14 +485,16 @@ const ExchangeReturnDetails = () => {
                                           handleQtyChange2(
                                             index,
                                             item.quantity,
-                                            item.total_quantity
+                                            item.total_quantity,
                                           );
-                                        }}>
+                                        }}
+                                      >
                                         <FaMinus />
                                       </button>
                                       <p
                                         className="qty"
-                                        style={{ marginBottom: "0px" }}>
+                                        style={{ marginBottom: "0px" }}
+                                      >
                                         {item.quantity}
                                       </p>
                                       <button
@@ -503,9 +509,10 @@ const ExchangeReturnDetails = () => {
                                           handleQtyChange(
                                             index,
                                             item.quantity,
-                                            item.total_quantity
+                                            item.total_quantity,
                                           );
-                                        }}>
+                                        }}
+                                      >
                                         <FaPlus />
                                       </button>
                                     </div>
@@ -526,7 +533,7 @@ const ExchangeReturnDetails = () => {
                                       item.product_id,
                                       item.id,
                                       item.price,
-                                      item.main_price
+                                      item.main_price,
                                     );
                                   }}
                                 />
@@ -546,7 +553,8 @@ const ExchangeReturnDetails = () => {
                                   } else if (getStatus == 2) {
                                     returnPostApi();
                                   }
-                                }}>
+                                }}
+                              >
                                 Submit
                               </button>
                             </td>
@@ -585,7 +593,7 @@ const Wrapper = styled.div`
   gap: 1rem;
   overflow: scroll;
   flex-direction: column;
- 
+
   input {
     padding: "1rem";
     border: "1px solid";
