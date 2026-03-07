@@ -299,10 +299,11 @@ const SingleProductPage = () => {
                           setValue(item.price);
                           setValue1(item.wholesale_price);
                           setSizeId(item.size_id);
-                          setColorId(item.color_id);
+                          // setColorId(item.color_id);
                           // setColorName(item.color_name);
                           SetCon1(true);
                           setSizeValue(item.size_name);
+                          setActiveColor(null);
                           // SetStock(item.display_stock);
                           setWish(item.wishlist);
                           SetCondition(true);
