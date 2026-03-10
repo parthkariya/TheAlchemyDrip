@@ -1629,11 +1629,25 @@ const MyOrders = () => {
                 Submit
               </button>
             </div> */}
-                    <p style={{ marginTop: "1rem", fontWeight: "600" }}>
-                      Kindly note that a charge of{" "}
-                      <span style={{ color: "red" }}>₹100</span> will be applied
-                      for exchanges or returns.
-                    </p>
+                    {getStatus == 1 ? (
+                      <>
+                        <p style={{ marginTop: "1rem", fontWeight: "600" }}>
+                          For exchange, a fee of{" "}
+                          <span style={{ color: "red" }}>Rs. 100</span> will be
+                          charged along with the price difference charges.
+                        </p>
+                      </>
+                    ) : getStatus == 2 ? (
+                      <>
+                        <p style={{ marginTop: "1rem", fontWeight: "600" }}>
+                          For return, a flat fee of will be charged.{" "}
+                          <span style={{ color: "red" }}>Rs. 100</span> will be
+                          charged.
+                        </p>
+                      </>
+                    ) : (
+                      <></>
+                    )}
                   </div>
                 </div>
               </div>
