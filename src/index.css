@@ -81,6 +81,66 @@ h5 {
 p {
   margin-bottom: 1.25rem;
 }
+
+/* Payment failure modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+}
+.payment-fail-modal {
+  max-width: 640px;
+  width: 92vw;
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px 22px;
+  position: relative;
+  outline: none;
+}
+.payment-fail-modal h3 {
+  margin: 0 0 12px 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #1f1f1f;
+}
+.payment-fail-modal .close-btn {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font-size: 22px;
+  color: #333;
+}
+.payment-fail-modal .fail-meta {
+  background: #f8f8f8;
+  border: 1px solid #ededed;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  color: #333;
+}
+.payment-fail-modal .fail-meta p {
+  margin: 0 0 6px 0;
+}
+.payment-fail-modal pre {
+  background: #0f0f0f;
+  color: #eaeaea;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  max-height: 260px;
+  overflow: auto;
+}
 @media screen and (min-width: 800px) {
   h1 {
     font-size: 3rem;

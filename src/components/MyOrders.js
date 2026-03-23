@@ -32,6 +32,7 @@ import { Link } from "react-router-dom/cjs/react-router-dom";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { useCartContext } from "../context/cart_context";
 import createNotification from "../utils/Notification";
+import Item from "antd/lib/list/Item";
 
 const MyOrders = () => {
   const {
@@ -475,10 +476,82 @@ const MyOrders = () => {
     }
   };
 
+  // async function displayRazorpay(order_id, total_amount) {
+  //   console.log("order_id from api in => displayRazorpay", order_id);
+
+  //   var res = await loadScript();
+  //   console.log("res => in displayRazorpay function", res);
+
+  //   if (!res) {
+  //     alert("Razorpay SDK failed to load. Are you online?");
+  //     return;
+  //   }
+
+  //   var names = "dsh";
+  //   if (logindata) {
+  //     names = logindata.name;
+  //   }
+  //   var options = {
+  //     // key: "rzp_live_pXp8Xsvsqxx2j2",
+  //     key: "rzp_test_C1WkhcrxRyAGl9",
+
+  //     currency: "INR",
+  //     order_id: order_id,
+  //     name: "The Alchemy Drip",
+  //     description: "Transaction",
+  //     amount: total_amount * 100.0,
+  //     prefill: {
+  //       name: names,
+  //     },
+  //     // image: "https://applified.co.in/dsh//public/logos/1626349162-200X200.png",
+  //     // image: web_logo2,
+
+  //     handler: async function (response) {
+  //       console.log(
+  //         "Response => get_payment_id api after razorpay payment",
+  //         response,
+  //       );
+
+  //       var formData = new FormData();
+  //       formData.append("razorpay_payment_id", response.razorpay_payment_id);
+  //       formData.append("razorpay_order_id", response.razorpay_order_id);
+  //       formData.append("razorpay_signature", response.razorpay_signature);
+
+  //       for (var pair of formData.entries()) {
+  //         console.log("Body => ", pair[0] + ", " + pair[1]);
+  //       }
+
+  //       var myRes = await axios.post(get_exchange_payment_id, formData, {
+  //         headers: {
+  //           Accept: "application/x.uniform.v1+json",
+  //           // "Authorization": "Bearer ".concat(token)
+  //         },
+  //       });
+  //       console.log(
+  //         "Response => get_payment_id api after razorpay payment------",
+  //         myRes.data,
+  //       );
+
+  //       if (myRes && myRes.data.success == 1) {
+  //         Notification("success", "", myRes.data.message);
+
+  //         // clearCart();
+  //         history.push("/");
+  //         // alert('Payment Successfully\n Order Placed Successfully \n ')
+  //       } else if (myRes && myRes.data.success == 0) {
+  //         alert(myRes.data.message);
+  //       }
+  //       // Notification("success", "", order_data.message);
+  //     },
+  //   };
+  //   const paymentObject = new window.Razorpay(options);
+  //   paymentObject.open();
+  // }
+
   async function displayRazorpay(order_id, total_amount) {
     console.log("order_id from api in => displayRazorpay", order_id);
 
-    var res = await loadScript();
+    const res = await loadScript();
     console.log("res => in displayRazorpay function", res);
 
     if (!res) {
@@ -486,71 +559,122 @@ const MyOrders = () => {
       return;
     }
 
-    var names = "dsh";
+    let names = "Guest";
     if (logindata) {
       names = logindata.name;
     }
-    var options = {
+
+    const options = {
       key: "rzp_live_pXp8Xsvsqxx2j2",
       // key: "rzp_test_C1WkhcrxRyAGl9",
-
       currency: "INR",
       order_id: order_id,
       name: "The Alchemy Drip",
       description: "Transaction",
-      amount: total_amount * 100.0,
+      amount: total_amount * 100,
+
       prefill: {
         name: names,
       },
-      // image: "https://applified.co.in/dsh//public/logos/1626349162-200X200.png",
-      // image: web_logo2,
 
+      // ✅ SUCCESS HANDLER
       handler: async function (response) {
-        console.log(
-          "Response => get_payment_id api after razorpay payment",
-          response,
-        );
+        console.log("Payment Success Response:", response);
 
-        var formData = new FormData();
+        let formData = new FormData();
         formData.append("razorpay_payment_id", response.razorpay_payment_id);
         formData.append("razorpay_order_id", response.razorpay_order_id);
         formData.append("razorpay_signature", response.razorpay_signature);
+        formData.append("status", "success");
 
-        for (var pair of formData.entries()) {
-          console.log("Body => ", pair[0] + ", " + pair[1]);
+        try {
+          let myRes = await axios.post(get_exchange_payment_id, formData, {
+            headers: {
+              Accept: "application/x.uniform.v1+json",
+            },
+          });
+
+          console.log("Success API response:", myRes.data);
+
+          if (myRes?.data?.success == 1) {
+            Notification("success", "", myRes.data.message);
+            // clearCart();
+            history.push("/");
+          } else {
+            Notification("error", "", myRes.data.message);
+          }
+        } catch (err) {
+          console.log("Error in success API:", err);
         }
+      },
 
-        var myRes = await axios.post(get_exchange_payment_id, formData, {
+      // ✅ HANDLE POPUP CLOSE (CANCEL)
+      // modal: {
+      //   ondismiss: async function () {
+      //     console.log("Payment popup closed by user");
+
+      //     let formData = new FormData();
+      //     formData.append("razorpay_order_id", order_id);
+      //     formData.append("status", "cancelled");
+
+      //     try {
+      //       let myRes = await axios.post(get_exchange_payment_id, formData);
+
+      //       console.log("Cancel API response:", myRes.data);
+
+      //       Notification("error", "", "Payment cancelled by user");
+      //     } catch (err) {
+      //       console.log("Error in cancel API:", err);
+      //     }
+      //   },
+      // },
+    };
+
+    const paymentObject = new window.Razorpay(options);
+
+    // ✅ FAILURE HANDLER
+    paymentObject.on("payment.failed", async function (response) {
+      console.log("Payment Failed:", response);
+
+      let formData = new FormData();
+      formData.append(
+        "razorpay_payment_id",
+        response.error?.metadata?.payment_id || "",
+      );
+      formData.append(
+        "razorpay_order_id",
+        response.error?.metadata?.order_id || order_id,
+      );
+      formData.append("error_code", response.error?.code || "");
+      formData.append("error_description", response.error?.description || "");
+      formData.append("status", "failed");
+
+      try {
+        let myRes = await axios.post(get_exchange_payment_id, formData, {
           headers: {
             Accept: "application/x.uniform.v1+json",
-            // "Authorization": "Bearer ".concat(token)
           },
         });
-        console.log(
-          "Response => get_payment_id api after razorpay payment------",
-          myRes.data,
-        );
 
-        if (myRes && myRes.data.success == 1) {
-          Notification("success", "", myRes.data.message);
+        console.log("Failure API response:", myRes.data);
 
-          // clearCart();
-          history.push("/");
-          // alert('Payment Successfully\n Order Placed Successfully \n ')
-        } else if (myRes && myRes.data.success == 0) {
-          alert(myRes.data.message);
+        if (myRes?.data?.success == 1) {
+          Notification("error", "", "Payment failed but recorded!");
+        } else {
+          Notification("error", "", myRes.data.message);
         }
-        // Notification("success", "", order_data.message);
-      },
-    };
-    const paymentObject = new window.Razorpay(options);
+      } catch (err) {
+        console.log("Error in failure API:", err);
+      }
+    });
+
     paymentObject.open();
   }
 
   async function displayRazorpayReturn(order_id, total_amount) {
     console.log("order_id from api in => displayRazorpay", order_id);
 
-    var res = await loadScript();
+    const res = await loadScript();
     console.log("res => in displayRazorpay function", res);
 
     if (!res) {
@@ -558,66 +682,189 @@ const MyOrders = () => {
       return;
     }
 
-    var names = "dsh";
+    let names = "Guest";
     if (logindata) {
       names = logindata.name;
     }
-    var options = {
+
+    const options = {
       key: "rzp_live_pXp8Xsvsqxx2j2",
       // key: "rzp_test_C1WkhcrxRyAGl9",
-
       currency: "INR",
       order_id: order_id,
       name: "The Alchemy Drip",
       description: "Transaction",
-      amount: total_amount * 100.0,
+      amount: total_amount * 100,
+
       prefill: {
         name: names,
       },
-      // image: "https://applified.co.in/dsh//public/logos/1626349162-200X200.png",
-      // image: web_logo2,
 
+      // ✅ SUCCESS HANDLER
       handler: async function (response) {
-        console.log(
-          "Response => get_payment_id api after razorpay payment",
-          response,
-        );
+        console.log("Payment Success Response:", response);
 
-        var formData = new FormData();
+        let formData = new FormData();
         formData.append("razorpay_payment_id", response.razorpay_payment_id);
         formData.append("razorpay_order_id", response.razorpay_order_id);
         formData.append("razorpay_signature", response.razorpay_signature);
+        formData.append("status", "success");
 
-        for (var pair of formData.entries()) {
-          console.log("Body => ", pair[0] + ", " + pair[1]);
+        try {
+          let myRes = await axios.post(get_return_payment_id, formData, {
+            headers: {
+              Accept: "application/x.uniform.v1+json",
+            },
+          });
+
+          console.log("Success API response:", myRes.data);
+
+          if (myRes?.data?.success == 1) {
+            Notification("success", "", myRes.data.message);
+            // clearCart();
+            history.push("/");
+          } else {
+            Notification("error", "", myRes.data.message);
+          }
+        } catch (err) {
+          console.log("Error in success API:", err);
         }
+      },
 
-        var myRes = await axios.post(get_return_payment_id, formData, {
+      // ✅ HANDLE POPUP CLOSE (CANCEL)
+      // modal: {
+      //   ondismiss: async function () {
+      //     console.log("Payment popup closed by user");
+
+      //     let formData = new FormData();
+      //     formData.append("razorpay_order_id", order_id);
+      //     formData.append("status", "cancelled");
+
+      //     try {
+      //       let myRes = await axios.post(get_return_payment_id, formData);
+
+      //       console.log("Cancel API response:", myRes.data);
+
+      //       Notification("error", "", "Payment cancelled by user");
+      //     } catch (err) {
+      //       console.log("Error in cancel API:", err);
+      //     }
+      //   },
+      // },
+    };
+
+    const paymentObject = new window.Razorpay(options);
+
+    // ✅ FAILURE HANDLER
+    paymentObject.on("payment.failed", async function (response) {
+      console.log("Payment Failed:", response);
+
+      let formData = new FormData();
+      formData.append(
+        "razorpay_payment_id",
+        response.error?.metadata?.payment_id || "",
+      );
+      formData.append(
+        "razorpay_order_id",
+        response.error?.metadata?.order_id || order_id,
+      );
+      formData.append("error_code", response.error?.code || "");
+      formData.append("error_description", response.error?.description || "");
+      formData.append("status", "failed");
+
+      try {
+        let myRes = await axios.post(get_return_payment_id, formData, {
           headers: {
             Accept: "application/x.uniform.v1+json",
-            // "Authorization": "Bearer ".concat(token)
           },
         });
-        console.log(
-          "Response => get_payment_id api after razorpay payment------",
-          myRes.data,
-        );
 
-        if (myRes && myRes.data.success == 1) {
-          Notification("success", "", myRes.data.message);
+        console.log("Failure API response:", myRes.data);
 
-          // clearCart();
-          history.push("/");
-          // alert('Payment Successfully\n Order Placed Successfully \n ')
-        } else if (myRes && myRes.data.success == 0) {
-          alert(myRes.data.message);
+        if (myRes?.data?.success == 1) {
+          Notification("error", "", "Payment failed but recorded!");
+        } else {
+          Notification("error", "", myRes.data.message);
         }
-        // Notification("success", "", order_data.message);
-      },
-    };
-    const paymentObject = new window.Razorpay(options);
+      } catch (err) {
+        console.log("Error in failure API:", err);
+      }
+    });
+
     paymentObject.open();
   }
+
+  // async function displayRazorpayReturn(order_id, total_amount) {
+  //   console.log("order_id from api in => displayRazorpay", order_id);
+
+  //   var res = await loadScript();
+  //   console.log("res => in displayRazorpay function", res);
+
+  //   if (!res) {
+  //     alert("Razorpay SDK failed to load. Are you online?");
+  //     return;
+  //   }
+
+  //   var names = "dsh";
+  //   if (logindata) {
+  //     names = logindata.name;
+  //   }
+  //   var options = {
+  //     // key: "rzp_live_pXp8Xsvsqxx2j2",
+  //     key: "rzp_test_C1WkhcrxRyAGl9",
+
+  //     currency: "INR",
+  //     order_id: order_id,
+  //     name: "The Alchemy Drip",
+  //     description: "Transaction",
+  //     amount: total_amount * 100.0,
+  //     prefill: {
+  //       name: names,
+  //     },
+  //     // image: "https://applified.co.in/dsh//public/logos/1626349162-200X200.png",
+  //     // image: web_logo2,
+
+  //     handler: async function (response) {
+  //       console.log(
+  //         "Response => get_payment_id api after razorpay payment",
+  //         response,
+  //       );
+
+  //       var formData = new FormData();
+  //       formData.append("razorpay_payment_id", response.razorpay_payment_id);
+  //       formData.append("razorpay_order_id", response.razorpay_order_id);
+  //       formData.append("razorpay_signature", response.razorpay_signature);
+
+  //       for (var pair of formData.entries()) {
+  //         console.log("Body => ", pair[0] + ", " + pair[1]);
+  //       }
+
+  //       var myRes = await axios.post(get_return_payment_id, formData, {
+  //         headers: {
+  //           Accept: "application/x.uniform.v1+json",
+  //           // "Authorization": "Bearer ".concat(token)
+  //         },
+  //       });
+  //       console.log(
+  //         "Response => get_payment_id api after razorpay payment------",
+  //         myRes.data,
+  //       );
+
+  //       if (myRes && myRes.data.success == 1) {
+  //         Notification("success", "", myRes.data.message);
+
+  //         // clearCart();
+  //         history.push("/");
+  //         // alert('Payment Successfully\n Order Placed Successfully \n ')
+  //       } else if (myRes && myRes.data.success == 0) {
+  //         alert(myRes.data.message);
+  //       }
+  //       // Notification("success", "", order_data.message);
+  //     },
+  //   };
+  //   const paymentObject = new window.Razorpay(options);
+  //   paymentObject.open();
+  // }
 
   function loadScript() {
     return new Promise((res) => {
@@ -695,12 +942,25 @@ const MyOrders = () => {
       // formData.append("order_number", getOrderId2);
       // formData.append("is_return_status", 2);
 
+      // for (var i = 0; i < selectedWithApiData.length; i++) {
+      //   formData.append("order_lines_id[" + i + "]", selectedWithApiData[i].id);
+      //   formData.append(
+      //     "quantity[" + i + "]",
+      //     selectedWithApiData[i].selected_qty,
+      //   );
+      // }
+
       for (var i = 0; i < selectedWithApiData.length; i++) {
-        formData.append("order_lines_id[" + i + "]", selectedWithApiData[i].id);
-        formData.append(
-          "quantity[" + i + "]",
-          selectedWithApiData[i].selected_qty,
+        // getData ma thi matching item shodo jeno id same hoy
+        const matchedItem = getData?.find(
+          (d) => d.id === selectedWithApiData[i].id,
         );
+        const returnQty = matchedItem
+          ? matchedItem.select_return_qty
+          : selectedWithApiData[i].selected_qty;
+
+        formData.append("order_lines_id[" + i + "]", selectedWithApiData[i].id);
+        formData.append("quantity[" + i + "]", returnQty);
       }
 
       // if (getProId == "") {
@@ -811,11 +1071,11 @@ const MyOrders = () => {
                             <td className="cancelled_order">Exchange</td>
                           ) : item.order_status_id == "11" ? (
                             <td className="cancelled_order">
-                              Partial Returned
+                              Partial Exchange
                             </td>
                           ) : item.order_status_id == "12" ? (
                             <td className="cancelled_order">
-                              Partial Exchange
+                              Partial Returned
                             </td>
                           ) : (
                             ""
@@ -1347,13 +1607,53 @@ const MyOrders = () => {
                                 <>
                                   <tbody>
                                     <td>{item.product_name}</td>
-                                    <td>{item.total_quantity}</td>
+                                    {/* <td>{item.total_quantity}</td> */}
                                     <td>
-                                      {item?.price} X {item.total_quantity} ={" "}
-                                      {item.price * item.total_quantity}
+                                      {item.total_quantity}
+
+                                      {item?.exchange_status == 1 && (
+                                        <span>
+                                          {" "}
+                                          (Exchanged Qty:{" "}
+                                          {item.exchange_quantity})
+                                        </span>
+                                      )}
+
+                                      {item?.return_status == 1 && (
+                                        <span>
+                                          {" "}
+                                          (Returned Qty:{" "}
+                                          {item.returned_quantity})
+                                        </span>
+                                      )}
                                     </td>
-                                    <td>{item.size}</td>
-                                    <td>{item.color}</td>
+                                    <td>
+                                      {item.price} × {item.total_quantity} ={" "}
+                                      {item.price * item.total_quantity}
+                                      {item?.exchange_status == 1 && (
+                                        <>
+                                          {" "}
+                                          (Exchanged Price:{" "}
+                                          {item.exchange_price} ×{" "}
+                                          {item.exchange_quantity} ={" "}
+                                          {item.exchange_price *
+                                            item.exchange_quantity}
+                                          )
+                                        </>
+                                      )}
+                                    </td>
+                                    <td>
+                                      {item.size}
+                                      {item?.exchange_status == 1
+                                        ? ` (Exchanged size: ${item?.exchange_size})`
+                                        : ""}
+                                    </td>
+                                    <td>
+                                      {item.color}
+                                      {item?.exchange_status == 1
+                                        ? ` (Exchanged Color: ${item?.exchange_color})`
+                                        : ""}
+                                    </td>
 
                                     {/* {getexsizeshow == true ? (
                                       <td>

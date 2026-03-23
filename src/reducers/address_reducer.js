@@ -1,4 +1,3 @@
-
 import {
   ADDRESS_BEGIN,
   ADDRESS_ADD_SUCCESS,
@@ -19,7 +18,6 @@ const address_reducer = (state, action) => {
       ...state,
       loading: false,
       add_address_res: action.payload,
-     
     };
   }
   if (action.type === GET_COUNTRY) {
@@ -27,7 +25,6 @@ const address_reducer = (state, action) => {
       ...state,
       loading: false,
       get_countrylist: action.payload,
-     
     };
   }
   if (action.type === GET_STATES) {
@@ -35,29 +32,27 @@ const address_reducer = (state, action) => {
       ...state,
       loading: false,
       get_statelist: action.payload,
-     
     };
   }
-   if (action.type === GET_CITY) {
-     return {
-       ...state,
-       loading: false,
-       get_citylist: action.payload,
-     };
-   }
+  if (action.type === GET_CITY) {
+    return {
+      ...state,
+      loading: false,
+      get_citylist: action.payload,
+    };
+  }
   if (action.type === ADDRESS_GET_SUCCESS) {
     return {
       ...state,
       loading: false,
       get_address_data: action.payload,
-     
     };
   }
-  
+
   if (action.type === ADDRESS_ERROR) {
-    return { ...state, loading: false, };
+    return { ...state, loading: false };
   }
-  
+
   return state;
   throw new Error(`No Matching "${action.type}" - action type`);
 };
