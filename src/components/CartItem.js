@@ -20,8 +20,10 @@ const CartItem = ({
   sizeid,
   colorId,
   colorName,
+  colorImage,
 }) => {
-  console.log("colorId",colorId);
+  console.log("colorId", colorId);
+  console.log("colorImage", colorImage);
   const { removeItem, toggleAmount } = useCartContext();
   const increase = () => {
     toggleAmount(id, "inc");
@@ -36,9 +38,10 @@ const CartItem = ({
         border: "1px solid",
         padding: "1rem",
         borderRadius: "10px",
-      }}>
+      }}
+    >
       <div className="title">
-        {image.length <= 0 ? (
+        {/* {image.length <= 0 ? (
           <>
             <img src={IImages.ImageComingSoon} alt={name} />
           </>
@@ -47,8 +50,15 @@ const CartItem = ({
             {" "}
             <img src={image[0].image} alt={name} />
           </>
-        )}
-        {/* <img src={image[0].image} alt={name} /> */}
+        )} */}
+
+        <img
+          src={
+            colorImage ||
+            (image?.length > 0 ? image[0].image : IImages.ImageComingSoon)
+          }
+          alt={name}
+        />
         <div>
           <h5 className="name">{name}</h5>
 
@@ -79,7 +89,8 @@ const CartItem = ({
         className="remove-btn"
         onClick={() => {
           removeItem(id);
-        }}>
+        }}
+      >
         <FaTrash />
       </button>
     </Wrapper>

@@ -23,6 +23,7 @@ const cart_reducer = (state, action) => {
       color_id,
       colorName,
       check_value,
+      colorImage,
     } = action.payload;
 
     console.log("===>", check_value);
@@ -82,6 +83,7 @@ const cart_reducer = (state, action) => {
         sizeid: sizeid,
         color_id: color_id,
         colorName: colorName,
+        colorImage: colorImage,
       };
       // console.log("123", newItem);
       return { ...state, cart: [...state.cart, newItem], check_value };

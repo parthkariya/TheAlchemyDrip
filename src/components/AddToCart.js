@@ -14,6 +14,7 @@ const AddToCart = ({
   colorId,
   colorName,
   qtyy,
+  colorImage,
 }) => {
   const { addToCart } = useCartContext();
   console.log("colorId are ==>", colorId);
@@ -114,7 +115,8 @@ const AddToCart = ({
                 sizeid,
                 colorId,
                 colorName,
-                currentCheck // Pass the local value directly
+                currentCheck, // Pass the local value directly
+                colorImage,
               );
             }}
           >
@@ -170,6 +172,7 @@ const AddToCart = ({
                   colorId: colorId,
                   colorName: colorName,
                   currentCheck: 1, // Include the local variable
+                  colorImage,
                 },
               ],
             },
@@ -193,7 +196,8 @@ const AddToCart = ({
               sizeid,
               colorId,
               colorName,
-              1
+              1,
+              colorImage,
             );
           }}
         >

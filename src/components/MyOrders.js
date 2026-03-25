@@ -2667,7 +2667,7 @@ const Wrapper = styled.div`
     margin: 0 0 0 10px;
   }
   .notification_head h3 {
-    padding: 0px 20px 0px 0px;
+    padding: 0px 20px 0px 10px;
   }
   .refund_amt {
     width: 13%;

@@ -71,6 +71,7 @@ export const CartProvider = ({ children }) => {
     color_id,
     colorName,
     check,
+    colorImage,
   ) => {
     console.log("checkkkk", check);
 
@@ -92,6 +93,7 @@ export const CartProvider = ({ children }) => {
         color_id,
         colorName,
         check_value: check,
+        colorImage,
       },
     });
     if (check == 1) {

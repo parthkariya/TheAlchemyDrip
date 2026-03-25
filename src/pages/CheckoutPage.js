@@ -103,6 +103,10 @@ const CheckoutPage = () => {
     }
     if (selectedAddId == 0 || selectedAddId == "") {
       Notification("error", "Error!", "Please select address!");
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth", // optional for smooth scroll
+      });
       return;
     }
 

@@ -9,12 +9,17 @@ import {
   IoMdCloseCircleOutline,
 } from "react-icons/io";
 
-const ProductImages = ({ images = [{ image: "" }] }) => {
+// const ProductImages = ({ images = [{ image: "" }] }) => {
+const ProductImages = ({
+  images = [{ image: "" }],
+  featuredImage,
+  onImageClick,
+}) => {
   const [main, setMain] = useState(
-    images.length <= 0 ? IImages.ImageComingSoon : images[0]
+    images.length <= 0 ? IImages.ImageComingSoon : images[0],
   );
   const [getMain, setMani] = useState(
-    images.length <= 0 ? IImages.ImageComingSoon : main.image
+    images.length <= 0 ? IImages.ImageComingSoon : main.image,
   );
 
   const [getModal, setModal] = useState(false);
@@ -36,6 +41,16 @@ const ProductImages = ({ images = [{ image: "" }] }) => {
     setMani(images.length <= 0 ? IImages.ImageComingSoon : main.image);
   }, [main]);
 
+  // Add this new useEffect
+  useEffect(() => {
+    if (featuredImage) {
+      const found = images?.find((img) => img.image === featuredImage);
+      if (found) {
+        setMain(found);
+      }
+    }
+  }, [featuredImage]);
+
   return (
     <>
       <Wrapper>
@@ -50,6 +65,7 @@ const ProductImages = ({ images = [{ image: "" }] }) => {
                 key={index}
                 onClick={() => {
                   setMain(images[index]);
+                  if (onImageClick) onImageClick(images[index]); // ADD THIS
                 }}
                 className={`${imagee.image == main.image ? "active" : null}`}
               />
@@ -60,7 +76,8 @@ const ProductImages = ({ images = [{ image: "" }] }) => {
           style={{ height: "400px", width: "350px" }}
           onClick={() => {
             setModal(true);
-          }}>
+          }}
+        >
           <img
             style={{ cursor: "pointer" }}
             src={images.length <= 0 ? IImages.ImageComingSoon : main.image}
@@ -78,14 +95,16 @@ const ProductImages = ({ images = [{ image: "" }] }) => {
         isOpen={getModal}
         onRequestClose={closeModal}
         style={customStyles}
-        contentLabel="Example Modal">
+        contentLabel="Example Modal"
+      >
         <div
           style={{
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             position: "relative",
-          }}>
+          }}
+        >
           <div>
             <img
               className="zoom_image"
@@ -99,7 +118,8 @@ const ProductImages = ({ images = [{ image: "" }] }) => {
               gap: "3rem",
               position: "absolute",
               bottom: "2.5rem",
-            }}>
+            }}
+          >
             {/* <IoIosArrowDropleft
               style={{
                 fontSize: "40px",

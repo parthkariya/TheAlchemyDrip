@@ -55,8 +55,6 @@ const ProductsPage = () => {
   const [getClassDta, setClassData] = useState([]);
   const [getClassDtaLoading, setClassDataLoading] = useState(false);
 
-  console.log("class_data_loading", class_data_loading);
-
   useEffect(() => {
     GetClassData();
   }, []);

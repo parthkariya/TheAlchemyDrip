@@ -101,17 +101,51 @@ const SingleProductPage = () => {
   const [getActiveColor, setActiveColor] = useState(null);
   const [getColors, setColors] = useState([]);
   const [qty, setQty] = useState();
+  const [selectedColorImage, setSelectedColorImage] = useState(null);
   // const [getSize_Id, setSize_Id] = useState("");
 
+  // useEffect(() => {
+  //   if (getColors.length > 0 && getActiveColor === null) {
+  //     const first = getColors[0];
+  //     setColorId(first.color_id);
+  //     setColorName(first.color_name);
+  //     // setColorName(first.color_name);
+  //     // setActiveColor(0);
+  //     SetStock(first.display_stock);
+  //     setQty(1);
+  //     setActiveColor(0);
+  //     const matchedImg = product_images?.find(
+  //       (img) => img.color_id === first.color_id,
+  //     );
+  //     setSelectedColorImage(matchedImg ? matchedImg.image : null);
+  //   }
+  // }, [getColors]);
+
+  // After sizeApi returns new colors, re-apply previously selected color's image
   useEffect(() => {
-    if (getColors.length > 0 && getActiveColor === null) {
-      const first = getColors[0];
-      setColorId(first.color_id);
-      setColorName(first.color_name);
-      // setColorName(first.color_name);
-      // setActiveColor(0);
-      SetStock(first.display_stock);
-      setQty(1);
+    if (getColors.length > 0 && colorId) {
+      const currentColorIndex = getColors.findIndex(
+        (c) => c.color_id === colorId,
+      );
+      if (currentColorIndex !== -1) {
+        // Color still exists in new size — keep it selected
+        setActiveColor(currentColorIndex);
+        const matchedImg = product_images?.find(
+          (img) => img.color_id === colorId,
+        );
+        setSelectedColorImage(matchedImg ? matchedImg.image : null);
+      } else {
+        // Color not available in this size — fall back to first
+        const first = getColors[0];
+        setActiveColor(0);
+        setColorId(first.color_id);
+        setColorName(first.color_name);
+        SetStock(first.display_stock);
+        const matchedImg = product_images?.find(
+          (img) => img.color_id === first.color_id,
+        );
+        setSelectedColorImage(matchedImg ? matchedImg.image : null);
+      }
     }
   }, [getColors]);
 
@@ -139,6 +173,8 @@ const SingleProductPage = () => {
     }
     setSizeValue2(size && size);
     SetStock2(inventory && inventory);
+    setSelectedColorImage(null);
+    setActiveColor(null);
   }, [single_product1]);
 
   useEffect(() => {
@@ -170,22 +206,6 @@ const SingleProductPage = () => {
       })
       .catch((error) => console.error(`Error: ${error}`));
     setColors(response.data.detail);
-
-    // if (response.data.success == 1) {
-    //   setProd_Id("");
-    //   setSize_Id("");
-
-    //   Notification(
-    //     "success",
-    //     "Success!",
-    //     "form has been successfully submitted"
-    //   );
-    //   return;
-    // } else {
-    //   Notification("error", "Error!", "please enter valid data!");
-    //   return;
-    // }
-    // }
   };
 
   const mAddToWishlist = async () => {
@@ -237,7 +257,30 @@ const SingleProductPage = () => {
           back to products
         </Link> */}
         <div className="product-center" style={{ gap: "1.5rem" }}>
-          <ProductImages images={product_images} />
+          {/* <ProductImages images={product_images} /> */}
+          <ProductImages
+            images={product_images}
+            featuredImage={selectedColorImage}
+            colors={getColors}
+            onImageClick={(clickedImage) => {
+              // Find if this image matches any color
+              const matchedColor = getColors.find((color) =>
+                product_images?.find(
+                  (img) =>
+                    img.color_id === color.color_id &&
+                    img.image === clickedImage.image,
+                ),
+              );
+              if (matchedColor) {
+                const colorIndex = getColors.indexOf(matchedColor);
+                setActiveColor(colorIndex);
+                setColorId(matchedColor.color_id);
+                setColorName(matchedColor.color_name);
+                SetStock(matchedColor.display_stock);
+                setSelectedColorImage(clickedImage.image);
+              }
+            }}
+          />
           <section className="content">
             <h2
               style={{ color: "black", fontWeight: "700" }}
@@ -294,23 +337,38 @@ const SingleProductPage = () => {
                               ? "solid var(--clr-primary-darkred) 2px"
                               : "solid black 2px",
                         }}
+                        // onClick={() => {
+                        //   handleButtonClick(index);
+                        //   setValue(item.price);
+                        //   setValue1(item.wholesale_price);
+                        //   setSizeId(item.size_id);
+                        //   // setColorId(item.color_id);
+                        //   // setColorName(item.color_name);
+                        //   setColorId(getColors[0]?.color_id);
+                        //   setColorName(getColors[0]?.color_name);
+                        //   setActiveColor(0);
+                        //   SetCon1(true);
+                        //   setSizeValue(item.size_name);
+                        //   // SetStock(item.display_stock);
+                        //   setWish(item.wishlist);
+                        //   SetCondition(true);
+                        //   sizeApi(item.size_id);
+                        //   setQty(1);
+                        // }}
+
                         onClick={() => {
                           handleButtonClick(index);
                           setValue(item.price);
                           setValue1(item.wholesale_price);
                           setSizeId(item.size_id);
-                          // setColorId(item.color_id);
-                          // setColorName(item.color_name);
-                          setColorId(getColors[0]?.color_id);
-                          setColorName(getColors[0]?.color_name);
-                          setActiveColor(0);
                           SetCon1(true);
                           setSizeValue(item.size_name);
-                          // SetStock(item.display_stock);
                           setWish(item.wishlist);
                           SetCondition(true);
                           sizeApi(item.size_id);
                           setQty(1);
+                          // preserve selected color after size change
+                          // after sizeApi refreshes getColors, re-apply the current colorId
                         }}
                       >
                         {item.size_name}
@@ -381,12 +439,26 @@ const SingleProductPage = () => {
                       >
                         <div
                           key={index}
+                          // onClick={() => {
+                          //   setColorId(item.color_id);
+                          //   setColorName(item.color_name);
+                          //   setActiveColor(index);
+                          //   SetStock(item.display_stock);
+                          //   setQty(1);
+                          // }}
                           onClick={() => {
                             setColorId(item.color_id);
                             setColorName(item.color_name);
                             setActiveColor(index);
                             SetStock(item.display_stock);
                             setQty(1);
+                            // Find matching image for this color
+                            const matchedImg = product_images?.find(
+                              (img) => img.color_id === item.color_id,
+                            );
+                            setSelectedColorImage(
+                              matchedImg ? matchedImg.image : null,
+                            );
                           }}
                           style={{
                             width: "20px",
@@ -444,6 +516,7 @@ const SingleProductPage = () => {
                   colorId={colorId}
                   colorName={colorName}
                   qtyy={qty}
+                  colorImage={selectedColorImage}
                 />
               ) : (
                 <></>
@@ -465,6 +538,7 @@ const SingleProductPage = () => {
                   colorId={colorId}
                   colorName={colorName}
                   qtyy={qty}
+                  colorImage={selectedColorImage}
                 />
               ) : (
                 <></>

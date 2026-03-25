@@ -250,7 +250,7 @@ const UserAddress = (props) => {
                 </i>
                 &nbsp; Add New Address
               </div>
-              {get_address_data.map((item, index) => {
+              {/* {get_address_data.map((item, index) => {
                 return (
                   <div
                     onClick={() => mSelectAddress(item)}
@@ -277,10 +277,8 @@ const UserAddress = (props) => {
                           <address>Mobile : {item.number}</address>
                           <address>
                             {item.address}
-                            {/* - {item.city_id} */}
                           </address>
                           <address>
-                            {/* {item.state_name}, {item.country_name} -{" "} */}
                             {item.pincode}
                           </address>
                         </div>
@@ -288,8 +286,68 @@ const UserAddress = (props) => {
                       <div className="col-md-3">
                         <div
                           className="actions_btns"
-                          // style={{ marginLeft: "1rem" }}
                         >
+                          <div className="left_edit">
+                            <a
+                              href="javascript:void(0);"
+                              onClick={() => mEditAddress(item)}
+                            >
+                              Edit
+                            </a>
+                          </div>
+                          <div className="right_delete">
+                            <a
+                              href="javascript:void(0);"
+                              onClick={() => mDeleteAddress(item.id)}
+                            >
+                              Delete
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })} */}
+
+              {get_address_data.map((item, index) => {
+                return (
+                  <div
+                    onClick={() => mSelectAddress(item)}
+                    className={
+                      props.selectedAddId == item.id
+                        ? "card-body active"
+                        : "card-body deactive"
+                    }
+                  >
+                    <div className="row">
+                      <div className="col-md-9">
+                        <div className="addressList">
+                          <h4 style={{ display: "flex", alignItems: "center" }}>
+                            <input
+                              type="radio"
+                              name="selectedAddress"
+                              checked={props.selectedAddId == item.id}
+                              onChange={() => mSelectAddress(item)}
+                              className="address_select_radio"
+                            />
+                            <i className="fas" style={{ marginLeft: "7px" }}>
+                              <FaHome />
+                            </i>
+                            {item.fullname}
+                            {props.selectedAddId == item.id ? (
+                              <div className="check">
+                                <FaCheckCircle />
+                              </div>
+                            ) : null}
+                          </h4>
+                          <address>Mobile : {item.number}</address>
+                          <address>{item.address}</address>
+                          <address>{item.pincode}</address>
+                        </div>
+                      </div>
+                      <div className="col-md-3">
+                        <div className="actions_btns">
                           <div className="left_edit">
                             <a
                               href="javascript:void(0);"
@@ -430,7 +488,7 @@ const Wrapper = styled.section`
       text-transform: uppercase;
       border: none;
       font-size: 16px;
-      padding: 16px 20px;
+      padding: 16px 12px;
       text-align: left;
       width: 100%;
       background-color: var(--clr-primary-darkred);
@@ -518,7 +576,7 @@ const Wrapper = styled.section`
         .addressList {
           width: 100%;
           display: block;
-          padding: 16px 20px 20px 50px;
+          padding: 16px 20px 20px 70px;
           position: relative;
           h4 {
             margin-bottom: 5px;
@@ -530,8 +588,9 @@ const Wrapper = styled.section`
               margin-right: 10px;
               font-size: 26px;
               position: absolute;
-              left: 10px;
+              left: 30px;
             }
+
             .check {
               display: inline-block;
               padding: 0 0 0 5px;
@@ -555,12 +614,24 @@ const Wrapper = styled.section`
       }
     }
   }
+
   @media screen and (max-width: 575px) {
     .col-md-9,
     .col-md-3 {
       flex: 0 0 100% !important;
       max-width: 100% !important;
     }
+  }
+
+  .address_select_radio {
+    margin-right: 8px;
+    accent-color: #5d5d9c;
+    cursor: pointer;
+    width: 15px;
+    height: 15px;
+    position: absolute;
+    left: 10px;
+    margin-left: 8px;
   }
 `;
 
@@ -1129,6 +1200,7 @@ const Innermodal = styled.section`
       margin: 7px 0 0 0;
     }
   }
+
   @media screen and (max-width: 350px) {
     .sub-total .shipping {
       width: 100% !important;

@@ -56,6 +56,23 @@ const MyProfile = () => {
           ) : activeTab == NOTIFICAION_TAB ? (
             <Notifications />
           ) : null}
+
+          {activeTab == MY_ORDER_TAB ? (
+            <>
+              <p className="return_exchange_note">
+                Note: Orders can be exchanged/returned once full order is
+                completed. For any concerns kindly contact us at{" "}
+                <a
+                  style={{ cursor: "pointer", color: "#5d5d9c" }}
+                  href="tel:+918073209270"
+                >
+                  +91 80732 09270
+                </a>
+              </p>
+            </>
+          ) : (
+            <></>
+          )}
         </div>
       </Wrapper>
     </main>
@@ -73,6 +90,11 @@ const Wrapper = styled.section`
     max-width: calc(100% - 280px);
     padding-left: 30px;
     max-height: 530px !important;
+  }
+
+  .return_exchange_note {
+    margin-top: 1rem;
+    font-weight: 600;
   }
   @media screen and (max-width: 980px) {
     flex-wrap: wrap;
