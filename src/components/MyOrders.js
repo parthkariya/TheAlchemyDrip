@@ -1119,26 +1119,34 @@ const MyOrders = () => {
                                   <FaDownload />
                                 </i>
                               </a>
-                              {/* {item.order_status_id == "1" ? () */}
-                              {item.order_status_id == "4" ||
-                              item.order_status_id == "11" ||
-                              item.order_status_id == "12" ? (
+
+                              {item?.category_id != 101 &&
+                              item?.category_id != 35 ? (
                                 <>
-                                  <div
-                                    className="exchange_btn_desing"
-                                    style={{
-                                      cursor: "pointer",
-                                    }}
-                                    // to="/ExchangeReturnDetails"
-                                    onClick={() => {
-                                      setExchangeModal(true);
-                                      getSingleOrderDetails(item.id, login);
-                                    }}
-                                  >
-                                    <i className="">
-                                      <FaExchangeAlt />
-                                    </i>
-                                  </div>
+                                  {/* {item.order_status_id == "1" ? () */}
+                                  {item.order_status_id == "4" ||
+                                  item.order_status_id == "11" ||
+                                  item.order_status_id == "12" ? (
+                                    <>
+                                      <div
+                                        className="exchange_btn_desing"
+                                        style={{
+                                          cursor: "pointer",
+                                        }}
+                                        // to="/ExchangeReturnDetails"
+                                        onClick={() => {
+                                          setExchangeModal(true);
+                                          getSingleOrderDetails(item.id, login);
+                                        }}
+                                      >
+                                        <i className="">
+                                          <FaExchangeAlt />
+                                        </i>
+                                      </div>
+                                    </>
+                                  ) : (
+                                    <></>
+                                  )}
                                 </>
                               ) : (
                                 <></>

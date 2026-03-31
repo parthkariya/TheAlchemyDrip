@@ -73,6 +73,41 @@ const MyProfile = () => {
           ) : (
             <></>
           )}
+
+          {/* {activeTab == MY_ORDER_TAB ? (
+            <>
+              <p
+                className="return_exchange_note"
+                style={{ marginBottom: "0px", marginTop: "1rem" }}
+              >
+                Note:
+              </p>
+              <p style={{ fontWeight: "600", marginBottom: "0px" }}>
+                Orders can be exchanged/returned once full order is completed.
+                For any concerns kindly contact us at{" "}
+                <a
+                  style={{ cursor: "pointer", color: "#5d5d9c" }}
+                  href="tel:+918073209270"
+                >
+                  +91 80732 09270
+                </a>
+              </p>
+              <p
+                className="return_exchange_note"
+                style={{ marginBottom: "2rem" }}
+              >
+                For exchange/return queries, please drop us a message at{" "}
+                <a
+                  style={{ cursor: "pointer", color: "#5d5d9c" }}
+                  href="tel:+918073209270"
+                >
+                  +91 80732 09270
+                </a>
+              </p>
+            </>
+          ) : (
+            <></>
+          )} */}
         </div>
       </Wrapper>
     </main>
