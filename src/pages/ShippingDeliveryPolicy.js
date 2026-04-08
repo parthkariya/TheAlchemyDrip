@@ -11,6 +11,9 @@ const ShippingDeliveryPolicy = () => {
             <h3 className="privacy-policy-heading">
               Shipping & Delivery Policy
             </h3>
+
+            {/* OLD CONTENT COMMENTED */}
+            {/*
             <p className="privacy-policy-subheading-txt">
               For domestic buyers, orders are shipped through registered
               domestic courier companies and /or speed post only. Orders are
@@ -26,6 +29,70 @@ const ShippingDeliveryPolicy = () => {
               will be confirmed on your mail ID as specified during
               registration. For any issues in utilizing our services you may
               contact our helpdesk on or Info@TheAlchemydrip.com
+            </p>
+            */}
+
+            {/* NEW CONTENT */}
+            <p className="privacy-policy-subheading-txt">
+              All domestic orders are shipped through registered courier
+              partners and/or Speed Post. <br /> Orders are dispatched within{" "}
+              <b>6–8 working days</b> from the date of order confirmation and
+              successful payment, unless a different delivery timeline is
+              explicitly agreed upon by the school and informed to the customer.
+            </p>
+
+            <h4 className="privacy-policy-subheading">Delivery Timelines</h4>
+            <p className="privacy-policy-txt privacy-policy-txt-lineheight">
+              Estimated delivery timelines are subject to the serviceability and
+              operational norms of the courier company or postal authorities.{" "}
+              <br />
+              The Alchemy Drip is responsible only for handing over the shipment
+              within the committed dispatch timeline (6–8 days or agreed date).{" "}
+              <br />
+              We are <b>not liable for delays</b> caused by courier partners,
+              postal services, or unforeseen logistical issues (weather,
+              strikes, regional restrictions, etc.).
+            </p>
+
+            <h4 className="privacy-policy-subheading">Delivery Address</h4>
+            <p className="privacy-policy-txt">
+              Orders will be delivered strictly to the address provided by the
+              customer at the time of order placement. <br /> Customers are
+              responsible for ensuring accuracy of address and contact details.
+            </p>
+
+            <h4 className="privacy-policy-subheading">
+              Order Tracking & Confirmation
+            </h4>
+            <p className="privacy-policy-txt">
+              Shipment confirmation and updates are shared via <b>WhatsApp</b>{" "}
+              on the registered mobile number. <br /> Customers may be contacted
+              for coordination if required.
+            </p>
+
+            <h4 className="privacy-policy-subheading">
+              Failed Delivery / Reattempts
+            </h4>
+            <p className="privacy-policy-txt">
+              In case of failed delivery attempts due to incorrect address,
+              unavailability, or refusal, re-delivery may incur additional
+              charges. <br /> Orders returned back to origin due to such issues
+              will be re-shipped only after additional payment.
+            </p>
+
+            <h4 className="privacy-policy-subheading">Support</h4>
+            <p className="privacy-policy-txt">
+              For any issues related to shipping, delivery, or service
+              utilization, contact: <br />
+              <b>Email:</b> Info@TheAlchemyDrip.com <br />
+              <b>Phone/WhatsApp:</b> 8073209270
+            </p>
+
+            <p className="privacy-policy-txt">
+              <b>
+                By placing an order, you agree to the terms outlined in this
+                policy.
+              </b>
             </p>
           </div>
         </section>

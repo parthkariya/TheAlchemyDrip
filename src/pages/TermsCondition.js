@@ -8,44 +8,99 @@ const TermsCondition = () => {
       <Wrapper>
         <section className="sec-privacy-policy">
           <div className="con-privacy-policy">
-            <h3 className="privacy-policy-heading">Terms & Condition</h3>
+            <h3 className="privacy-policy-heading">Terms & Conditions</h3>
+
             <ul className="privacy-policy-subheading-list-flex">
               <li className="privacy-policy-subheading-txt">
-                Bank account details provided by the customer would be final and
-                any error in the details provided by the customer would not be
-                the responsibility of the brand.
+                <b>1. Customer Information</b>
+                <br />
+                The bank account and contact details provided by the customer
+                would be final and binding. The Alchemy Drip will not be
+                responsible for any errors in details provided by the customer
+                (including refund failures due to incorrect information).
               </li>
+
               <li className="privacy-policy-subheading-txt">
-                If you have received an SMS or EMAIL of order delivered status
-                and if it's not received by you, please contact us within 24
-                hours.
+                <b>2. Delivery Discrepancies</b>
+                <br />
+                If you receive an order delivered notification (SMS/WhatsApp)
+                but have not received the product, you must notify us within 24
+                hours. Failure to report within this timeframe may result in the
+                issue not being considered.
               </li>
+
               <li className="privacy-policy-subheading-txt">
-                The customer will be under an obligation to take utmost care of
-                the product(s) whilst the products are in their possession. This
-                includes all of the product(s) instructions, documents and
-                wrappings while returning the product(s) in the same condition
-                as received.
+                <b>3. Product Responsibility</b>
+                <br />
+                Customers are required to take reasonable care of the product(s)
+                while in their possession. All original tags, packaging,
+                documents, and accessories must be retained and returned in the
+                same condition as received.
               </li>
+
               <li className="privacy-policy-subheading-txt">
-                In circumstances where the customer feels that the product does
-                not conform to the standards at the time of delivery, they shall
-                promptly contact us via on Whatsapp: +91 8296485534 with details
-                of the product and its damage within 1 day of receiving the
-                products; whereon, the customer will receive instructions from
-                us.
+                <b>4. Damaged / Defective Products</b>
+                <br />
+                If the product does not meet expected standards or is received
+                in a damaged/defective condition, the customer must notify us
+                within 24 hours of delivery. Complaints must be raised via
+                WhatsApp: 8073209270 along with clear images of the product and
+                description of the issue. Our team will review and provide
+                further instructions.
               </li>
+
               <li className="privacy-policy-subheading-txt">
-                Upon return of the product, we will fully examine it and notify
-                the customer of their right to a refund (if any) via
-                e-mail/whatsapp within a reasonable period of time. We aim to
-                process the refund as soon as possible and, in any case, within
-                30 working days from the day, we confirmed to the customer via
-                e-mail that they are entitled to a refund.
+                <b>5. Inspection & Approval</b>
+                <br />
+                All returned products will undergo a quality check upon receipt.
+                Based on inspection, The Alchemy Drip reserves the right to
+                approve or reject the return/refund and deduct applicable
+                charges (if any).
+              </li>
+
+              <li className="privacy-policy-subheading-txt">
+                <b>6. Refund Process</b>
+                <br />
+                Eligible refunds will be confirmed via WhatsApp. Refunds will be
+                processed to the original payment method. While we aim to
+                process refunds at the earliest, it may take up to 30 working
+                days from the date of approval.
+              </li>
+
+              <li className="privacy-policy-subheading-txt">
+                <b>7. Wash & Care Instructions</b>
+                <br />
+                All products must be machine washed only. Strictly do not hand
+                wash, bleach, or use harsh detergents. Damage caused due to
+                improper washing or handling will not be eligible for return,
+                exchange, or refund.
+              </li>
+
+              <li className="privacy-policy-subheading-txt">
+                <b>8. Communication</b>
+                <br />
+                All official communication and updates will be shared via
+                WhatsApp on the registered number.
+              </li>
+
+              <li className="privacy-policy-subheading-txt">
+                <b>9. Policy Rights</b>
+                <br />
+                The Alchemy Drip reserves the right to modify or update these
+                terms at any time without prior notice.
+              </li>
+
+              <li className="privacy-policy-subheading-txt">
+                <b>
+                  By placing an order, you acknowledge and agree to the above
+                  Terms & Conditions.
+                </b>
               </li>
             </ul>
 
-            {/* <h4 className="privacy-policy-subheading">
+            {/* OLD TERMS (NOT USED) */}
+            {/* 
+            <h4 className="privacy-policy-subheading">
               The use of this website is subject to the following terms of use:
             </h4>
             <ul className="privacy-policy-subheading-list-flex">
@@ -108,7 +163,8 @@ const TermsCondition = () => {
               decline of authorization for any Transaction, on Account of the
               Cardholder having exceeded the preset limit mutually agreed by us
               with our acquiring bank from time to time
-            </p> */}
+            </p> 
+            */}
           </div>
         </section>
       </Wrapper>
@@ -165,9 +221,12 @@ const Wrapper = styled.section`
     display: flex;
     flex-direction: column;
     gap: 10px;
-    list-style: disc;
-    padding-left: 15px;
+    /* list-style: disc;
+    padding-left: 15px; */
+    list-style: none;
+    padding-left: 0;
   }
+
   @media screen and (max-width: 1140px) {
     .con-privacy-policy {
       padding-left: 15px;

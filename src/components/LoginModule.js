@@ -293,8 +293,10 @@ const LoginModule = ({ showscreen, setShowlogin }) => {
     } else if (getCampusinput == "") {
       alert("Please select your campus!");
       return;
+    } else if (isChecked === false) {
+      alert("Please select terms & conditions checkbox");
+      return;
     }
-
     var params = {
       email: email,
       password: password,
