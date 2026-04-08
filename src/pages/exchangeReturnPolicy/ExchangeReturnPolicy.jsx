@@ -49,7 +49,7 @@ const ExchangeReturnPolicy = () => {
               </li>
             </ul>
 
-            <h4 className="privacy-policy-subheading">Bangalore Schools</h4>
+            <h4 className="privacy-policy-subheading">1. Bangalore Schools</h4>
             <ul className="privacy-policy-subheading-list-flex">
               <li className="privacy-policy-subheading-txt">
                 Returns & exchanges must be initiated via the <b>website</b>.
@@ -66,7 +66,7 @@ const ExchangeReturnPolicy = () => {
             </ul>
 
             <h4 className="privacy-policy-subheading">
-              Hyderabad & Pune Schools
+              2. Hyderabad & Pune Schools
             </h4>
             <ul className="privacy-policy-subheading-list-flex">
               <li className="privacy-policy-subheading-txt">
@@ -91,7 +91,7 @@ const ExchangeReturnPolicy = () => {
               Bangalore – 560085
             </p>
 
-            <h4 className="privacy-policy-subheading">Product Condition</h4>
+            <h4 className="privacy-policy-subheading">3. Product Condition</h4>
             <ul className="privacy-policy-subheading-list-flex">
               <li className="privacy-policy-subheading-txt">
                 Items must be returned in <b>unused condition</b> with original
@@ -102,7 +102,7 @@ const ExchangeReturnPolicy = () => {
               </li>
             </ul>
 
-            <h4 className="privacy-policy-subheading">Reverse Pickup</h4>
+            <h4 className="privacy-policy-subheading">4. Reverse Pickup</h4>
             <ul className="privacy-policy-subheading-list-flex">
               <li className="privacy-policy-subheading-txt">
                 Available <b>only for Bangalore orders</b>.
@@ -112,7 +112,7 @@ const ExchangeReturnPolicy = () => {
               </li>
             </ul>
 
-            <h4 className="privacy-policy-subheading">Refund Policy</h4>
+            <h4 className="privacy-policy-subheading">5. Refund Policy</h4>
             <ul className="privacy-policy-subheading-list-flex">
               <li className="privacy-policy-subheading-txt">
                 Refunds are applicable <b>only for prepaid orders</b>.
@@ -125,7 +125,12 @@ const ExchangeReturnPolicy = () => {
               </li>
             </ul>
 
-            <h4 className="privacy-policy-subheading">Non-Returnable Items</h4>
+            <h4
+              className="privacy-policy-subheading"
+              style={{ fontSize: "16px" }}
+            >
+              5.1. Non-Returnable Items
+            </h4>
             <ul className="privacy-policy-subheading-list-flex">
               <li className="privacy-policy-subheading-txt">Socks</li>
               <li className="privacy-policy-subheading-txt">
@@ -137,7 +142,7 @@ const ExchangeReturnPolicy = () => {
             </ul>
 
             <h4 className="privacy-policy-subheading">
-              Self-Shipping Guidelines (Hyderabad & Pune)
+              6. Self-Shipping Guidelines (Hyderabad & Pune)
             </h4>
             <ul className="privacy-policy-subheading-list-flex">
               <li className="privacy-policy-subheading-txt">
@@ -154,7 +159,7 @@ const ExchangeReturnPolicy = () => {
               </li>
             </ul>
 
-            <h4 className="privacy-policy-subheading">Support</h4>
+            <h4 className="privacy-policy-subheading">7. Support</h4>
             <p className="privacy-policy-txt">
               WhatsApp: <b>8073209270</b> <br />
               Timings: <b>Monday – Sunday, 10 AM – 7 PM</b>

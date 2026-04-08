@@ -41,7 +41,7 @@ const ShippingDeliveryPolicy = () => {
               explicitly agreed upon by the school and informed to the customer.
             </p>
 
-            <h4 className="privacy-policy-subheading">Delivery Timelines</h4>
+            <h4 className="privacy-policy-subheading">1. Delivery Timelines</h4>
             <p className="privacy-policy-txt privacy-policy-txt-lineheight">
               Estimated delivery timelines are subject to the serviceability and
               operational norms of the courier company or postal authorities.{" "}
@@ -54,7 +54,7 @@ const ShippingDeliveryPolicy = () => {
               strikes, regional restrictions, etc.).
             </p>
 
-            <h4 className="privacy-policy-subheading">Delivery Address</h4>
+            <h4 className="privacy-policy-subheading">2. Delivery Address</h4>
             <p className="privacy-policy-txt">
               Orders will be delivered strictly to the address provided by the
               customer at the time of order placement. <br /> Customers are
@@ -62,7 +62,7 @@ const ShippingDeliveryPolicy = () => {
             </p>
 
             <h4 className="privacy-policy-subheading">
-              Order Tracking & Confirmation
+              3. Order Tracking & Confirmation
             </h4>
             <p className="privacy-policy-txt">
               Shipment confirmation and updates are shared via <b>WhatsApp</b>{" "}
@@ -71,7 +71,7 @@ const ShippingDeliveryPolicy = () => {
             </p>
 
             <h4 className="privacy-policy-subheading">
-              Failed Delivery / Reattempts
+              4. Failed Delivery / Reattempts
             </h4>
             <p className="privacy-policy-txt">
               In case of failed delivery attempts due to incorrect address,
@@ -80,7 +80,7 @@ const ShippingDeliveryPolicy = () => {
               will be re-shipped only after additional payment.
             </p>
 
-            <h4 className="privacy-policy-subheading">Support</h4>
+            <h4 className="privacy-policy-subheading">5. Support</h4>
             <p className="privacy-policy-txt">
               For any issues related to shipping, delivery, or service
               utilization, contact: <br />
