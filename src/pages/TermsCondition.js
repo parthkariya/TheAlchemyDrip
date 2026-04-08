@@ -220,7 +220,7 @@ const Wrapper = styled.section`
     line-height: 1.6rem;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 1rem;
     /* list-style: disc;
     padding-left: 15px; */
     list-style: none;
