@@ -14,7 +14,13 @@ import styled from "styled-components";
 import { useUserContext } from "../context/user_context";
 import loginimg from "../assets/loginimg1.png";
 import Notification from "../utils/Notification";
-import { forgot_change_password, forgot_password, getcampus, login_url as url, WEB_CLIENT_ID } from "../utils/constants";
+import {
+  forgot_change_password,
+  forgot_password,
+  getcampus,
+  login_url as url,
+  WEB_CLIENT_ID,
+} from "../utils/constants";
 import { signup_url as urlsignup } from "../utils/constants";
 import { mobileValidate } from "../utils/helpers";
 import IImages from "../constants/IImages";
@@ -23,7 +29,7 @@ import { SiGoogleclassroom } from "react-icons/si";
 import axios from "axios";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { useProductsContext } from "../context/products_context";
-
+import { Link } from "react-router-dom";
 
 const LoginModule = ({ showscreen, setShowlogin }) => {
   const regEx =
@@ -39,8 +45,9 @@ const LoginModule = ({ showscreen, setShowlogin }) => {
   const [forgotPass, setForgotPass] = React.useState("");
   const [forgotPassConfirm, setForgotPassConfirm] = React.useState("");
   const [otp, setOtp] = React.useState("");
-    const [showNewPassword, setShowNewPassword] = useState(false);
-    const [showNewConfirmPassword, setShowNewConfirmPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showNewConfirmPassword, setShowNewConfirmPassword] = useState(false);
+  const [isChecked, setIsChecked] = useState(false);
 
   const [username, setUserName] = React.useState("");
   const [mobile, setMobile] = useState("");
@@ -49,17 +56,15 @@ const LoginModule = ({ showscreen, setShowlogin }) => {
   const [getCampusinput, setCampusinput] = useState("");
   const [signuptype, setSignupType] = useState(1); // 1: login, 2: signup
   const [getCampus, setCampus] = useState([]);
-  const [forgotPassEmailModalOpen, setForgotPassEmailModalOpen] = useState(false);
+  const [forgotPassEmailModalOpen, setForgotPassEmailModalOpen] =
+    useState(false);
   const [forgotPassModalOpen, setForgotPassModalOpen] = useState(false);
   const [forgotPassEmailLoading, setgotPassEmailLoading] = useState(false);
   const [forgotPassOtpLoading, setgotPassOtpLoading] = useState(false);
 
   const { mall_signup_data } = useProductsContext();
 
-
-
   // console.log("getCampus",getCampus);
-
 
   // const getCampusApi = async () => {
   //   try {
@@ -125,7 +130,6 @@ const LoginModule = ({ showscreen, setShowlogin }) => {
       const logindata = response.data;
 
       if (logindata.success == 1) {
-        
       }
       return response.data;
     } catch (error) {
@@ -145,7 +149,6 @@ const LoginModule = ({ showscreen, setShowlogin }) => {
       const logindata = response.data;
 
       if (logindata.success == 1) {
-        
       }
       return response.data;
     } catch (error) {
@@ -193,7 +196,6 @@ const LoginModule = ({ showscreen, setShowlogin }) => {
     // }
   };
   const forgotPassEmail = async () => {
-
     if (forgotEmail == "") {
       alert("Please enter your email ID!");
       // Notification("error", "Error!", "Please enter your email ID!");
@@ -202,7 +204,7 @@ const LoginModule = ({ showscreen, setShowlogin }) => {
       // else if (regEx.test(email) == false) {
       //   alert("Please enter valid email id!");
       //   return;
-    }  else {
+    } else {
       setgotPassEmailLoading(true);
       var params = {
         email: forgotEmail,
@@ -214,13 +216,16 @@ const LoginModule = ({ showscreen, setShowlogin }) => {
 
       if (data && data.success === 1) {
         Notification("success", "Success!", data.message);
-        setgotPassEmailLoading(false)
+        setgotPassEmailLoading(false);
         setForgotPassEmailModalOpen(false);
         setForgotPassModalOpen(true);
         setForgotEmail("");
       } else {
         setgotPassEmailLoading(false);
-        alert("forgot password email failed: " + (data.message || "Invalid credentials"));
+        alert(
+          "forgot password email failed: " +
+            (data.message || "Invalid credentials"),
+        );
       }
     }
   };
@@ -233,13 +238,13 @@ const LoginModule = ({ showscreen, setShowlogin }) => {
       // else if (regEx.test(email) == false) {
       //   alert("Please enter valid email id!");
       //   return;
-    } else if (forgotPass == ""){
+    } else if (forgotPass == "") {
       alert("Please enter your new password!");
       return;
-    }  else if (forgotPassConfirm == ""){
+    } else if (forgotPassConfirm == "") {
       alert("Please enter your confirm password!");
       return;
-    } else if (forgotPass !== forgotPassConfirm){
+    } else if (forgotPass !== forgotPassConfirm) {
       alert("Please enter same password in both fields!");
       return;
     } else {
@@ -317,7 +322,6 @@ const LoginModule = ({ showscreen, setShowlogin }) => {
     }
   };
 
-
   // function mSignUp() {
   //   if (email == "") {
   //     alert("Please enter your email ID!");
@@ -379,16 +383,26 @@ const LoginModule = ({ showscreen, setShowlogin }) => {
       <div className={showscreen ? "show login-screen" : " login-screen "}>
         <div
           className="login-bg"
-          onClick={() => setShowlogin(!showscreen)}></div>
+          onClick={() => setShowlogin(!showscreen)}
+        ></div>
         <div className="loging-container">
-          <div className="close" onClick={() => { setShowlogin(!showscreen); setSignupType(1); setForgotPassEmailModalOpen(false); setForgotPassModalOpen(false); }}>
+          <div
+            className="close"
+            onClick={() => {
+              setShowlogin(!showscreen);
+              setSignupType(1);
+              setForgotPassEmailModalOpen(false);
+              setForgotPassModalOpen(false);
+            }}
+          >
             <FaTimes />
           </div>
           <div className="login-row">
             <div className="login-6">
               <div
                 className="login-logo"
-                style={{ display: "flex", justifyContent: "center" }}>
+                style={{ display: "flex", justifyContent: "center" }}
+              >
                 <img
                   src={IImages.logo}
                   alt="Logo"
@@ -404,215 +418,243 @@ const LoginModule = ({ showscreen, setShowlogin }) => {
             </div>
             {signuptype == 1 ? (
               <div className="login-6">
-                {forgotPassEmailModalOpen == true ? <>
-                  <div className="login-form">
+                {forgotPassEmailModalOpen == true ? (
+                  <>
+                    <div className="login-form">
+                      <h2>Forget Password :)</h2>
 
-                    <h2>Forget Password :)</h2>
+                      <form>
+                        <div className="input-row">
+                          <FaEnvelope />
+                          <label style={{ textAlign: "left" }}>
+                            Email Address
+                          </label>
+                          <input
+                            type="text"
+                            placeholder=""
+                            value={forgotEmail}
+                            onChange={(e) => setForgotEmail(e.target.value)}
+                          />
+                        </div>
+                      </form>
 
-                    <form>
-                      <div className="input-row">
-                        <FaEnvelope />
-                        <label style={{ textAlign: "left" }}>Email Address</label>
-                        <input
-                          type="text"
-                          placeholder=""
-                          value={forgotEmail}
-                          onChange={(e) => setForgotEmail(e.target.value)}
-                        />
+                      <div className="login-button" style={{ display: "flex" }}>
+                        <button
+                          style={{
+                            opacity:
+                              forgotPassEmailLoading === true ? "0.6" : "1",
+                          }}
+                          className="btn-login"
+                          disabled={forgotPassEmailLoading ? true : false}
+                          onClick={() => {
+                            forgotPassEmail();
+                          }}
+                        >
+                          Submit
+                        </button>
                       </div>
-                    </form>
-
+                      {/* <div className="social-icon">
+                    <span>Or you can join with</span>
+                    <ul>
+                      <li><FaFacebook /></li>
+                      <li><FaGoogle /></li>
+                    </ul>
+                  </div> */}
+                    </div>
+                  </>
+                ) : forgotPassModalOpen == true ? (
+                  <>
+                    <div className="login-form">
+                      <h2>Forget Password :)</h2>
+                      <form>
+                        <div className="input-row">
+                          <SiLastpass />
+                          <label style={{ textAlign: "left" }}>OTP</label>
+                          <input
+                            type="text"
+                            placeholder=""
+                            value={otp}
+                            onChange={(e) => setOtp(e.target.value)}
+                          />
+                        </div>
+                        <div className="input-row">
+                          <FaLock />
+                          <label style={{ textAlign: "left" }}>
+                            New Password
+                          </label>
+                          <input
+                            type={showNewPassword ? "text" : "password"}
+                            placeholder=""
+                            value={forgotPassConfirm}
+                            onChange={(e) =>
+                              setForgotPassConfirm(e.target.value)
+                            }
+                            style={{ width: "100%", paddingRight: "30px" }}
+                          />
+                          <span
+                            onClick={() => setShowNewPassword(!showNewPassword)}
+                            style={{
+                              position: "absolute",
+                              right: "45px",
+                              top: "50%",
+                              transform: "translateY(-50%)",
+                              cursor: "pointer",
+                              color: "#666",
+                            }}
+                          >
+                            {showNewPassword ? <FaEye /> : <FaEyeSlash />}
+                          </span>
+                        </div>
+                        <div className="input-row">
+                          <FaLock />
+                          <label style={{ textAlign: "left" }}>
+                            Confirm New Password
+                          </label>
+                          <input
+                            type={showNewConfirmPassword ? "text" : "password"}
+                            placeholder=""
+                            value={forgotPass}
+                            onChange={(e) => setForgotPass(e.target.value)}
+                            style={{ width: "100%", paddingRight: "30px" }}
+                          />
+                          <span
+                            onClick={() =>
+                              setShowNewConfirmPassword(!showNewConfirmPassword)
+                            }
+                            style={{
+                              position: "absolute",
+                              right: "45px",
+                              top: "50%",
+                              transform: "translateY(-50%)",
+                              cursor: "pointer",
+                              color: "#666",
+                            }}
+                          >
+                            {showNewConfirmPassword ? (
+                              <FaEye />
+                            ) : (
+                              <FaEyeSlash />
+                            )}
+                          </span>
+                        </div>
+                      </form>
+                    </div>
                     <div className="login-button" style={{ display: "flex" }}>
                       <button
-                       style={{
-              opacity: forgotPassEmailLoading === true ? "0.6" : "1",
-            }}
+                        style={{
+                          opacity: forgotPassOtpLoading === true ? "0.6" : "1",
+                        }}
+                        disabled={forgotPassOtpLoading ? true : false}
                         className="btn-login"
-                        disabled={forgotPassEmailLoading ? true : false} 
                         onClick={() => {
-                          forgotPassEmail();
-                          
-                        }}>
+                          forgotPassChangeApi();
+                        }}
+                      >
                         Submit
                       </button>
-
                     </div>
-                    {/* <div className="social-icon">
-                    <span>Or you can join with</span>
-                    <ul>
-                      <li><FaFacebook /></li>
-                      <li><FaGoogle /></li>
-                    </ul>
-                  </div> */}
-                  </div>
-                </> : forgotPassModalOpen == true ? <>
-                  <div className="login-form">
-
-                    <h2>Forget Password :)</h2>
-                    <form>
-                      <div className="input-row">
-                        <SiLastpass />
-                        <label style={{ textAlign: "left" }}>OTP</label>
-                        <input
-                          type="text" 
-                          placeholder=""
-                          value={otp}
-                          onChange={(e) => setOtp(e.target.value)}
-                          
-                        />
-                       
-                      </div>
-                      <div className="input-row">
-                        <FaLock />
-                        <label style={{ textAlign: "left" }}>New Password</label>
-                        <input
-                          type={showNewPassword ? "text" : "password"}
-                          placeholder=""
-                          value={forgotPassConfirm}
-                          onChange={(e) => setForgotPassConfirm(e.target.value)}
-                          style={{ width: "100%", paddingRight: "30px" }}
-                        />
-                        <span
-                          onClick={() => setShowNewPassword(!showNewPassword)}
-                          style={{
-                            position: "absolute",
-                            right: "45px",
-                            top: "50%",
-                            transform: "translateY(-50%)",
-                            cursor: "pointer",
-                            color: "#666",
-                          }}
-                        >
-                          {showNewPassword ?  <FaEye />  : <FaEyeSlash /> }
-                        </span>
-                      </div>
-                      <div className="input-row">
-                        <FaLock />
-                        <label style={{ textAlign: "left" }}>Confirm New Password</label>
-                        <input
-                          type={showNewConfirmPassword ? "text" : "password"}
-                          placeholder=""
-                          value={forgotPass}
-                          onChange={(e) => setForgotPass(e.target.value)}
-                          style={{ width: "100%", paddingRight: "30px" }}
-                        />
-                        <span
-                          onClick={() => setShowNewConfirmPassword(!showNewConfirmPassword)}
-                          style={{
-                            position: "absolute",
-                            right: "45px",
-                            top: "50%",
-                            transform: "translateY(-50%)",
-                            cursor: "pointer",
-                            color: "#666",
-                          }}
-                        >
-                          {showNewConfirmPassword ?  <FaEye />  : <FaEyeSlash /> }
-                        </span>
-                      </div>
-                    </form>
-                  </div>
-                  <div className="login-button" style={{ display: "flex" }}>
-                    <button
-                    style={{
-              opacity: forgotPassOtpLoading === true ? "0.6" : "1",
-            }}
-                    disabled={forgotPassOtpLoading ? true : false}
-                      className="btn-login"
-                      onClick={() => {
-                        forgotPassChangeApi();
-                      }}>
-                      Submit
-                    </button>
-
-                  </div>
-                </> : forgotPassEmailModalOpen == true || forgotPassModalOpen == true ?
-                <>
-                
-                </> : <>
+                  </>
+                ) : forgotPassEmailModalOpen == true ||
+                  forgotPassModalOpen == true ? (
+                  <></>
+                ) : (
+                  <>
                     <div className="login-form">
-                    {/* <div className="login-logo">
+                      {/* <div className="login-logo">
                     <img src={IImages.logo} alt="Logo" />
                   </div> */}
-                    <h2>Welcome Back :)</h2>
-                    <p>
-                      {/* Lorem Ipsum is simply dummy text of the printing and
+                      <h2>Welcome Back :)</h2>
+                      <p>
+                        {/* Lorem Ipsum is simply dummy text of the printing and
                     typesetting industry. Lorem Ipsum has been the industry's
                     standard dummy text ever since the{" "} */}
-                    </p>
-                    <form>
-                      <div className="input-row">
-                        <FaEnvelope />
-                        <label style={{ textAlign: "left" }}>Email Address</label>
-                        <input
-                          type="text"
-                          placeholder=""
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                        />
-                      </div>
-                      <div className="input-row">
-                        <FaLock />
-                        <label style={{ textAlign: "left" }}>Password</label>
-                        <input
-                          type={showPassword ? "text" : "password"}
-                          placeholder=""
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                          style={{ width: "100%", paddingRight: "30px" }}
-                        />
-                        <span
-                          onClick={() => setShowPassword(!showPassword)}
-                          style={{
-                            position: "absolute",
-                            right: "45px",
-                            top: "50%",
-                            transform: "translateY(-50%)",
-                            cursor: "pointer",
-                            color: "#666",
+                      </p>
+                      <form>
+                        <div className="input-row">
+                          <FaEnvelope />
+                          <label style={{ textAlign: "left" }}>
+                            Email Address
+                          </label>
+                          <input
+                            type="text"
+                            placeholder=""
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                          />
+                        </div>
+                        <div className="input-row">
+                          <FaLock />
+                          <label style={{ textAlign: "left" }}>Password</label>
+                          <input
+                            type={showPassword ? "text" : "password"}
+                            placeholder=""
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            style={{ width: "100%", paddingRight: "30px" }}
+                          />
+                          <span
+                            onClick={() => setShowPassword(!showPassword)}
+                            style={{
+                              position: "absolute",
+                              right: "45px",
+                              top: "50%",
+                              transform: "translateY(-50%)",
+                              cursor: "pointer",
+                              color: "#666",
+                            }}
+                          >
+                            {showPassword ? <FaEye /> : <FaEyeSlash />}
+                          </span>
+                        </div>
+                      </form>
+                      <ul>
+                        <li>
+                          <a
+                            onClick={() => setShow(!show)}
+                            href="javascript:void(0)"
+                            className={show ? "show" : ""}
+                          >
+                            <FaCheckCircle /> Remember Me{" "}
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            onClick={() => {
+                              setForgotPassEmailModalOpen(true);
+                            }}
+                            href="javascript:void(0)"
+                          >
+                            Forget Password?
+                          </a>
+                        </li>
+                      </ul>
+                      <div className="login-button" style={{ display: "flex" }}>
+                        <button
+                          className="btn-login"
+                          onClick={() => {
+                            mLogin();
+                            setShowlogin(!showscreen);
                           }}
                         >
-                          {showPassword ?  <FaEye />  : <FaEyeSlash /> }
-                        </span>
+                          Login Now
+                        </button>
+                        <button
+                          className="btn"
+                          onClick={() => setSignupType(2)}
+                        >
+                          Create Account
+                        </button>
                       </div>
-                    </form>
-                    <ul>
-                      <li>
-                        <a
-                          onClick={() => setShow(!show)}
-                          href="javascript:void(0)"
-                          className={show ? "show" : ""}>
-                          <FaCheckCircle /> Remember Me{" "}
-                        </a>
-                      </li>
-                      <li>
-                        <a onClick={() => { setForgotPassEmailModalOpen(true) }} href="javascript:void(0)">Forget Password?</a>
-                      </li>
-                    </ul>
-                    <div className="login-button" style={{ display: "flex" }}>
-                      <button
-                        className="btn-login"
-                        onClick={() => {
-                          mLogin();
-                          setShowlogin(!showscreen);
-                        }}>
-                        Login Now
-                      </button>
-                      <button className="btn" onClick={() => setSignupType(2)}>
-                        Create Account
-                      </button>
-                    </div>
-                    {/* <div className="social-icon">
+                      {/* <div className="social-icon">
                     <span>Or you can join with</span>
                     <ul>
                       <li><FaFacebook /></li>
                       <li><FaGoogle /></li>
                     </ul>
                   </div> */}
-                  </div>
-                </>}
-
-
+                    </div>
+                  </>
+                )}
               </div>
             ) : (
               <div className="login-6">
@@ -621,11 +663,7 @@ const LoginModule = ({ showscreen, setShowlogin }) => {
                     <img src={IImages.logo} alt="Logo" />
                   </div> */}
                   <h2>Welcome to The Alchemy Drip :)</h2>
-                  {/* <p>
-                    Lorem Ipsum is simply dummy text of the printing and
-                    typesetting industry. Lorem Ipsum has been the industry's
-                    standard dummy text ever since the{" "}
-                  </p> */}
+
                   <form>
                     <div className="input-row" style={{ marginBottom: "1rem" }}>
                       <FaUser />
@@ -706,7 +744,8 @@ const LoginModule = ({ showscreen, setShowlogin }) => {
                           border: "none",
                           width: "96%",
                         }}
-                        onChange={(e) => setCampusinput(e.target.value)}>
+                        onChange={(e) => setCampusinput(e.target.value)}
+                      >
                         {getCampus && getCampus.length <= 0 ? (
                           <></>
                         ) : (
@@ -724,18 +763,50 @@ const LoginModule = ({ showscreen, setShowlogin }) => {
                       </select>
                     </div>
                   </form>
+                  <div
+                    className="input-row"
+                    style={{ marginTop: "0.8rem", marginBottom: "0.8rem" }}
+                  >
+                    <input
+                      type="checkbox"
+                      id="terms"
+                      checked={isChecked}
+                      onChange={(e) => setIsChecked(e.target.checked)}
+                      style={{ marginRight: "8px" }}
+                    />
+
+                    <label style={{ fontSize: "14px" }}>
+                      I agree to the{" "}
+                      <Link
+                        style={{ color: "#5d5d9c" }}
+                        to="/TermsCondition"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        Terms & Conditions
+                      </Link>{" "}
+                      and{" "}
+                      <Link
+                        style={{ color: "#5d5d9c" }}
+                        to="/PrivacyPolicy"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        Privacy Policy
+                      </Link>
+                    </label>
+                  </div>
                   <ul>
                     <li>
                       <a
                         onClick={() => setShow(!show)}
                         href="javascript:void(0)"
-                        className={show ? "show" : ""}>
+                        className={show ? "show" : ""}
+                      >
                         <FaCheckCircle /> Remember Me{" "}
                       </a>
                     </li>
-                    <li>
+                    {/* <li>
                       <a href="javascript:void(0)">Forget Password?</a>
-                    </li>
+                    </li> */}
                   </ul>
                   <div className="login-button" style={{ display: "flex" }}>
                     <button className="btn" onClick={() => setSignupType(1)}>
