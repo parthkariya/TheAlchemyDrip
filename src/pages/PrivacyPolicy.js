@@ -125,7 +125,7 @@ const PrivacyPolicy = () => {
                 if you have previously agreed to us using your personal
                 information for direct marketing purposes, you may change your
                 mind at any time by writing to or emailing us at
-                Info@TheAlchemydrip.com
+                Info@TheAlchemydrip.in
               </li>
             </ul>
             <p className="privacy-policy-txt">

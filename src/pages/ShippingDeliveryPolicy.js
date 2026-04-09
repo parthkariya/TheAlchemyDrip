@@ -84,7 +84,7 @@ const ShippingDeliveryPolicy = () => {
             <p className="privacy-policy-txt">
               For any issues related to shipping, delivery, or service
               utilization, contact: <br />
-              <b>Email:</b> Info@TheAlchemyDrip.com <br />
+              <b>Email:</b> Info@TheAlchemyDrip.in <br />
               <b>Phone/WhatsApp:</b> 8073209270
             </p>
 
