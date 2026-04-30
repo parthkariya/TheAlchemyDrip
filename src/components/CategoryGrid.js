@@ -97,15 +97,21 @@ const CategoryGrid = ({ getdrop, setdrop }) => {
       const data = await setMallRegister(params);
       if (data) {
         if (data.status === 1) {
-          localStorage.setItem("shiftingcharge", JSON.stringify(data?.shipping_rate ? data?.shipping_rate : ""));
-          localStorage.setItem("categoryid", JSON.stringify(data?.category_id ? data?.category_id : ""));
+          localStorage.setItem(
+            "shiftingcharge",
+            JSON.stringify(data?.shipping_rate ? data?.shipping_rate : ""),
+          );
+          localStorage.setItem(
+            "categoryid",
+            JSON.stringify(data?.category_id ? data?.category_id : ""),
+          );
           setModal(false);
           setShowlogin(true);
           console.log("register-data", data);
           setdrop(1);
 
-          if(isLogin === true){
-          history.push("/products");
+          if (isLogin === true) {
+            history.push("/products");
           }
           // history.push("/products");
           // history.push("/Propage/" + data.data[0].slug);
@@ -141,7 +147,8 @@ const CategoryGrid = ({ getdrop, setdrop }) => {
                 >
                   {/* <Link to={`/products`}> */}
                   <div className="a">
-                    <img className="resp_cat_img"
+                    <img
+                      className="resp_cat_img"
                       src={c.image_full_path}
                       alt=""
                       style={{ marginBottom: "0px !important" }}
@@ -157,7 +164,17 @@ const CategoryGrid = ({ getdrop, setdrop }) => {
                     </button>
                   </div>
 
-                  <p className="cat_school_name" style={{color:"#000",fontWeight:"500",fontSize:"18px",marginBottom:"10px"}}>{c.name}</p>
+                  <p
+                    className="cat_school_name"
+                    style={{
+                      color: "#000",
+                      fontWeight: "500",
+                      fontSize: "18px",
+                      marginBottom: "10px",
+                    }}
+                  >
+                    {c.name}
+                  </p>
                 </div>
               );
             })}

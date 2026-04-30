@@ -26,7 +26,6 @@ import { FaHeart, FaWhatsapp, FaMailBulk, FaRegHeart } from "react-icons/fa";
 import { useUserContext } from "../context/user_context";
 import { useWishlistContext } from "../context/wishlist_context";
 import axios from "axios";
-import MaintenanceBanner from "../components/MaintenanceBanner";
 
 const SingleProductPage = () => {
   const { userid, isLogin } = useUserContext();
@@ -248,8 +247,6 @@ const SingleProductPage = () => {
     <Wrapper>
       {/* <Navbar /> */}
       <NavbarHome />
-      <MaintenanceBanner />
-
       <PageHero title={name} />
       {/* <PageHero title={name} productpage="e" /> */}
       <div

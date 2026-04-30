@@ -18,7 +18,7 @@ const MaintenanceBanner = () => {
         borderBottom: "2px solid #f5c518",
         borderTop: "2px solid #f5c518",
         position: "relative",
-        zIndex: 9999,
+        // zIndex: 9999,
       }}
     >
       <div

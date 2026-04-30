@@ -102,10 +102,10 @@ export const UserProvider = ({ children }) => {
           Accept: "application/x.uniform.v1+json",
         },
       });
-  
+
       const logindata = response.data;
       console.log("logindata", logindata);
-  
+
       if (logindata.success == 1) {
         dispatch({ type: GET_LOGIN_SUCCESS, payload: logindata });
         localStorage.setItem("logindata", JSON.stringify(logindata.user));
@@ -125,7 +125,6 @@ export const UserProvider = ({ children }) => {
     }
   };
 
-  
   const getUserDetails = async () => {
     const token = JSON.parse(localStorage.getItem("token"));
     dispatch({ type: GET_LOGIN_BEGIN });
@@ -138,7 +137,7 @@ export const UserProvider = ({ children }) => {
             Accept: "application/x.uniform.v1+json",
             Authorization: "Bearer ".concat(token),
           },
-        }
+        },
       );
       const logindata = response.data;
       if (logindata.success == 1) {

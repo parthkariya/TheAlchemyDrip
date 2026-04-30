@@ -14,7 +14,6 @@ import {
 } from "../components";
 import { Helmet } from "react-helmet";
 import Modal from "react-modal";
-import MaintenanceBanner from "../components/MaintenanceBanner";
 
 const HomePage = () => {
   const [getdrop, setdrop] = useState(0);
@@ -27,9 +26,7 @@ const HomePage = () => {
         <meta name="description" content="The Alchemy Drip" />
       </Helmet>
       <NavbarHome getdrop={getdrop} />
-      <MaintenanceBanner />
       <Hero />
-
       <CategoryGrid getdrop={getdrop} setdrop={setdrop} />
       {/* <TrandingProducts /> */}
       {/* <FeaturedProducts /> */}
