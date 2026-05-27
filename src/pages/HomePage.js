@@ -14,6 +14,7 @@ import {
 } from "../components";
 import { Helmet } from "react-helmet";
 import Modal from "react-modal";
+import CityGrid from "../components/Citygrid";
 
 const HomePage = () => {
   const [getdrop, setdrop] = useState(0);
@@ -27,7 +28,9 @@ const HomePage = () => {
       </Helmet>
       <NavbarHome getdrop={getdrop} />
       <Hero />
-      <CategoryGrid getdrop={getdrop} setdrop={setdrop} />
+      <CityGrid getdrop={getdrop} setdrop={setdrop} />
+
+      {/* <CategoryGrid getdrop={getdrop} setdrop={setdrop} /> */}
       {/* <TrandingProducts /> */}
       {/* <FeaturedProducts /> */}
       {/* <HeroCategories /> */}
