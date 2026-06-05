@@ -206,7 +206,7 @@ const CityGrid = ({ getdrop, setdrop }) => {
         {/* ── City Section ── */}
         <div className="section-center">
           <div className="cities-heading">
-            <p>Popular Cities</p>
+            <p>Select your city</p>
             <div className="underline" />
           </div>
 
