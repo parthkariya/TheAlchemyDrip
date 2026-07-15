@@ -3,10 +3,11 @@ import styled from "styled-components";
 import { useCartContext } from "../context/cart_context";
 import { useUserContext } from "../context/user_context";
 import { formatPrice } from "../utils/helpers";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 const CartTotals = () => {
   const { total_amount, shipping_fees } = useCartContext();
+  const history = useHistory();
 
   console.log("shipping_fees", shipping_fees);
   const [getShiftigCharge, setShiftingCharge] = React.useState();
@@ -14,10 +15,18 @@ const CartTotals = () => {
   useEffect(() => {
     const shifting_charge = JSON.parse(localStorage.getItem("shiftingcharge"));
     setShiftingCharge(shifting_charge);
-  }, [])
+  }, []);
 
   console.log("shifting charge", getShiftigCharge);
 
+  // Blocks ctrl/cmd/shift/middle-click so checkout never opens in a new tab
+  const handleCheckoutClick = (e) => {
+    if (e.ctrlKey || e.metaKey || e.shiftKey || e.button === 1) {
+      e.preventDefault();
+      return;
+    }
+    history.push("/checkout");
+  };
 
   return (
     <Wrapper>
@@ -26,45 +35,79 @@ const CartTotals = () => {
           <h5>
             subtotal : <span>{formatPrice(total_amount)}</span>
           </h5>
-          {getShiftigCharge == 0 ? <>
-            <p>
-              shipping fee : <span>{formatPrice(shipping_fees)}</span>
-            </p>
-          </> : <>
-            <p>
-              shipping fee : <span>{formatPrice(getShiftigCharge)}</span>
-            </p>
-          </>}
+          {getShiftigCharge == 0 ? (
+            <>
+              <p>
+                shipping fee : <span>{formatPrice(shipping_fees)}</span>
+              </p>
+            </>
+          ) : (
+            <>
+              <p>
+                shipping fee : <span>{formatPrice(getShiftigCharge)}</span>
+              </p>
+            </>
+          )}
 
           <hr />
-          {getShiftigCharge == 0 ? <>
-            <h4>
-              Order Total :{" "}
-              <span>{formatPrice(total_amount + shipping_fees)}</span>
-            </h4>
-          </> : <>
-            <h4>
-              Order Total :{" "}
-              <span>{formatPrice(total_amount + Number(getShiftigCharge))}</span>
-            </h4>
-          </>}
+          {getShiftigCharge == 0 ? (
+            <>
+              <h4>
+                Order Total :{" "}
+                <span>{formatPrice(total_amount + shipping_fees)}</span>
+              </h4>
+            </>
+          ) : (
+            <>
+              <h4>
+                Order Total :{" "}
+                <span>
+                  {formatPrice(total_amount + Number(getShiftigCharge))}
+                </span>
+              </h4>
+            </>
+          )}
 
           <div style={{ marginTop: "2rem" }}>
-            <Link to="/checkout" className="btn">
+            {/* <Link to="/checkout" className="btn">
               proceed to checkout
-            </Link>
+            </Link> */}
+            {/* Replaced <Link> with a plain <button> so there's no href for
+                the browser to open in a new tab. handleCheckoutClick also
+                blocks ctrl/cmd/shift/middle-click, and onAuxClick/onContextMenu
+                block middle-click and right-click "open in new tab" respectively. */}
+            <button
+              type="button"
+              className="btn"
+              onClick={handleCheckoutClick}
+              onAuxClick={(e) => e.preventDefault()}
+              onContextMenu={(e) => e.preventDefault()}
+            >
+              proceed to checkout
+            </button>
           </div>
-          {total_amount < 1000 && getShiftigCharge == 0 ? <>
-            <p style={{ color: "#000", fontWeight: "500", marginTop: "1rem", marginBottom: "0rem", display: "block" }}>Avail free shipping for orders above 1000/-</p>
-          </> : <>
-            {/* {getShiftigCharge == 50 ? <></> : <>
+          {total_amount < 1000 && getShiftigCharge == 0 ? (
+            <>
+              <p
+                style={{
+                  color: "#000",
+                  fontWeight: "500",
+                  marginTop: "1rem",
+                  marginBottom: "0rem",
+                  display: "block",
+                }}
+              >
+                Avail free shipping for orders above 1000/-
+              </p>
+            </>
+          ) : (
+            <>
+              {/* {getShiftigCharge == 50 ? <></> : <>
               <p style={{color:"#000",fontWeight:"500",marginTop:"1rem",marginBottom:"0rem",display:"block"}}>Avail free shipping for orders above 1000/-</p>
             </>} */}
-          </>}
-
-
+            </>
+          )}
         </article>
-
       </div>
     </Wrapper>
   );

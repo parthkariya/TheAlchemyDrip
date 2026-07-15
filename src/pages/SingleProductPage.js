@@ -90,7 +90,6 @@ const SingleProductPage = () => {
   const [sizeId, setSizeId] = useState("");
   const [colorId, setColorId] = useState("");
   const [colorName, setColorName] = useState("");
-  // const [getstock, SetStock] = useState(singleProduct? singleProduct.details[0].inventory :'');
   const [getstock, SetStock] = useState();
   // const [getColorId, setColorId] = useState();
   const [getwish, setWish] = useState();
@@ -128,14 +127,14 @@ const SingleProductPage = () => {
         (c) => c.color_id === colorId,
       );
       if (currentColorIndex !== -1) {
-        // Color still exists in new size — keep it selected
+        const matchedColor = getColors[currentColorIndex];
         setActiveColor(currentColorIndex);
+        SetStock(matchedColor.display_stock); // ✅ add this line
         const matchedImg = product_images?.find(
           (img) => img.color_id === colorId,
         );
         setSelectedColorImage(matchedImg ? matchedImg.image : null);
       } else {
-        // Color not available in this size — fall back to first
         const first = getColors[0];
         setActiveColor(0);
         setColorId(first.color_id);
@@ -168,7 +167,11 @@ const SingleProductPage = () => {
       setSizeId(details[0].size_id);
       setValue(details[0].price);
       setValue1(details[0].wholesale_price);
-      sizeApi("");
+      // sizeApi("");
+      sizeApi("", details[0].color_id);
+      // if (getColors.length <= 0) {
+      //   SetStock(getColors[0]?.display_stock);
+      // }
     } else {
     }
     setSizeValue2(size && size);
@@ -193,7 +196,22 @@ const SingleProductPage = () => {
     }
   }, [error]);
 
-  const sizeApi = async (id) => {
+  // const sizeApi = async (id) => {
+  //   const formData = new FormData();
+  //   formData.append("product_id", product_id);
+  //   formData.append("size_id", id ? id : details && details[0].size_id);
+  //   const response = await axios
+  //     .post(get_size_color_stock, formData, {
+  //       headers: {
+  //         Accept: "application/x.uniform.v1+json",
+  //       },
+  //       "Access-Control-Allow-Origin": "*",
+  //     })
+  //     .catch((error) => console.error(`Error: ${error}`));
+  //   setColors(response.data.detail);
+  // };
+
+  const sizeApi = async (id, colorIdOverride) => {
     const formData = new FormData();
     formData.append("product_id", product_id);
     formData.append("size_id", id ? id : details && details[0].size_id);
@@ -205,7 +223,24 @@ const SingleProductPage = () => {
         "Access-Control-Allow-Origin": "*",
       })
       .catch((error) => console.error(`Error: ${error}`));
-    setColors(response.data.detail);
+
+    const newColors = (response && response.data && response.data.detail) || [];
+    setColors(newColors);
+
+    // Directly compute & apply stock here using the response we already have,
+    // instead of relying only on the separate useEffect that depends on the
+    // `colorId` state — that state may not have flushed yet on first load,
+    // which was causing the stock cap to be skipped by default.
+    const targetColorId = colorIdOverride ?? (details && details[0].color_id);
+    const matched =
+      newColors.find((c) => c.color_id === targetColorId) || newColors[0];
+
+    if (matched) {
+      SetStock(matched.display_stock);
+      setColorId(matched.color_id);
+      setColorName(matched.color_name);
+      setActiveColor(newColors.indexOf(matched));
+    }
   };
 
   const mAddToWishlist = async () => {
@@ -357,6 +392,8 @@ const SingleProductPage = () => {
                         // }}
 
                         onClick={() => {
+                          console.log("Selected Item:", item);
+
                           handleButtonClick(index);
                           setValue(item.price);
                           setValue1(item.wholesale_price);
@@ -367,6 +404,10 @@ const SingleProductPage = () => {
                           SetCondition(true);
                           sizeApi(item.size_id);
                           setQty(1);
+                          getColors.length == 1 &&
+                            getColors[0].color_id == 1 &&
+                            getColors[0].color_code == "no" &&
+                            SetStock(item.display_stock);
                           // preserve selected color after size change
                           // after sizeApi refreshes getColors, re-apply the current colorId
                         }}
@@ -495,7 +536,7 @@ const SingleProductPage = () => {
                 </div>
               </>
             )}
-            {/* {getstock == 0 || getstock <= 0 ? (
+            {getstock == 0 || getstock <= 0 ? (
               <h3
                 style={{
                   color: "red",
@@ -504,47 +545,47 @@ const SingleProductPage = () => {
               >
                 Out of stock
               </h3>
-            ) : ( */}
-            <div>
-              {colorId > 1 ? (
-                <AddToCart
-                  product={single_product1}
-                  value={value}
-                  sizeValue={sizeValue}
-                  getstock={getstock}
-                  sizeid={sizeId}
-                  colorId={colorId}
-                  colorName={colorName}
-                  qtyy={qty}
-                  colorImage={selectedColorImage}
-                />
-              ) : (
-                <></>
-              )}
-            </div>
-            {/* )} */}
+            ) : (
+              <div>
+                {colorId > 1 ? (
+                  <AddToCart
+                    product={single_product1}
+                    value={value}
+                    sizeValue={sizeValue}
+                    getstock={getstock}
+                    sizeid={sizeId}
+                    colorId={colorId}
+                    colorName={colorName}
+                    qtyy={qty}
+                    colorImage={selectedColorImage}
+                  />
+                ) : (
+                  <></>
+                )}
+              </div>
+            )}
 
-            {/* {getstock == 0 || getstock <= 0 ? (
+            {getstock == 0 || getstock <= 0 ? (
               <></>
-            ) : ( */}
-            <div>
-              {getColors[0]?.color_id === 1 ? (
-                <AddToCart
-                  product={single_product1}
-                  value={value}
-                  sizeValue={sizeValue}
-                  getstock={getstock}
-                  sizeid={sizeId}
-                  colorId={colorId}
-                  colorName={colorName}
-                  qtyy={qty}
-                  colorImage={selectedColorImage}
-                />
-              ) : (
-                <></>
-              )}
-            </div>
-            {/* )} */}
+            ) : (
+              <div>
+                {getColors[0]?.color_id === 1 ? (
+                  <AddToCart
+                    product={single_product1}
+                    value={value}
+                    sizeValue={sizeValue}
+                    getstock={getstock}
+                    sizeid={sizeId}
+                    colorId={colorId}
+                    colorName={colorName}
+                    qtyy={qty}
+                    colorImage={selectedColorImage}
+                  />
+                ) : (
+                  <></>
+                )}
+              </div>
+            )}
 
             <div className="description-part-main">
               <div className="description-part">

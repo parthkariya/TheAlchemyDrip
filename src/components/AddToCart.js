@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { useCartContext } from "../context/cart_context";
 import QtyButtons from "./QtyButtons";
 import IImages from "../constants/IImages";
-import { Link } from "react-router-dom/cjs/react-router-dom";
+import { Link, useHistory } from "react-router-dom/cjs/react-router-dom";
 const AddToCart = ({
   product,
   value,
@@ -17,6 +17,7 @@ const AddToCart = ({
   colorImage,
 }) => {
   const { addToCart } = useCartContext();
+  const history = useHistory();
   console.log("colorId are ==>", colorId);
   const { stock, colors, sizes, HIGHT, LENGTH, WIDTH, slug } = product;
   console.log("product details", sizeValue);
@@ -33,16 +34,16 @@ const AddToCart = ({
 
   useEffect(() => {
     setQty(1);
-  }, [colorId]);
+  }, [colorId, sizeid]);
 
   console.log("AAAAQQQQ", qty);
 
   const increase = () => {
     setQty((oldQty) => {
       let tempQty = oldQty + 1;
-      // if (tempQty > getstock) {
-      //   tempQty = getstock;
-      // }
+      if (tempQty > getstock) {
+        tempQty = getstock;
+      }
       return tempQty;
     });
   };
@@ -54,6 +55,61 @@ const AddToCart = ({
         tempQty = 1;
       }
       return tempQty;
+    });
+  };
+
+  // Handles PROCEED TO CHECKOUT click - blocks ctrl/cmd/shift/middle click
+  // so checkout never opens in a new tab (which would lose the passed state)
+  const handleCheckoutClick = (e) => {
+    if (e.ctrlKey || e.metaKey || e.shiftKey || e.button === 1) {
+      e.preventDefault();
+      return;
+    }
+
+    console.log("ttttt->", JSON.stringify(colorId, null, 2));
+    const currentCheck = 1; // Use a local variable to set check
+    setCheck(currentCheck);
+    addToCart(
+      product.product_id,
+      mainColor,
+      qty,
+      product,
+      mainSize,
+      slug,
+      product.product_images,
+      value,
+      sizeValue,
+      getstock,
+      sizeid,
+      colorId,
+      colorName,
+      currentCheck, // Pass the local value directly
+      colorImage,
+    );
+
+    history.push({
+      pathname: "/checkouts",
+      state: {
+        items: [
+          {
+            product_id: product.product_id,
+            mainColor: mainColor,
+            qty: qty,
+            product: product,
+            mainSize: mainSize,
+            slug: slug,
+            product_images: product.product_images,
+            value: value,
+            sizeValue: sizeValue,
+            getstock: getstock,
+            sizeid: sizeid,
+            colorId: colorId,
+            colorName: colorName,
+            currentCheck: currentCheck, // Include the local variable
+            colorImage,
+          },
+        ],
+      },
     });
   };
 
@@ -152,7 +208,7 @@ const AddToCart = ({
   PROCEED TO CHECKOUT
 </Link>; */}
 
-        <Link
+        {/* <Link
           to={{
             pathname: "/checkouts",
             state: {
@@ -202,7 +258,22 @@ const AddToCart = ({
           }}
         >
           PROCEED TO CHECKOUT
-        </Link>
+        </Link> */}
+
+        {/* Replaced <Link> with a plain <button> so there's no href for the
+            browser to open in a new tab. handleCheckoutClick also blocks
+            ctrl/cmd/shift/middle-click, and onAuxClick/onContextMenu block
+            middle-click and right-click "open in new tab" respectively. */}
+        <button
+          type="button"
+          className="btn"
+          style={{ marginTop: "0px", width: "225px", borderRadius: "0px" }}
+          onClick={handleCheckoutClick}
+          onAuxClick={(e) => e.preventDefault()}
+          onContextMenu={(e) => e.preventDefault()}
+        >
+          PROCEED TO CHECKOUT
+        </button>
         {/* <Link
           to="/cart"
           className="cart-btn"
